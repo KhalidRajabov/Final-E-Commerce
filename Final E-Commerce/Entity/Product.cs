@@ -27,9 +27,10 @@ namespace Final_E_Commerce.Entity
         public List<int>? TagId { get; set; }
 
 
-        
 
 
+        public string? AppUserId { get; set; }
+        public AppUser? AppUser { get; set; }
 
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
@@ -41,7 +42,8 @@ namespace Final_E_Commerce.Entity
         public CustomBrand? CustomBrand { get; set; }
 
 
-        public List<UserProduct>? UserProducts { get; set; }
+
+
         public List<ProductTag>? ProductTags { get; set; }
 
         public List<ProductImage>? ProductImages { get; set; }
