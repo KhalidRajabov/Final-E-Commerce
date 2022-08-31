@@ -22,7 +22,7 @@ namespace Final_E_Commerce.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.AppUser", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -80,6 +80,9 @@ namespace Final_E_Commerce.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("WishlistId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -90,10 +93,12 @@ namespace Final_E_Commerce.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("WishlistId");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Bio", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Bio", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,7 +147,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Bios");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Brand", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,7 +178,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Brands");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Category", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,7 +214,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.CustomBrand", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.CustomBrand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,7 +245,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("CustomBrands");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Order", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -294,7 +299,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.OrderItem", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -323,7 +328,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Product", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -334,14 +339,23 @@ namespace Final_E_Commerce.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Battery")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Bestseller")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Chipset")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -364,6 +378,12 @@ namespace Final_E_Commerce.Migrations
                     b.Property<double?>("DiscountPrice")
                         .HasColumnType("float");
 
+                    b.Property<string>("Display")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FrontCamera")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("InStock")
                         .HasColumnType("bit");
 
@@ -376,14 +396,29 @@ namespace Final_E_Commerce.Migrations
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Memory")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("NewArrival")
                         .HasColumnType("bit");
 
+                    b.Property<string>("OperationSystem")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<string>("RearCamera")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Views")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Weight")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -398,7 +433,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.ProductImage", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -422,7 +457,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.ProductTag", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.ProductTag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -445,7 +480,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("ProductTags");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Slider", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Slider", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -470,7 +505,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Sliders");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Subscriber", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Subscriber", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -486,7 +521,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Subscribers");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Tag", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -503,6 +538,27 @@ namespace Final_E_Commerce.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -535,31 +591,31 @@ namespace Final_E_Commerce.Migrations
                         new
                         {
                             Id = "39792324-9bcf-41cc-aff7-9421ab090dbf",
-                            ConcurrencyStamp = "f9a408bb-5705-4a66-b38c-d5f24abdd1aa",
+                            ConcurrencyStamp = "d41fbc20-8be6-4cee-8272-59bea70a510d",
                             Name = "Member"
                         },
                         new
                         {
                             Id = "d78fa29e-8b9b-431d-90e1-312c634436da",
-                            ConcurrencyStamp = "9467528e-aa3a-4fe6-9368-ecf21804f03c",
+                            ConcurrencyStamp = "4106b24b-2bc2-45e9-918c-2ecf86bf7a00",
                             Name = "Editor"
                         },
                         new
                         {
                             Id = "64830485-9bcf-41fr-aff7-3333ab090dbf",
-                            ConcurrencyStamp = "158df72d-08ab-4230-8ccf-866ff6f93def",
+                            ConcurrencyStamp = "c17362b2-5344-44e5-be9d-9e08c3b455c2",
                             Name = "Moderator"
                         },
                         new
                         {
                             Id = "7985400a-d644-4954-a0c5-f579a46dd5c6",
-                            ConcurrencyStamp = "06f3ef09-af9c-475b-bf11-1f181f7ded95",
+                            ConcurrencyStamp = "f197279b-c577-4781-8db7-ceb098d650b6",
                             Name = "Admin"
                         },
                         new
                         {
                             Id = "d76fa29e-8b9b-431d-90e1-641c634654da",
-                            ConcurrencyStamp = "7608222f-4d01-4d84-8d5e-bc14df32378c",
+                            ConcurrencyStamp = "64415651-5959-4412-90b5-19a8e95999f9",
                             Name = "SuperAdmin"
                         });
                 });
@@ -670,33 +726,42 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Category", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.Category", "Parent")
+                    b.HasOne("Final_E_Commerce.Entities.Wishlist", "Wishlist")
+                        .WithMany()
+                        .HasForeignKey("WishlistId");
+
+                    b.Navigation("Wishlist");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Category", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.Category", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Order", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.AppUser", "AppUser")
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
                         .WithMany("Orders")
                         .HasForeignKey("AppUserId");
 
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.OrderItem", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.Order", "Order")
+                    b.HasOne("Final_E_Commerce.Entities.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Final_E_Commerce.Entity.Product", "Product")
+                    b.HasOne("Final_E_Commerce.Entities.Product", "Product")
                         .WithMany("OrderItem")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -707,25 +772,25 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Product", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Product", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.AppUser", "AppUser")
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
                         .WithMany("Products")
                         .HasForeignKey("AppUserId");
 
-                    b.HasOne("Final_E_Commerce.Entity.Brand", "Brand")
+                    b.HasOne("Final_E_Commerce.Entities.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Final_E_Commerce.Entity.Category", "Category")
+                    b.HasOne("Final_E_Commerce.Entities.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Final_E_Commerce.Entity.CustomBrand", "CustomBrand")
+                    b.HasOne("Final_E_Commerce.Entities.CustomBrand", "CustomBrand")
                         .WithMany("Products")
                         .HasForeignKey("CustomBrandId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -740,9 +805,9 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("CustomBrand");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.ProductImage", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.ProductImage", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.Product", "Product")
+                    b.HasOne("Final_E_Commerce.Entities.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -751,15 +816,15 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.ProductTag", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.ProductTag", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.Product", "Product")
+                    b.HasOne("Final_E_Commerce.Entities.Product", "Product")
                         .WithMany("ProductTags")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Final_E_Commerce.Entity.Tag", "Tags")
+                    b.HasOne("Final_E_Commerce.Entities.Tag", "Tags")
                         .WithMany("ProductTag")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -768,6 +833,17 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.Product", "Products")
+                        .WithMany("Wishlists")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -781,7 +857,7 @@ namespace Final_E_Commerce.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.AppUser", null)
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -790,7 +866,7 @@ namespace Final_E_Commerce.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.AppUser", null)
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -805,7 +881,7 @@ namespace Final_E_Commerce.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Final_E_Commerce.Entity.AppUser", null)
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -814,52 +890,54 @@ namespace Final_E_Commerce.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entity.AppUser", null)
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.AppUser", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
                 {
                     b.Navigation("Orders");
 
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Brand", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Category", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Category", b =>
                 {
                     b.Navigation("Children");
 
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.CustomBrand", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.CustomBrand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Order", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Product", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Product", b =>
                 {
                     b.Navigation("OrderItem");
 
                     b.Navigation("ProductImages");
 
                     b.Navigation("ProductTags");
+
+                    b.Navigation("Wishlists");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entity.Tag", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Tag", b =>
                 {
                     b.Navigation("ProductTag");
                 });

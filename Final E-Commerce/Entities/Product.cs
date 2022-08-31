@@ -1,19 +1,29 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Final_E_Commerce.Entity
+namespace Final_E_Commerce.Entities
 {
     public class Product:BaseEntity
     {
         public double Price { get; set; }
         
         public string? Description { get; set; }
-        
+        public string? Body { get; set; }
+        public string? Chipset { get; set; }
+        public string? Display { get; set; }
+        public string? OperationSystem { get; set; }
+        public string? Memory { get; set; }
+        public string? FrontCamera { get; set; }
+        public string? RearCamera { get; set; }
+        public string? Battery { get; set; }
+        public string? Weight { get; set; }
+
         public Nullable<double> DiscountPercent { get; set; }
         
         public Nullable<double> DiscountPrice { get; set; }
         
         public int Count { get; set; }
+        public int Views { get; set; }
         public bool IsFeatured { get; set; }
         public bool Bestseller { get; set; }
         public bool NewArrival { get; set; }
@@ -49,5 +59,6 @@ namespace Final_E_Commerce.Entity
         public List<ProductImage>? ProductImages { get; set; }
 
         public List<OrderItem>? OrderItem { get; set; }
+        public List<Wishlist>? Wishlists { get; set; }
     }
 }

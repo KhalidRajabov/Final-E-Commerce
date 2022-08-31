@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApi.DTO.CategoryDTO
 {
@@ -6,5 +7,13 @@ namespace WebApi.DTO.CategoryDTO
     {
         public string? Name { get; set; }
         public IFormFile? Photo { get; set; }
+        public Nullable<int> ParentId { get; set; }
+    }
+    public class CategoryCreateDtoValidation : AbstractValidator<CategoryCreateDto>
+    {
+        public CategoryCreateDtoValidation()
+        {
+            RuleFor(c => c.Name).NotEmpty();
+        }
     }
 }

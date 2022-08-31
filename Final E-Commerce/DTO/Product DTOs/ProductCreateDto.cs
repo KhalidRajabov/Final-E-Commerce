@@ -11,12 +11,13 @@ namespace WebApi.DTO.Product_DTOs
         public int Count { get; set; }
         public int CategoryId { get; set; }
     }
-
+     
     public class ProductCreateDtoValidator : AbstractValidator<ProductCreateDto>
     {
         public ProductCreateDtoValidator()
         {
-            RuleFor(p => p.Name).NotEmpty().WithMessage("Name can not be empty").MaximumLength(30).WithMessage("Max character: 30");
+            RuleFor(p => p.Name).NotEmpty().WithMessage("Name can not be empty")
+                .MaximumLength(30).WithMessage("Max character: 30");
             RuleFor(p => p.Description).NotEmpty().WithMessage("Description can not be empty")
                 .MinimumLength(50).WithMessage("Minimum allowed character length is 50")
                 .MaximumLength(1000).WithMessage("Maximum allowed character length is 1000");

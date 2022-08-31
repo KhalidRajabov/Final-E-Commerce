@@ -1,4 +1,4 @@
-﻿using Final_E_Commerce.Entity;
+﻿using Final_E_Commerce.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +24,7 @@ namespace Final_E_Commerce.DAL
         public DbSet<Slider>? Sliders { get; set; }
         public DbSet<Subscriber>? Subscribers { get; set; }
         public DbSet<Tag>? Tags { get; set; }
+        public DbSet<Wishlist>? Wishlists { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
