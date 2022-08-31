@@ -6,7 +6,7 @@
         public string? Logo { get; set; }
         public string? Headertext { get; set; }
         public string? Address { get; set; }
-        public int Phone { get; set; }
+        public string? Phone { get; set; }
         public string? Email { get; set; }
         public string? Author { get; set; }
         public string? Facebook { get; set; }

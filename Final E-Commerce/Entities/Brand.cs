@@ -6,7 +6,8 @@ namespace Final_E_Commerce.Entities
     {
         
         public string? ImageUrl { get; set; }
-        [NotMapped]
+        public bool Popular { get; set; }
+        [NotMapped]                      
         public IFormFile? Photo { get; set; }
 
 

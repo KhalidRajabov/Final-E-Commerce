@@ -19,7 +19,6 @@ namespace Final_E_Commerce.Entities
         public string? Weight { get; set; }
 
         public Nullable<double> DiscountPercent { get; set; }
-        
         public Nullable<double> DiscountPrice { get; set; }
         
         public int Count { get; set; }
@@ -47,9 +46,6 @@ namespace Final_E_Commerce.Entities
 
         public int BrandId { get; set; }
         public Brand? Brand { get; set; }
-
-        public int CustomBrandId { get; set; }
-        public CustomBrand? CustomBrand { get; set; }
 
 
 

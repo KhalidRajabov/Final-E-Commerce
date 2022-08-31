@@ -136,8 +136,8 @@ namespace Final_E_Commerce.Migrations
                     b.Property<string>("NewsLetterText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Twitter")
                         .HasColumnType("nvarchar(max)");
@@ -145,6 +145,24 @@ namespace Final_E_Commerce.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Bios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Bakı şəhəri, Səbayıl rayonu, G.Əliyev küç.54D",
+                            Author = "Khalid Rajabov",
+                            Email = "khalidsr@code.edu.az",
+                            Facebook = "https://www.facebook.com/khalid.radjabov.5",
+                            Headertext = "Free shipping • Free 30 days return • Express delivery",
+                            Instagram = "https://www.instagram.com/mr.felix_666/",
+                            Linkedin = "https://www.linkedin.com/mwlite/in/khalid-racabov-867281243",
+                            Logo = "logo.png",
+                            NewsLetterHeader = "Our Newsletter",
+                            NewsLetterText = "Subscribe to our Newsletter to receive early discount offers",
+                            Phone = "+994515186423",
+                            Twitter = "https://twitter.com/slayer_dante_?t=G-VmlfAok6IC_vxmQnYfLQ&s=08"
+                        });
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>
@@ -172,6 +190,9 @@ namespace Final_E_Commerce.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Popular")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -212,37 +233,95 @@ namespace Final_E_Commerce.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Categories");
-                });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.CustomBrand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomBrands");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDeleted = false,
+                            Name = "Phones and Tablets"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsDeleted = false,
+                            Name = "Watches"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsDeleted = false,
+                            Name = "TV, Audio and Video"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsDeleted = false,
+                            Name = "Computers and accessories"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsDeleted = false,
+                            Name = "Smartphones",
+                            ParentId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsDeleted = false,
+                            Name = "Tablets",
+                            ParentId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsDeleted = false,
+                            Name = "Mobile Accessories",
+                            ParentId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsDeleted = false,
+                            Name = "Smart watches",
+                            ParentId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsDeleted = false,
+                            Name = "Analog watches",
+                            ParentId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsDeleted = false,
+                            Name = "Kids watch",
+                            ParentId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            IsDeleted = false,
+                            Name = "Watch Accessories",
+                            ParentId = 2
+                        },
+                        new
+                        {
+                            Id = 12,
+                            IsDeleted = false,
+                            Name = "TVs",
+                            ParentId = 3
+                        },
+                        new
+                        {
+                            Id = 13,
+                            IsDeleted = false,
+                            Name = "TV/Audio Video Accessories",
+                            ParentId = 3
+                        });
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
@@ -363,9 +442,6 @@ namespace Final_E_Commerce.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomBrandId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
@@ -427,8 +503,6 @@ namespace Final_E_Commerce.Migrations
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CustomBrandId");
 
                     b.ToTable("Products");
                 });
@@ -556,8 +630,6 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
                     b.ToTable("Wishlists");
                 });
 
@@ -586,38 +658,6 @@ namespace Final_E_Commerce.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "39792324-9bcf-41cc-aff7-9421ab090dbf",
-                            ConcurrencyStamp = "d41fbc20-8be6-4cee-8272-59bea70a510d",
-                            Name = "Member"
-                        },
-                        new
-                        {
-                            Id = "d78fa29e-8b9b-431d-90e1-312c634436da",
-                            ConcurrencyStamp = "4106b24b-2bc2-45e9-918c-2ecf86bf7a00",
-                            Name = "Editor"
-                        },
-                        new
-                        {
-                            Id = "64830485-9bcf-41fr-aff7-3333ab090dbf",
-                            ConcurrencyStamp = "c17362b2-5344-44e5-be9d-9e08c3b455c2",
-                            Name = "Moderator"
-                        },
-                        new
-                        {
-                            Id = "7985400a-d644-4954-a0c5-f579a46dd5c6",
-                            ConcurrencyStamp = "f197279b-c577-4781-8db7-ceb098d650b6",
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = "d76fa29e-8b9b-431d-90e1-641c634654da",
-                            ConcurrencyStamp = "64415651-5959-4412-90b5-19a8e95999f9",
-                            Name = "SuperAdmin"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -726,6 +766,21 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProductWishlist", b =>
+                {
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WishlistsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductsId", "WishlistsId");
+
+                    b.HasIndex("WishlistsId");
+
+                    b.ToTable("ProductWishlist");
+                });
+
             modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.Wishlist", "Wishlist")
@@ -790,19 +845,11 @@ namespace Final_E_Commerce.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Final_E_Commerce.Entities.CustomBrand", "CustomBrand")
-                        .WithMany("Products")
-                        .HasForeignKey("CustomBrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("AppUser");
 
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
-
-                    b.Navigation("CustomBrand");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.ProductImage", b =>
@@ -833,17 +880,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.Product", "Products")
-                        .WithMany("Wishlists")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -897,6 +933,21 @@ namespace Final_E_Commerce.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductWishlist", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Final_E_Commerce.Entities.Wishlist", null)
+                        .WithMany()
+                        .HasForeignKey("WishlistsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
                 {
                     b.Navigation("Orders");
@@ -916,11 +967,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.CustomBrand", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
@@ -933,8 +979,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("ProductImages");
 
                     b.Navigation("ProductTags");
-
-                    b.Navigation("Wishlists");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Tag", b =>
