@@ -81,18 +81,15 @@
       <div class="col-lg-4 col-md-6 mb-50">
         <div class="card p-0">
           <div class="border-bottom text-center hover-zoom-img">
-            <a href="shop.html"><img src="images/categories/product-big-1.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
+            <a href="shop.html"><img src="images/categories/@Model.Category.ImageUrl" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
           <ul class="d-flex list-unstyled pl-0 categories-list">
-            <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-1.jpg" class="img-fluid w-100" alt="product-img"></a>
+            @foreach (var item in Model.Images)
+            {
+                <li class="m-0 hover-zoom-img">
+              <a href="shop.html"><img src="images/categories/@item.ToString()" class="img-fluid w-100" alt="product-img"></a>
             </li>
-            <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-2.jpg" class="img-fluid w-100" alt="product-img"></a>
-            </li>
-            <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-3.jpg" class="img-fluid w-100" alt="product-img"></a>
-            </li>
+            }
           </ul>
           <div class="px-4 py-3 border-top">
             <h4 class="d-inline-block mb-0 mt-1">Clothing</h4>

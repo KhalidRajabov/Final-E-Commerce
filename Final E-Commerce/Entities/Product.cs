@@ -8,6 +8,8 @@ namespace Final_E_Commerce.Entities
         public double Price { get; set; }
         
         public string? Description { get; set; }
+        public Nullable<DateTime> ReleaseDate { get; set; }
+        public string? GPU { get; set; }
         public string? Body { get; set; }
         public string? Chipset { get; set; }
         public string? Display { get; set; }
