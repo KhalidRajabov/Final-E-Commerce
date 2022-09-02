@@ -31,8 +31,10 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Detail(int? id)
         {
+
             Product product = _context.Products.Include(p=>p.ProductImages).FirstOrDefault(p=>p.Id==id);
-            
+            product.Views++;
+            await _context.SaveChangesAsync();
             DetailVM detailVM = new DetailVM();
             detailVM.Product = product;
             detailVM.RelatedProducts= _context.Products.Where(c => c.CategoryId == product.CategoryId).ToList();

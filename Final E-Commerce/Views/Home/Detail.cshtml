@@ -61,8 +61,8 @@
                     <div class="product-slider">
                         @foreach (var item in Model.Product.ProductImages)
                         {
-                            <div  data-image="~/images/product-single/product-sm-1.jpg">
-                            <img class="img-fluid w-100 image-zoom" src="~/images/products/@item.ImageUrl" alt="product-img" data-zoom="~/images/product-single/product-sm-1.jpg">
+                            <div  data-image="~/images/products/@item.ImageUrl">
+                            <img class="img-fluid w-100 image-zoom" src="~/images/products/@item.ImageUrl" alt="product-img" data-zoom="~/images/products/@item.ImageUrl">
                         </div>
                         }
                     </div>
@@ -70,9 +70,16 @@
                 </div>
                 <!-- produt details -->
                 <div class="col-lg-6 mb-100">
-                    <h2>Box Leather Shoulder Bag</h2>
-                    <i class="ti-check-box text-success"></i>
-                    <span class="text-success">Instock</span>
+                    <h2>@Model.Product.Name</h2>
+                    @if (Model.Product.Count>0)
+                    {
+                        <i class="ti-check-box text-success"></i>
+                        <span class="text-success">Instock</span>
+                    }
+                    else{
+                        <i class="ti-face-sad text-danger"></i>
+                        <span class="text-danger">Out-of-stock</span>
+                    }
                     <ul class="list-inline mb-4">
                         <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
                         <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
@@ -81,89 +88,37 @@
                         <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
                         <li class="list-inline-item"><a href="#" class="text-gray ml-3">( 3 Reviews )</a></li>
                     </ul>
-                    <h4 class="text-primary h3">$65.00 <s class="text-color ml-2">$90.00</s></h4>
-                    <h6 class="mb-4">You save: <span class="text-primary">$25.00 USD (30%)</span></h6>
-                    <div class="d-flex flex-column flex-sm-row justify-content-between mb-4">
-                        <input id="quantity" class="quantity mr-sm-2 mb-3 mb-sm-0" type="text" value="" name="quantity">
-                        <select class="form-control mx-sm-2 mb-3 mb-sm-0" name="color">
-                            <option value="brown">Brown Color</option>
-                            <option value="gray">Gray Color</option>
-                            <option value="black">Black Color</option>
-                        </select>
-
-                        <select class="form-control ml-sm-2 mb-3 mb-sm-0" name="size">
-                            <option class="form-control" value="small">Small Size</option>
-                            <option value="medium">Medium Size</option>
-                            <option value="large">Large Size</option>
-                        </select>
-                    </div>
+                    @if (Model.Product.DiscountPercent>0)
+                    {
+                        <h4 class="text-primary h3">$@Model.Product.DiscountPrice <s class="text-color ml-2">$@Model.Product.Price</s></h4>
+                        <h6 class="mb-4">You save: <span class="text-primary">$@(@Model.Product.DiscountPrice - Model.Product.Price) USD (@(Model.Product.DiscountPrice)%)</span></h6>
+                    }
+                    else{
+                        <h4 style="color:black">$@Model.Product.Price</h4>
+                    }
+                    
+                        <h2 class="mb-3">Description</h2>
+                        <p class="text-gray mb-4">
+                          @Model.Product.Description
+                        </p>
+                    <h4 class="text-primary">View: <span class="text-color">@Model.Product.Views</span></h4>
+                        <div class="col-8 d-flex flex-row">
+                    <input id="quantity" class="quantity mr-sm-2 mb-3 mb-sm-0" type="text" value="" name="quantity">
                     <a href="#" class="btn btn-primary mb-4">add to cart</a>
+                        </div>
                     <h4 class="mb-3"><span class="text-primary">Harry up!</span> Sale ends in</h4>
                     <!-- syo-timer -->
                     <div class="syotimer dark">
-                        <div id="sale-timer" data-year="2019" data-month="5" data-day="1" data-hour="1"></div>
+                        <div id="sale-timer" data-year="2025" data-month="5" data-day="1" data-hour="1"></div>
                     </div>
                     <hr>
-                    <div class="payment-option border border-primary mt-5 mb-4">
-                        <h5 class="bg-white">Guaranted Safe Checkout</h5>
-                        <img class="img-fluid w-100 p-3" src="~/images/payment-card/all-card.png" alt="payment-card">
-                    </div>
-                    <h5 class="mb-3">4 Great Reason to Buy From Us</h5>
-                    <div class="row">
-                        <!-- service item -->
-                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
-                            <div class="d-flex">
-                                <i class="ti-truck icon-md mr-3"></i>
-                                <div class="align-items-center">
-                                    <h6>Free Shipping</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- service item -->
-                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
-                            <div class="d-flex">
-                                <i class="ti-shield icon-md mr-3"></i>
-                                <div class="align-items-center">
-                                    <h6>Secure Payment</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- service item -->
-                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
-                            <div class="d-flex">
-                                <i class="ti-money icon-md mr-3"></i>
-                                <div class="align-items-center">
-                                    <h6>Lowest Price</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- service item -->
-                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
-                            <div class="d-flex">
-                                <i class="ti-reload icon-md mr-3"></i>
-                                <div class="align-items-center">
-                                    <h6>30 Days Return</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    
+
                 </div>
                 <div class="col-lg-12">
-                    <h3 class="mb-3">Product Description</h3>
-                    <p class="text-gray mb-4">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-                        esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                        qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit
-                        voluptatem accusantium doloremque laudantium.
-                    </p>
-                    <h4>Product Features</h4>
-                    <ul class="features-list">
-                        <li>Mapped with 3M™ Thinsulate™ Insulation [40G Body / Sleeves / Hood]</li>
-                        <li>Embossed Taffeta Lining</li>
-                        <li>DRYRIDE Durashell™ 2-Layer Oxford Fabric [10,000MM, 5,000G]</li>
-                    </ul>
+                    <h3 class="mb-3">Product Specifications</h3>
+                    
                 </div>
             </div>
         </div>

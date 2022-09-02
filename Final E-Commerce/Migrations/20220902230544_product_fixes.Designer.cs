@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220902230544_product_fixes")]
+    partial class product_fixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -576,7 +578,7 @@ namespace Final_E_Commerce.Migrations
                             Count = 50,
                             Description = "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.",
                             DiscountPercent = 5.0,
-                            DiscountPrice = 1900.0,
+                            DiscountPrice = 100.0,
                             Display = "Dynamic AMOLED 2X, 120Hz, HDR10+, 1750 nits (peak)",
                             FrontCamera = "40 MP, f/2.2, 26mm (wide), 1/2.82\", 0.7µm, PDAF",
                             GPU = "Xclipse 920 - Europe",
@@ -605,7 +607,7 @@ namespace Final_E_Commerce.Migrations
                             Count = 50,
                             Description = "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.",
                             DiscountPercent = 25.0,
-                            DiscountPrice = 1125.0,
+                            DiscountPrice = 375.0,
                             Display = "Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision, 1000 nits (HBM), 1200 nits (peak)",
                             FrontCamera = "12 MP, f/2.2, 23mm (wide), 1/3.6\", 4K@24/25/30/60fps, 1080p@30/60/120fps, gyro-EIS\r\n",
                             GPU = "Apple GPU",
