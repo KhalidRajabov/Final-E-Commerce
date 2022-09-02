@@ -34,7 +34,7 @@
                 C 
               </span>
               <!-- Slide image -->
-              <img class="img-fluid d-unset" src="images/hero-area/converse.png" alt="converse" data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
+              <img class="img-fluid d-unset" src="~/images/hero-area/converse.png" alt="converse" data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
             </div>
           </div>
           <!-- end slide image  -->
@@ -58,7 +58,7 @@
               <span data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1.2" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
                 B
               </span>
-              <img class="img-fluid d-unset" src="images/hero-area/bag.png" alt="converse" data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
+              <img class="img-fluid d-unset" src="~/images/hero-area/bag.png" alt="converse" data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
             </div>
           </div>
         </div>
@@ -78,17 +78,25 @@
         <h2 class="section-title">Top Categories</h2>
       </div>
       <!-- categories item -->
-      <div class="col-lg-4 col-md-6 mb-50">
-        <div class="card p-0">
+      <div class="col-lg-4 col-md-6 mb-50" >
+                <div class="card p-0">
           <div class="border-bottom text-center hover-zoom-img">
-            <a href="shop.html"><img src="images/categories/@Model.Category.ImageUrl" class="rounded-top img-fluid w-100" alt="product-img"></a>
+            <a href="shop.html"><img src="~/images/categories/@Model.Category.ImageUrl" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
           <ul class="d-flex list-unstyled pl-0 categories-list">
-            @foreach (var item in Model.Images)
+            @foreach (var item in Model.Products)
             {
-                <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/@item.ToString()" class="img-fluid w-100" alt="product-img"></a>
-            </li>
+                foreach (var images in item.ProductImages)
+                            {
+                                if (images.IsMain)
+                                {
+                                <li class="m-0 hover-zoom-img">
+                                  <a asp-controller="home" asp-action="detail" asp-route-id="@item.Id">
+                                      <img src="~/images/products/@images.ImageUrl" class="img-fluid w-100" alt="product-img">
+                                      </a>
+                                </li>
+                                }
+                            }
             }
           </ul>
           <div class="px-4 py-3 border-top">
@@ -101,17 +109,17 @@
       <div class="col-lg-4 col-md-6 mb-50">
         <div class="card p-0">
           <div class="border-bottom text-center hover-zoom-img">
-            <a href="shop.html"><img src="images/categories/product-big-2.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
+            <a href="shop.html"><img src="~/images/categories/product-big-2.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
           <ul class="d-flex list-unstyled pl-0 categories-list">
             <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-4.jpg" class="img-fluid w-100" alt="product-img"></a>
+              <a href="shop.html"><img src="~/images/categories/product-sm-4.jpg" class="img-fluid w-100" alt="product-img"></a>
             </li>
             <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-5.jpg" class="img-fluid w-100" alt="product-img"></a>
+              <a href="shop.html"><img src="~/images/categories/product-sm-5.jpg" class="img-fluid w-100" alt="product-img"></a>
             </li>
             <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-6.jpg" class="img-fluid w-100" alt="product-img"></a>
+              <a href="shop.html"><img src="~/images/categories/product-sm-6.jpg" class="img-fluid w-100" alt="product-img"></a>
             </li>
           </ul>
           <div class="px-4 py-3 border-top">
@@ -124,17 +132,17 @@
       <div class="col-lg-4 col-md-6 mb-50">
         <div class="card p-0">
           <div class="border-bottom text-center hover-zoom-img">
-            <a href="shop.html"><img src="images/categories/product-big-3.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
+            <a href="shop.html"><img src="~/images/categories/product-big-3.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
           <ul class="d-flex list-unstyled pl-0 categories-list">
             <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-7.jpg" class="img-fluid w-100" alt="product-img"></a>
+              <a href="shop.html"><img src="~/images/categories/product-sm-7.jpg" class="img-fluid w-100" alt="product-img"></a>
             </li>
             <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-8.jpg" class="img-fluid w-100" alt="product-img"></a>
+              <a href="shop.html"><img src="~/images/categories/product-sm-8.jpg" class="img-fluid w-100" alt="product-img"></a>
             </li>
             <li class="m-0 hover-zoom-img">
-              <a href="shop.html"><img src="images/categories/product-sm-9.jpg" class="img-fluid w-100" alt="product-img"></a>
+              <a href="shop.html"><img src="~/images/categories/product-sm-9.jpg" class="img-fluid w-100" alt="product-img"></a>
             </li>
           </ul>
           <div class="px-4 py-3 border-top">
@@ -163,7 +171,7 @@
 <div id="quickView" class="quickview">
   <div class="row w-100">
     <div class="col-lg-6 col-md-6 mb-5 mb-md-0 pl-5 pt-4 pt-lg-0 pl-lg-0">
-      <img src="images/feature/product.png" alt="product-img" class="img-fluid">
+      <img src="~/images/feature/product.png" alt="product-img" class="img-fluid">
     </div>
     <div class="col-lg-5 col-md-6 text-center text-md-left align-self-center pl-5">
       <h3 class="mb-lg-2 mb-2">Woven Crop Cami</h3>
@@ -206,8 +214,8 @@
                 <div class="product-thumb">
                   <div class="overflow-hidden position-relative">
                     <a href="product-single.html">
-                      <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-1.jpg" alt="product-img">
-                      <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-4.jpg" alt="product-img">
+                      <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-1.jpg" alt="product-img">
+                      <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-4.jpg" alt="product-img">
                     </a>
                     <div class="btn-cart">
                         <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -235,8 +243,8 @@
                   <div class="product-thumb">
                     <div class="overflow-hidden position-relative">
                       <a href="product-single.html">
-                        <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-2.jpg" alt="product-img">
-                        <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-5.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-2.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-5.jpg" alt="product-img">
                       </a>
                       <div class="btn-cart">
                           <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -268,8 +276,8 @@
                   <div class="product-thumb">
                     <div class="overflow-hidden position-relative">
                       <a href="product-single.html">
-                        <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-3.jpg" alt="product-img">
-                        <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-6.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-3.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-6.jpg" alt="product-img">
                       </a>
                       <div class="btn-cart">
                           <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -298,8 +306,8 @@
                   <div class="product-thumb">
                     <div class="overflow-hidden position-relative">
                       <a href="product-single.html">
-                        <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-4.jpg" alt="product-img">
-                        <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-2.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-4.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-2.jpg" alt="product-img">
                       </a>
                       <div class="btn-cart">
                           <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -331,8 +339,8 @@
                   <div class="product-thumb">
                     <div class="overflow-hidden position-relative">
                       <a href="product-single.html">
-                        <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-5.jpg" alt="product-img">
-                        <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-3.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-5.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-3.jpg" alt="product-img">
                       </a>
                       <div class="btn-cart">
                           <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -361,8 +369,8 @@
                   <div class="product-thumb">
                     <div class="overflow-hidden position-relative">
                       <a href="product-single.html">
-                        <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-6.jpg" alt="product-img">
-                        <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-1.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-6.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-1.jpg" alt="product-img">
                       </a>
                       <div class="btn-cart">
                           <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -390,8 +398,8 @@
                   <div class="product-thumb">
                     <div class="overflow-hidden position-relative">
                       <a href="product-single.html">
-                        <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-7.jpg" alt="product-img">
-                        <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-3.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-7.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-3.jpg" alt="product-img">
                       </a>
                       <div class="btn-cart">
                           <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -420,8 +428,8 @@
                   <div class="product-thumb">
                     <div class="overflow-hidden position-relative">
                       <a href="product-single.html">
-                        <img class="img-fluid w-100 mb-3 img-first" src="images/collection/product-8.jpg" alt="product-img">
-                        <img class="img-fluid w-100 mb-3 img-second" src="images/collection/product-5.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-8.jpg" alt="product-img">
+                        <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-5.jpg" alt="product-img">
                       </a>
                       <div class="btn-cart">
                           <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
@@ -464,7 +472,7 @@
         <a href="shop.html" class="btn btn-primary">shop now</a>
       </div>
       <div class="col-md-6 text-center text-md-left align-self-center">
-        <img src="images/deal/product.png" alt="product-img" class="img-fluid up-down">
+        <img src="~/images/deal/product.png" alt="product-img" class="img-fluid up-down">
       </div>
     </div>
   </div>
@@ -488,7 +496,7 @@
       <!-- remove this section after link with your instagram account -->
       <div class="row">
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="images/instagram/item-1.png" alt="instagram-image">
+          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-1.png" alt="instagram-image">
             <ul class="list-inline text-center">
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>40</a></li>
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>24</a></li>
@@ -496,7 +504,7 @@
           </div>
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="images/instagram/item-2.png" alt="instagram-image">
+          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-2.png" alt="instagram-image">
             <ul class="list-inline text-center">
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>65</a></li>
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>11</a></li>
@@ -504,7 +512,7 @@
           </div>
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="images/instagram/item-3.png" alt="instagram-image">
+          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-3.png" alt="instagram-image">
             <ul class="list-inline text-center">
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>33</a></li>
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>78</a></li>
@@ -512,7 +520,7 @@
           </div>
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="images/instagram/item-4.png" alt="instagram-image">
+          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-4.png" alt="instagram-image">
             <ul class="list-inline text-center">
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>32</a></li>
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>77</a></li>
@@ -520,7 +528,7 @@
           </div>
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="images/instagram/item-5.png" alt="instagram-image">
+          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-5.png" alt="instagram-image">
             <ul class="list-inline text-center">
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>80</a></li>
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>38</a></li>
@@ -528,7 +536,7 @@
           </div>
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="images/instagram/item-6.png" alt="instagram-image">
+          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-6.png" alt="instagram-image">
             <ul class="list-inline text-center">
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>22</a></li>
               <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>57</a></li>

@@ -195,6 +195,7 @@ namespace Final_E_Commerce.DAL
                     BrandId=1,
                     CategoryId = 5,
                     Price = 2000,
+                    DiscountPercent= 5,
                     Name = "Samsung Galaxy S22 Ultra",
                     ReleaseDate = new DateTime(2021, 8, 8),
                     Description = "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.",
@@ -216,6 +217,7 @@ namespace Final_E_Commerce.DAL
                     BrandId=2,
                     CategoryId = 5,
                     Price = 1500,
+                    DiscountPercent = 25,
                     Name = "Apple iPhone 14 Pro Max",
                     ReleaseDate = new DateTime(2022, 9, 1),
                     Description = "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.",
@@ -244,30 +246,70 @@ namespace Final_E_Commerce.DAL
                 {
                     Id = 2,
                     ProductId = 1,
-                    ImageUrl = "poco-f1.jpg",
-                }, new ProductImage
+                    ImageUrl = "poco-f1-2.jpg",
+                },
+                new ProductImage
                 {
                     Id = 3,
                     ProductId = 2,
                     ImageUrl = "s22.jpg",
                     IsMain = true,
-                }, new ProductImage
+                }, 
+                new ProductImage
                 {
                     Id = 4,
                     ProductId = 2,
                     ImageUrl = "s22-2.jpg",
-                }, new ProductImage
+                }, 
+                new ProductImage
                 {
                     Id = 5,
                     ProductId = 3,
                     ImageUrl = "14max.jpg",
                     IsMain = true,
-                }, new ProductImage
+                }, 
+                new ProductImage
                 {
                     Id = 6,
                     ProductId = 3,
                     ImageUrl = "14max-2.jpg",
-                }
+                }, 
+                new ProductImage
+                {
+                    Id = 7,
+                    ProductId = 1,
+                    ImageUrl = "Xiaomi-Pocophone-F1-Steel-Blue.jpg",
+                }, 
+                /*new ProductImage
+                {
+                    Id = 8,
+                    ProductId = 1,
+                    ImageUrl = "Xiaomi-Pocophone-F1-launch-1.jpg",
+                },*/
+                new ProductImage
+                {
+                    Id = 9,
+                    ProductId = 2,
+                    ImageUrl = "Samsung-Galaxy-S22-family-in-blue-spread-like-cards-angled.jpg",
+                }, 
+                /*new ProductImage
+                {
+                    Id = 10,
+                    ProductId = 2,
+                    ImageUrl = "Samsung_GalaxyS22Ultra_LEAD.jpg",
+                }, */
+                new ProductImage
+                {
+                    Id = 11,
+                    ProductId = 3,
+                    ImageUrl = "gsmarena_000.jpg",
+                } 
+                /*new ProductImage
+                {
+                    Id = 12,
+                    ProductId = 3,
+                    ImageUrl = "32ff69fafded8e6b986bc76f410e0ce5.jpg",
+                }*/
                 );
         }
         

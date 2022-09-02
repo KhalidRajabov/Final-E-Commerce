@@ -7,9 +7,8 @@ namespace Final_E_Commerce.ViewModels
 {
     public class HomeVM
     {
-        public BioReturnDTO? Bio { get; set; }
-        public CategoryReturnDto? Category { get; set; }
-        public ProductListDto? ProductListDto { get; set; }
-        public List<string>? Images { get; set; }
+        public Bio? Bio { get; set; }
+        public Category? Category { get; set; }
+        public List<Product>? Products { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220902161522_discount_price_function3")]
+    partial class discount_price_function3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -697,6 +699,13 @@ namespace Final_E_Commerce.Migrations
                         },
                         new
                         {
+                            Id = 8,
+                            ImageUrl = "Xiaomi-Pocophone-F1-launch-1.jpg",
+                            IsMain = false,
+                            ProductId = 1
+                        },
+                        new
+                        {
                             Id = 9,
                             ImageUrl = "Samsung-Galaxy-S22-family-in-blue-spread-like-cards-angled.jpg",
                             IsMain = false,
@@ -704,8 +713,22 @@ namespace Final_E_Commerce.Migrations
                         },
                         new
                         {
+                            Id = 10,
+                            ImageUrl = "Samsung_GalaxyS22Ultra_LEAD.jpg",
+                            IsMain = false,
+                            ProductId = 2
+                        },
+                        new
+                        {
                             Id = 11,
                             ImageUrl = "gsmarena_000.jpg",
+                            IsMain = false,
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ImageUrl = "32ff69fafded8e6b986bc76f410e0ce5.jpg",
                             IsMain = false,
                             ProductId = 3
                         });
