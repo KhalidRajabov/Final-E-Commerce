@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220903225627_wishlist_addition2")]
+    partial class wishlist_addition2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -873,7 +875,8 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
 
                     b.ToTable("Wishlists");
                 });
@@ -1130,8 +1133,8 @@ namespace Final_E_Commerce.Migrations
             modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.AppUser", null)
-                        .WithMany("Wishlist")
-                        .HasForeignKey("AppUserId")
+                        .WithOne("Wishlist")
+                        .HasForeignKey("Final_E_Commerce.Entities.Wishlist", "AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

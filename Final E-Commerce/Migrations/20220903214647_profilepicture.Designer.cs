@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220903214647_profilepicture")]
+    partial class profilepicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,6 +88,9 @@ namespace Final_E_Commerce.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("WishlistId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -95,6 +100,8 @@ namespace Final_E_Commerce.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("WishlistId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -815,47 +822,6 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.UserDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Company")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique()
-                        .HasFilter("[AppUserId] IS NOT NULL");
-
-                    b.ToTable("UserDetails");
-                });
-
             modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
                 {
                     b.Property<int>("Id")
@@ -864,16 +830,13 @@ namespace Final_E_Commerce.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Wishlists");
                 });
@@ -1026,6 +989,15 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("ProductWishlist");
                 });
 
+            modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.Wishlist", "Wishlist")
+                        .WithMany()
+                        .HasForeignKey("WishlistId");
+
+                    b.Navigation("Wishlist");
+                });
+
             modelBuilder.Entity("Final_E_Commerce.Entities.Category", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.Category", "Parent")
@@ -1118,24 +1090,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Tags");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.UserDetails", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
-                        .WithOne("UserDetails")
-                        .HasForeignKey("Final_E_Commerce.Entities.UserDetails", "AppUserId");
-
-                    b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.AppUser", null)
-                        .WithMany("Wishlist")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1207,10 +1161,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Products");
-
-                    b.Navigation("UserDetails");
-
-                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>

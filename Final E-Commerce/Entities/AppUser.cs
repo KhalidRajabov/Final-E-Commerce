@@ -7,9 +7,13 @@ namespace Final_E_Commerce.Entities
         public string? Firstname { get; set; }
         public string? Lastname { get; set; }
         public string? Fullname { get; set; }
+        public string? ProfilePicture { get; set; }
+       
+        
         public List<Product>? Products { get; set; }
         public List<Order>? Orders { get; set; }
-        public Wishlist? Wishlist { get; set; }
+        public List<Wishlist>? Wishlist { get; set; }
+        public UserDetails? UserDetails { get; set; }
         //public List<BasketItem> BasketItems { get; set; }
     }
 }

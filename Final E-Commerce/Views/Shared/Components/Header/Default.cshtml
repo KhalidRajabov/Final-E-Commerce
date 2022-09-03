@@ -21,7 +21,10 @@
             </div>
             <div class="col-lg-6 text-center text-lg-right">
                 <ul class="list-inline">
-                    <li class="list-inline-item"><img src="~/images/flag.jpg" alt="flag"></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="list-inline-item"><a asp-action="wishlist" asp-controller="user">Wishlist</a> </li>
+                    }
                     <li class="list-inline-item">
                         <div class="dropdown">
                                 @if (!User.Identity.IsAuthenticated)
@@ -41,7 +44,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                                    <a class="dropdown-item text-dark" href="#">Profile</a>
+                                    <a class="dropdown-item text-dark" asp-action="index" asp-controller="user">Profile</a>
                                     <a class="dropdown-item text-dark" href="#">Checkout</a>
                                     <a class="dropdown-item text-dark" asp-action="logout" asp-controller="account">Logout</a>
                                     </div>
