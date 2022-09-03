@@ -91,7 +91,7 @@
                     @if (Model.Product.DiscountPercent>0)
                     {
                         <h4 class="text-primary h3">$@Model.Product.DiscountPrice <s class="text-color ml-2">$@Model.Product.Price</s></h4>
-                        <h6 class="mb-4">You save: <span class="text-primary">$@(@Model.Product.DiscountPrice - Model.Product.Price) USD (@(Model.Product.DiscountPrice)%)</span></h6>
+                        <h6 class="mb-4">You save: <span class="text-primary">$@(Model.Product.Price-@Model.Product.DiscountPrice) USD (@(Model.Product.DiscountPrice))</span></h6>
                     }
                     else{
                         <h4 style="color:black">$@Model.Product.Price</h4>
@@ -117,7 +117,103 @@
 
                 </div>
                 <div class="col-lg-12">
-                    <h3 class="mb-3">Product Specifications</h3>
+                    <h3 class="mb-3">Specifications</h3>
+
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Released:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.ReleaseDate
+                            </div>
+                        </div>
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                OS:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.OperationSystem
+                            </div>
+                        </div>
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                GPU:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.GPU
+                            </div>
+                        </div>
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Chipset:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.Chipset
+                            </div>
+                        </div>
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Memory:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.Memory
+                            </div>
+                        </div>
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Body:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.Body
+                            </div>
+                        </div>
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Display:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.Display
+                            </div>
+                    </div>
+                    @if (Model.Product.FrontCamera!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                        <b style="max-height:400px" class="col-2">
+                            Selfie:
+                        </b>
+                        <div style="max-height:400px" class="col-9 flex-wrap">
+                            @Model.Product.FrontCamera
+                        </div>
+                    </div>
+                    }
+                    
+                    @if (Model.Product.RearCamera!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Camera:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-wrap">
+                                @Model.Product.RearCamera
+                            </div>
+                        </div>
+                    }
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                        <b style="max-height:400px" class="col-2">
+                            Battery:
+                        </b>
+                        <div style="max-height:400px" class="col-9 flex-nowrap">
+                            @Model.Product.Battery
+                        </div>
+                    </div><div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Weight:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                                @Model.Product.Weight
+                            </div>
+                    </div>
+                    
                     
                 </div>
             </div>

@@ -9,12 +9,12 @@ namespace Final_E_Commerce.Entities
         
         public string? Description { get; set; }
         public Nullable<DateTime> ReleaseDate { get; set; }
-        public string? GPU { get; set; }
-        public string? Body { get; set; }
-        public string? Chipset { get; set; }
-        public string? Display { get; set; }
         public string? OperationSystem { get; set; }
+        public string? GPU { get; set; }
+        public string? Chipset { get; set; }
         public string? Memory { get; set; }
+        public string? Body { get; set; }
+        public string? Display { get; set; }
         public string? FrontCamera { get; set; }
         public string? RearCamera { get; set; }
         public string? Battery { get; set; }
