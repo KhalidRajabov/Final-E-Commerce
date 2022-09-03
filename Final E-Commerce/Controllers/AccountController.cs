@@ -1,4 +1,5 @@
-﻿using Final_E_Commerce.Entities;
+﻿using Final_E_Commerce.DAL;
+using Final_E_Commerce.Entities;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace Final_E_Commerce.Controllers
 {
     public class AccountController : Controller
     {
-
+        private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _usermanager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
@@ -21,19 +22,21 @@ namespace Final_E_Commerce.Controllers
             (UserManager<AppUser> usermanager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<AppUser> signInManager,
-            IConfiguration config
-            )
+            IConfiguration config,
+            AppDbContext context)
         {
             _usermanager = usermanager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _config = config;
+            _context = context;
         }
 
         public IActionResult Register()
         {
             if (User.Identity.IsAuthenticated) return RedirectToAction("index", "home");
-            return View();
+            RegisterVM registerVM = new RegisterVM();
+            return View(registerVM);
         }
 
 
@@ -51,7 +54,6 @@ namespace Final_E_Commerce.Controllers
                 Fullname = $"{registerVM.Firstname} {registerVM.Lastname}",
                 UserName = registerVM.Username,
                 Email = registerVM.Email
-
             };
             IdentityResult result = await _usermanager.CreateAsync(appUser, registerVM.Password);
             if (!result.Succeeded)
@@ -75,13 +77,15 @@ namespace Final_E_Commerce.Controllers
             }
 
 
+            
             return RedirectToAction("login", "account");
         }
 
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated) return RedirectToAction("index", "home");
-            return View();
+            LoginVM loginVM = new LoginVM();
+            return View(loginVM);
         }
 
 
@@ -90,7 +94,6 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> Login(LoginVM loginvm, string ReturnUrl)
         {
             if (User.Identity.IsAuthenticated) return RedirectToAction("index", "home");
-            if (!ModelState.IsValid) return View();
             AppUser appUser = await _usermanager.FindByEmailAsync(loginvm.Email);
             if (appUser == null)
             {

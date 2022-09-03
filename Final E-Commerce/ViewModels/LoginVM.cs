@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Final_E_Commerce.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Final_E_Commerce.ViewModels
 {

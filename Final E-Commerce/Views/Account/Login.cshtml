@@ -10,7 +10,7 @@
             <div class="col-md-6 mx-auto">
                 <div class="block text-center">
                     <a class="logo" href="index.html">
-                        <img src="images/logo.png" alt="logo">
+                        <img width="150" src="~/images/logo.png" alt="logo">
                     </a>
                     <h2 class="text-center">Welcome Back</h2>
                     <form class="text-left clearfix" method="post">
@@ -26,6 +26,11 @@
                             <input asp-for="Password" class="form-control" placeholder="Password">
                             <span asp-validation-for="Password"></span>
                         </div>
+                        <div class="custom-checkbox mt-30">
+                            <input asp-for="RememberMe" id="account">
+                            <label for="account"></label>
+                            <p>Remember me</p>
+                        </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Login</button>
                         </div>
@@ -37,3 +42,7 @@
         </div>
     </div>
 </section>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

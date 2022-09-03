@@ -29,34 +29,6 @@ namespace Final_E_Commerce.DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            #region Roles (updates on every migration, use only for once)
-            /*builder.Entity<IdentityRole>().HasData(
-               new IdentityRole
-               {
-                   Id = "39792324-9bcf-41cc-aff7-9421ab090dbf",
-                   Name = "Member"
-               },
-               new IdentityRole
-               {
-                   Id = "d78fa29e-8b9b-431d-90e1-312c634436da",
-                   Name = "Editor"
-               },
-               new IdentityRole
-               {
-                   Id = "64830485-9bcf-41fr-aff7-3333ab090dbf",
-                   Name = "Moderator"
-               },
-               new IdentityRole
-               {
-                   Id = "7985400a-d644-4954-a0c5-f579a46dd5c6",
-                   Name = "Admin"
-               },
-               new IdentityRole
-               {
-                   Id = "d76fa29e-8b9b-431d-90e1-641c634654da",
-                   Name = "SuperAdmin"
-               });*/
-            #endregion
             builder.Entity<Category>().HasData(
                 new Category
                 {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Final_E_Commerce.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Final_E_Commerce.ViewModels
 {
@@ -24,5 +25,6 @@ namespace Final_E_Commerce.ViewModels
 
         [Required, StringLength(16), DataType(DataType.Password), Compare("Password", ErrorMessage = "Confirmation password is wrong")]
         public string? ConfirmPassword { get; set; }
+
     }
 }

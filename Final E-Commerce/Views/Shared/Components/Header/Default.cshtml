@@ -22,7 +22,33 @@
             <div class="col-lg-6 text-center text-lg-right">
                 <ul class="list-inline">
                     <li class="list-inline-item"><img src="~/images/flag.jpg" alt="flag"></li>
-                    <li class="list-inline-item"><a href="~/login.html">My Accounts</a></li>
+                    <li class="list-inline-item">
+                        <div class="dropdown">
+                                @if (!User.Identity.IsAuthenticated)
+                                {
+                            <button class="btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Account
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                    <a class="dropdown-item text-dark" asp-action="login" asp-controller="account">Login</a>
+                                    <a class="dropdown-item text-dark" asp-action="register" asp-controller="account">Register</a>
+                                    </div>
+                                }
+                                else{
+                                    <button class="btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @ViewBag.User
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                    <a class="dropdown-item text-dark" href="#">Profile</a>
+                                    <a class="dropdown-item text-dark" href="#">Checkout</a>
+                                    <a class="dropdown-item text-dark" asp-action="logout" asp-controller="account">Logout</a>
+                                    </div>
+                                }
+                            
+                        </div>
+                    </li>
                     <li class="list-inline-item">
                         <form action="#">
                             <select class="country" name="country">
@@ -31,10 +57,7 @@
                                 <option value="BAN">BAN</option>
                             </select>
                         </form>
-                        <!-- <li class="list-inline-item">
-                          <a class="active" href="~/#">EN</a>
-                          <a href="~/#">FR</a>
-                        </li> -->
+                        </li>
                 </ul>
             </div>
         </div>
@@ -44,7 +67,7 @@
 
 <!-- navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white w-100" id="navbar">
-    <a class="navbar-brand order-2 order-lg-1" href="~/index.html"><img class="img-fluid" src="~/images/logo.png" alt="logo"></a>
+    <a class="navbar-brand order-2 order-lg-1" href="~/index.html"><img width="150" class="img-fluid" src="~/images/@Model.Bio.Logo" alt="logo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

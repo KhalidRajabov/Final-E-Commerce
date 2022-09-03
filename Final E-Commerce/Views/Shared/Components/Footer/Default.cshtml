@@ -20,11 +20,11 @@
                 <div class="col-md-3 col-sm-6 mb-5 mb-md-0 text-center text-sm-left">
                     <h4 class="mb-4">Category</h4>
                     <ul class="pl-0 list-unstyled">
-                        <li class="mb-2"><a class="text-color" href="~/shop.html">Men</a></li>
-                        <li class="mb-2"><a class="text-color" href="~/shop.html">Women</a></li>
-                        <li class="mb-2"><a class="text-color" href="~/shop.html">Kids</a></li>
-                        <li class="mb-2"><a class="text-color" href="~/shop.html">Accessories</a></li>
-                        <li class="mb-2"><a class="text-color" href="~/shop.html">Shoe</a></li>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <li class="mb-2"><a class="text-color" href="~/shop.html">@category.Name</a></li>
+                        }
+                        
                     </ul>
                 </div>
                 <div class="col-md-3 col-sm-6 mb-5 mb-md-0 text-center text-sm-left">
@@ -57,7 +57,7 @@
                     <p class="text-white mb-0">2022 by <span class="text-danger">@Model.Bio.Author</span> </p>
                 </div>
                 <div class="col-md-2 text-center text-md-left mb-4 mb-md-0">
-                    <img src="~/images/logo-alt.png" alt="logo">
+                    <img width="150" src="~/images/logo-alt.png" alt="logo">
                 </div>
                 <div class="col-md-5 text-center text-md-right mb-4 mb-md-0">
                     <ul class="list-inline">
