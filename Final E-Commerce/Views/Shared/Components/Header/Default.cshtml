@@ -30,7 +30,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                                    <a class="dropdown-item text-dark" asp-action="login" asp-controller="account">Login</a>
+                                    <a class="dropdown-item text-dark" asp-action="login" asp-controller="account" asp-route-ReturnUrl="@Context.Request.Path">Login</a>
                                     <a class="dropdown-item text-dark" asp-action="register" asp-controller="account">Register</a>
                                     </div>
                                 }
@@ -42,7 +42,7 @@
 
                                     <a class="dropdown-item text-dark" asp-action="index" asp-controller="user">Profile</a>
                                     <a class="dropdown-item text-dark" href="#">Checkout</a>
-                                    <a class="dropdown-item text-dark" asp-action="logout" asp-controller="account">Logout</a>
+                                    <a class="dropdown-item text-dark" asp-action="logout" asp-controller="account" asp-route-ReturnUrl="@Context.Request.Path">Logout</a>
                                     </div>
                                 }
                             
@@ -114,57 +114,6 @@
                 </div>
             </li>
             
-            <li class="nav-item dropdown mega-dropdown">
-                <a class="nav-link dropdown-toggle" href="~/#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                   aria-expanded="false">
-                    Mega Menu
-                </a>
-                <div class="dropdown-menu mega-menu">
-                    <div class="mx-3 mega-menu-item">
-                        <h6>Men</h6>
-                        <ul class="pl-0">
-                            <li><a href="~/shop.html">Jackets & Coats</a></li>
-                            <li><a href="~/shop.html">Jeans</a></li>
-                            <li><a href="~/shop.html">Top & T-Shirts</a></li>
-                            <li><a href="~/shop.html">Dresses</a></li>
-                            <li><a href="~/shop.html">Men Shirts</a></li>
-                        </ul>
-                    </div>
-                    <div class="mx-3 mega-menu-item">
-                        <h6>Women</h6>
-                        <ul class="pl-0">
-                            <li><a href="~/shop.html">Blouses & Shirts</a></li>
-                            <li><a href="~/shop.html">Dresses</a></li>
-                            <li><a href="~/shop.html">Top & T-Shirts</a></li>
-                            <li><a href="~/shop.html">Jeans & Trousers</a></li>
-                            <li><a href="~/shop.html">Jackets & Coats</a></li>
-                        </ul>
-                    </div>
-                    <div class="mx-3 mega-menu-item">
-                        <h6>Shoes & Bags</h6>
-                        <ul class="pl-0">
-                            <li><a href="~/shop.html">Backpacks</a></li>
-                            <li><a href="~/shop.html">Bum Bags</a></li>
-                            <li><a href="~/shop.html">Accross Bags</a></li>
-                            <li><a href="~/shop.html">Shoes</a></li>
-                            <li><a href="~/shop.html">Heeled Shoes</a></li>
-                        </ul>
-                    </div>
-                    <div class="mx-3 mega-menu-item">
-                        <h6>Accessories</h6>
-                        <ul class="pl-0">
-                            <li><a href="~/shop.html">Sunglasses</a></li>
-                            <li><a href="~/shop.html">Watches</a></li>
-                            <li><a href="~/shop.html">Gloves</a></li>
-                            <li><a href="~/shop.html">Capes & Hats</a></li>
-                            <li><a href="~/shop.html">Belts</a></li>
-                        </ul>
-                    </div>
-                    <div class="mx-3 mega-megu-image">
-                        <img class="img-fluid h-100" src="~/images/mega-megu.jpg" alt="feature-img">
-                    </div>
-                </div>
-            </li>
             @if (User.Identity.IsAuthenticated)
             {
 
@@ -175,6 +124,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="~/contact.html">Contact Us</a>
             </li>
+            @if (ViewBag.UserRole=="admin")
+            {    
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="index" asp-controller="dashboard" asp-area="adminpanel">Admin</a>
+                </li>
+            }
         </ul>
     </div>
     <div class="order-3 navbar-right-elements">

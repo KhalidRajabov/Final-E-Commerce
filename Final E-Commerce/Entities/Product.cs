@@ -5,7 +5,7 @@ namespace Final_E_Commerce.Entities
 {
     public class Product:BaseEntity
     {
-        public double Price { get; set; }
+        public double? Price { get; set; }
         
         public string? Description { get; set; }
         public Nullable<DateTime> ReleaseDate { get; set; }
@@ -23,7 +23,7 @@ namespace Final_E_Commerce.Entities
         public Nullable<double> DiscountPercent { get; set; }
         public Nullable<double> DiscountPrice { get; set; }
         
-        public int Count { get; set; }
+        public int? Count { get; set; }
         public int Views { get; set; }
         public bool IsFeatured { get; set; }
         public bool Bestseller { get; set; }

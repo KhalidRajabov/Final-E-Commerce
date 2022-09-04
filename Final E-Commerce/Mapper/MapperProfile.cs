@@ -6,7 +6,7 @@ using WebApi.DTO.Product_DTOs;
 
 namespace Final_E_Commerce.Mapper
 {
-    public class MapperProfile:Profile
+    public class MapperProfile: AutoMapper.Profile
     {
         public MapperProfile()
         {

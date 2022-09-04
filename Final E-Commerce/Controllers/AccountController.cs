@@ -53,7 +53,8 @@ namespace Final_E_Commerce.Controllers
                 Lastname = registerVM.Lastname,
                 Fullname = $"{registerVM.Firstname} {registerVM.Lastname}",
                 UserName = registerVM.Username,
-                Email = registerVM.Email
+                Email = registerVM.Email,
+                ProfilePicture = "default.jpg"
             };
             IdentityResult result = await _usermanager.CreateAsync(appUser, registerVM.Password);
             if (!result.Succeeded)

@@ -7,7 +7,7 @@ namespace Final_E_Commerce.Entities
         public int Id { get; set; }
         public DateTime OrderedAt { get; set; }
 
-        public double Price { get; set; }
+        public double? Price { get; set; }
      
         public string? Address { get; set; }
      

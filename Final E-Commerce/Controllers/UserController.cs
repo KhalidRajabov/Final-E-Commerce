@@ -10,21 +10,22 @@ namespace Final_E_Commerce.Controllers
     public class UserController:Controller
     {
         private readonly AppDbContext _context;
-        private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _usermanager;
 
         public UserController(AppDbContext context,
-        SignInManager<AppUser> signInManager,
         UserManager<AppUser> userManager)
         {
             _context = context;
-            _signInManager = signInManager;
             _usermanager = userManager;
         }
         public async Task<IActionResult> Index()
         {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserVM userVM = new UserVM();
-            userVM.User = await _usermanager.FindByNameAsync(User.Identity.Name);
+            
+            userVM.User = user;
+            userVM.UserProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            userVM.UserDetails = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             return View(userVM);
         }
         public async Task<IActionResult> Orders()

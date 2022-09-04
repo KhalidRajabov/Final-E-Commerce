@@ -7,7 +7,7 @@ namespace Final_E_Commerce.DAL
 {
     public class AppDbContext:IdentityDbContext<AppUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
+        public AppDbContext(DbContextOptions<AppDbContext>? options):base(options)
         {
         }
                         
@@ -24,6 +24,8 @@ namespace Final_E_Commerce.DAL
         public DbSet<Subscriber>? Subscribers { get; set; }
         public DbSet<Tag>? Tags { get; set; }
         public DbSet<Wishlist>? Wishlists { get; set; }
+        public DbSet<UserProfile>? UserProfiles { get; set; }
+        public DbSet<UserDetails>? UserDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -49,8 +49,8 @@ namespace Final_E_Commerce.ViewComponents
             ViewBag.BasketCount = 0;
             ViewBag.TotalPrice = 0;
             ViewBag.Products = "";
-            int TotalCount = 0;
-            double TotalPrice = 0;
+            int? TotalCount = 0;
+            double? TotalPrice = 0;
             string basket = Request.Cookies[$"basket{username}"];
             if (basket != null)
             {

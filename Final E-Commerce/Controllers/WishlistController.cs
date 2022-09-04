@@ -1,12 +1,14 @@
 ﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Controllers
 {
+    [Authorize]
     public class WishlistController : Controller
     {
         private readonly AppDbContext _context;

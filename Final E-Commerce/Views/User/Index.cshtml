@@ -17,12 +17,92 @@
 				<div class="dashboard-wrapper user-dashboard">
 					<div class="media">
 						<div class="pull-left mr-3">
-							<img class="media-object user-img" src="images/avater.jpg" alt="Image">
+							<img class="media-object user-img" src="images/ProfilePictures/@Model.User.ProfilePicture" alt="Image">
 						</div>
 						<div class="media-body align-self-center">
-							<h2 class="media-heading">Welcome Adam Smith</h2>
-							<p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde, iure, est. Sit mollitia est maxime! Eos cupiditate tempore, tempora omnis. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, nihil. </p>
+							<h2 class="media-heading">Welcome @Model.User.Fullname</h2>
+							<p class="mb-0">@Model.UserProfile.AboutMe</p>
 						</div>
+					</div>
+					<div class="row">
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <b style="max-height:400px" class="col-2">
+                                Birthdate:
+                            </b> 
+                            <div style="max-height:400px" class="col-9 flex-nowrap">
+								@Model.UserProfile.Birthdate.ToString("dddd, dd MMMM yyyy")
+                            </div>
+						</div>
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+							<b style="max-height:400px" class="col-2">
+								Age:
+							</b>
+							<div style="max-height:400px" class="col-9 flex-nowrap">
+								@(Int32.Parse(DateTime.Now.ToString("yyyy"))-Int32.Parse(Model.UserProfile.Birthdate.ToString("yyyy")))
+							</div>
+						</div>
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+							<b style="max-height:400px" class="col-2">
+								Email:
+							</b>
+							<div style="max-height:400px" class="col-9 flex-nowrap">
+								@Model.UserProfile.EmailForPublic
+							</div>
+						</div>
+
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+							<b style="max-height:400px" class="col-2">
+								Hobbies:
+							</b>
+							<div style="max-height:400px" class="col-9 flex-nowrap">
+								@Model.UserProfile.Hobbies
+							</div>
+						</div>
+
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+							<b style="max-height:400px" class="col-2">
+								Favourite songs:
+							</b>
+							<div style="max-height:400px" class="col-9 flex-nowrap">
+								@Model.UserProfile.FavouriteMusics
+							</div>
+						</div>
+
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+							<b style="max-height:400px" class="col-2">
+								Favourite movies:
+							</b>
+							<div style="max-height:400px" class="col-9 flex-nowrap">
+								@Model.UserProfile.FavouriteMovies
+							</div>
+						</div>
+
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+							<b style="max-height:400px" class="col-2">
+								Favourite books:
+							</b>
+							<div style="max-height:400px" class="col-9 flex-nowrap">
+								@Model.UserProfile.FavouriteBooks
+							</div>
+						</div>
+
+
+						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+							<b style="max-height:400px" class="col-2">
+								About me:
+							</b>
+							<div style="max-height:400px" class="col-9 flex-nowrap">
+								@Model.UserProfile.AboutMe
+							</div>
+						</div>
+
 					</div>
 				</div>
 			</div>

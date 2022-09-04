@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-
+ 
 namespace Final_E_Commerce.Entities
 {
     public class AppUser:IdentityUser
@@ -14,6 +14,7 @@ namespace Final_E_Commerce.Entities
         public List<Order>? Orders { get; set; }
         public List<Wishlist>? Wishlist { get; set; }
         public UserDetails? UserDetails { get; set; }
+        public UserProfile? UserProfile { get; set; }
         //public List<BasketItem> BasketItems { get; set; }
     }
 }
