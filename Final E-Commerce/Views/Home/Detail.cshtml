@@ -91,7 +91,7 @@
                     @if (Model.Product.DiscountPercent>0)
                     {
                         <h4 class="text-primary h3">$@Model.Product.DiscountPrice <s class="text-color ml-2">$@Model.Product.Price</s></h4>
-                        <h6 class="mb-4">You save: <span class="text-primary">$@(Model.Product.Price-@Model.Product.DiscountPrice) USD (@(Model.Product.DiscountPrice))</span></h6>
+                        <h6 class="mb-4">You save: <span class="text-primary">$@(Model.Product.Price-@Model.Product.DiscountPrice) USD (@(Model.Product.DiscountPercent)%)</span></h6>
                     }
                     else{
                         <h4 style="color:black">$@Model.Product.Price</h4>
