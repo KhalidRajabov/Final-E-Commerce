@@ -106,8 +106,10 @@
                         <input id="quantity" class="quantity mr-sm-2 mb-3 mb-sm-0" type="text" value="" name="quantity">
                         <a href="#" class="btn btn-primary mb-4">add to cart</a>
                     </div>
-
-                    <a class="btn btn-success" asp-action="add" asp-controller="wishlist" asp-route-id="@Model.Product.Id">Add to wishlist</a>
+                    @if (!ViewBag.ExistWishlist)
+                    {
+                        <a class="btn btn-success" asp-action="add" asp-controller="wishlist" asp-route-id="@Model.Product.Id">Add to wishlist</a>
+                    }
 
                     <h4 class="mb-3"><span class="text-primary">Harry up!</span> Sale ends in</h4>
                     <!-- syo-timer -->

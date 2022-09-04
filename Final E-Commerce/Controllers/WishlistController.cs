@@ -39,7 +39,7 @@ namespace Final_E_Commerce.Controllers
             }
             await _context.AddAsync(wishlist);
             await _context.SaveChangesAsync();
-            return Ok($"{product.Name} added");
+            return Ok($"{product.Name} added into your wishlist");
         }
     }
 }
