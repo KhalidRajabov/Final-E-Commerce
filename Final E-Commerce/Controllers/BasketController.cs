@@ -23,9 +23,49 @@ namespace Final_E_Commerce.Controllers
             _signInManager = signInManager;
             _usermanager = userManager;
         }
+        [Authorize]
         public IActionResult Index()
         {
-            return View();
+            string username = "";
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("login", "account");
+            }
+            else
+            {
+                username = User.Identity.Name;
+            }
+            string? basket = Request.Cookies[$"basket{username}"];
+            List<BasketVM> basketVM;
+            if (basket != null)
+            {
+                basketVM = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
+                foreach (var item in basketVM)
+                {
+                    Product? dbProducts = _context.Products.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
+                    item.Name = dbProducts.Name;
+                    if (dbProducts.DiscountPercent > 0)
+                    {
+                        item.Price = dbProducts.DiscountPrice;
+                    }
+                    else
+                    {
+                        item.Price = dbProducts.Price;
+                    }
+                    foreach (var image in dbProducts.ProductImages)
+                    {
+                        if (image.IsMain)
+                        {
+                            item.ImageUrl = image.ImageUrl;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                basketVM = new List<BasketVM>();
+            }
+            return View(basketVM);
         }
 
         [Authorize]
@@ -104,49 +144,7 @@ namespace Final_E_Commerce.Controllers
             return RedirectToAction("index", "home");
         }
 
-        public IActionResult ShowItem()
-        {
-            string username = "";
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("login", "account");
-            }
-            else
-            {
-                username = User.Identity.Name;
-            }
-            string? basket = Request.Cookies[$"basket{username}"];
-            List<BasketVM> products;
-            if (basket != null)
-            {
-                products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
-                foreach (var item in products)
-                {
-                    Product? dbProducts = _context.Products.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
-                    item.Name = dbProducts.Name;
-                    if (dbProducts.DiscountPercent > 0)
-                    {
-                        item.Price = dbProducts.DiscountPrice;
-                    }
-                    else
-                    {
-                        item.Price = dbProducts.Price;
-                    }
-                    foreach (var image in dbProducts.ProductImages)
-                    {
-                        if (image.IsMain)
-                        {
-                            item.ImageUrl = image.ImageUrl;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                products = new List<BasketVM>();
-            }
-            return View(products);
-        }
+        
 
         public IActionResult RemoveItem(int? id, string returnurl)
         {
@@ -265,7 +263,7 @@ namespace Final_E_Commerce.Controllers
                 main = basketCount,
                 itemTotal = dbproducts.Price * dbproducts.ProductCount
             };
-            return RedirectToAction("showitem");
+            return RedirectToAction("index");
         }
 
 
@@ -309,12 +307,12 @@ namespace Final_E_Commerce.Controllers
                 itemTotal = dbproducts.Price * dbproducts.ProductCount
             };
 
-            return RedirectToAction("showitem");
+            return RedirectToAction("index");
         }
 
 
 
-
+        [Authorize]
         public IActionResult CheckOut()
         {
             string username = "";

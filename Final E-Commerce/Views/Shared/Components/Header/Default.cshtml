@@ -41,6 +41,7 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                                     <a class="dropdown-item text-dark" asp-action="index" asp-controller="user">Profile</a>
+                                    <a class="dropdown-item text-dark" asp-action="index" asp-controller="basket">Basket</a>
                                     <a class="dropdown-item text-dark" href="#">Checkout</a>
                                     <a class="dropdown-item text-dark" asp-action="logout" asp-controller="account" asp-route-ReturnUrl="@Context.Request.Path">Logout</a>
                                     </div>
@@ -75,7 +76,7 @@
     <div class="collapse navbar-collapse order-1 order-lg-2" id="navbarSupportedContent">
         <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-                <a class="nav-link" href="~/index.html">home</a>
+                <a class="nav-link" asp-action="index" asp-controller="home">home</a>
             </li>
             <li class="nav-item dropdown view">
                 <a class="nav-link dropdown-toggle" href="~/shop.html" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -146,7 +147,7 @@
             </div>
             <!-- cart -->
             <div class="cart">
-                <button id="cartOpen" class="cart-btn"><i class="ti-bag"></i><span class="d-xs-none">CART</span> 3</button>
+                <button id="cartOpen" class="cart-btn"><i class="ti-bag"></i><span class="d-xs-none">CART</span> @ViewBag.BasketCount</button>
                 <div class="cart-wrapper">
                     <i id="cartClose" class="ti-close cart-close"></i>
                     <h4 class="mb-4">Your Cart</h4>
@@ -170,10 +171,10 @@
                     </ul>
                     <div class="mb-3">
                         <span>Cart Total</span>
-                        <span class="float-right">$79.00</span>
+                        <span class="float-right">$@ViewBag.TotalPrice</span>
                     </div>
                     <div class="text-center">
-                        <a href="~/cart.html" class="btn btn-dark btn-mobile rounded-0">view cart</a>
+                        <a asp-action="index" asp-controller="basket" class="btn btn-dark btn-mobile rounded-0">view cart</a>
                         <a href="~/shipping.html" class="btn btn-dark btn-mobile rounded-0">check out</a>
                     </div>
                 </div>

@@ -1,0 +1,70 @@
+﻿@model List<BasketVM>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int? count = 0;
+}
+
+<div class="container">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Order</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            count++;
+            <tr>
+                <td>
+
+                    <h6 class=" text-dark">@count</h6>
+
+                </td>
+                <td>
+                    <div class="product-image">
+                        <img width="70" src="~/images/products/@item.ImageUrl" alt="cart">
+                    </div>
+                </td>
+                <td>
+                    <div class="product-title d-flex flex-row align-items-center">
+                        <h5 class="title"><a class="text-dark" asp-action="detail" asp-controller="home" asp-route-id="@item.Id">@item.Name</a></h5>
+                    </div>
+                </td>
+                <td>
+                    <div class="product-price">
+                        <span class="price">€@item.Price</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="product-quantity">
+                        <div class="quantity mt-15 d-flex justify-content-around">
+                            <a asp-action="minus" asp-controller="basket" asp-route-id="@item.Id"><i class="fa-regular fa-square-minus"></i></a>
+                            <span> @item.ProductCount</span>
+                            <a asp-action="plus" asp-controller="basket" asp-route-id="@item.Id" asp-route-count="count"><i class="fa-regular fa-square-plus"></i></a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="product-total">
+                        <span class="total-amount">€@(item.Price * item.ProductCount)</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="product-delete">
+                            <a asp-action="removeitem" asp-controller="basket" asp-route-id="@item.Id"><i class="text-danger fa-solid fa-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+</div>
