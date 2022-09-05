@@ -1,0 +1,76 @@
+﻿@model UserProductsVM
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<nav class="bg-gray py-3">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Products</li>
+        </ol>
+    </div>
+</nav>
+<!-- /breadcrumb -->
+
+<section class="user-dashboard section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-inline dashboard-menu text-center">
+                    <li class="list-inline-item"><a asp-action="index" asp-controller="user">Dashboard</a></li>
+                    <li class="list-inline-item"><a  asp-action="orders" asp-controller="user">Orders</a></li>
+                    <li class="list-inline-item"><a asp-action="userdetail" asp-controller="user">Profile Details</a></li>
+                    <li class="list-inline-item"><a class="active" asp-action="products" asp-controller="user">Products</a></li>
+                </ul>
+                <div class="container d-flex flex-row justify-content-center">
+                    <a class="btn btn-primary" asp-action="createproduct">Add a new product</a>
+                </div>
+                <div class="dashboard-wrapper user-dashboard">
+                    <div class="table-responsive">
+                        <table id="user-table" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Sold</th>
+                                    <th>Profit</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Products)
+                                {
+                                    
+                                    <tr>
+                                        <td>
+                                            @foreach (var images in item.ProductImages)
+                                            {
+                                                if (images.IsMain)
+                                                {
+                                                    <img width="100" src="~/images/products/@images.ImageUrl" />
+                                                }
+                                            }
+                                        </td>
+
+                                        <td>@item.Name</td>
+                                        <td>$@item.Price</td>
+                                        <td>@item.Sold</td>
+                                        <td>$<span class="text-success">@item.Profit</span></td>
+                                        <td>
+                                            <a  asp-action="productdetail" asp-route-id="@item.Id"><i style="font-size:200%; color:green" class=" fa-solid fa-circle-info"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

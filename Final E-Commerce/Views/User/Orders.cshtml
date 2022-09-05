@@ -1,0 +1,72 @@
+﻿@model OrderVM
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int count = 0;
+}
+<nav class="bg-gray py-3">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Orders</li>
+    </ol>
+  </div>
+</nav>
+<!-- /breadcrumb -->
+
+<section class="user-dashboard section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<ul class="list-inline dashboard-menu text-center">
+					<li class="list-inline-item"><a  asp-action="index" asp-controller="user">Dashboard</a></li>
+                    <li class="list-inline-item"><a class="active" asp-action="orders" asp-controller="user">Orders</a></li>
+					<li class="list-inline-item"><a asp-action="userdetail" asp-controller="user">Profile Details</a></li>
+					<li class="list-inline-item"><a asp-action="products" asp-controller="user">Products</a></li>
+				</ul>
+				<div class="dashboard-wrapper user-dashboard">
+					<div class="table-responsive">
+					   <table id="user-table" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Orders)
+                            {
+                                count++;
+                                <tr>
+                                    <td>@count</td>
+
+                                    <td>@item.Price</td>
+                                    <td>@item.OrderedAt.ToString("dddd, dd MMMM yyyy HH:mm:ss")</td>
+                                    @if (item.OrderStatus == OrderStatus.Pending)
+                                    {
+                                        <td style="font-weight: 700; font-size: 120%" class="text-info">Pending </td>
+                                    }
+                                    else if (item.OrderStatus == OrderStatus.Approved)
+                                    {
+                                        <td style="font-weight: 700; font-size: 120%" class="text-success">Approved</td>
+                                    }
+                                    else if (item.OrderStatus == OrderStatus.Refused)
+                                    {
+                                        <td style="font-weight: 700; font-size: 120%" class="text-danger">Declined</td>
+                                    }
+                                    <td>
+                                        <a class="btn btn-success fs-5" asp-action="detail" asp-route-id="@item.Id"><i class="fa-solid fa-circle-info"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

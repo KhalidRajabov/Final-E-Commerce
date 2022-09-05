@@ -3,16 +3,23 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<nav class="bg-gray py-3">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">My Account</li>
+    </ol>
+  </div>
+</nav>
 <section class="user-dashboard section">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="list-inline dashboard-menu text-center">
-					<li class="list-inline-item"><a class="active" href="dashboard.html">Dashboard</a></li>
-					<li class="list-inline-item"><a href="order.html">Orders</a></li>
-					<li class="list-inline-item"><a href="address.html">Address</a></li>
-					<li class="list-inline-item"><a href="profile-details.html">Profile Details</a></li>
+					<li class="list-inline-item"><a class="active" asp-action="index" asp-controller="user">Dashboard</a></li>
+					<li class="list-inline-item"><a asp-action="orders" asp-controller="user">Orders</a></li>
+					<li class="list-inline-item"><a asp-action="userdetail" asp-controller="user">Profile Details</a></li>
+					<li class="list-inline-item"><a asp-action="products" asp-controller="user">Products</a></li>
 				</ul>
 				<div class="dashboard-wrapper user-dashboard">
 					<div class="media">

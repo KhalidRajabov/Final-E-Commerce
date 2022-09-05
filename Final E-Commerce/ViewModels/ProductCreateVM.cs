@@ -1,14 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Final_E_Commerce.Entities;
+using Microsoft.Build.Framework;
 using System.ComponentModel.DataAnnotations;
+using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
 
-namespace Final_E_Commerce.Entities
+namespace Final_E_Commerce.ViewModels
 {
-    public class Product:BaseEntity
+    public class ProductCreateVM
     {
-        public double? Price { get; set; }   
+        [Required, MaxLength(15, ErrorMessage = "Can not be more than 15"), MinLength(5, ErrorMessage = "Can not be less than 5")]
+        public string? Name { get; set; }
+        [Required, Range(5, 10000, ErrorMessage = "Price value must be between 5$ and 10000$")]
+        public double? Price { get; set; }
+        [Required, MinLength(30, ErrorMessage = "Description can not be less than 30"), MaxLength(500, ErrorMessage = "Description can not be more than 500")]
         public string? Description { get; set; }
+        [Required]
         public Nullable<DateTime> ReleaseDate { get; set; }
-        
         public string? OperationSystem { get; set; }
         public string? GPU { get; set; }
         public string? Chipset { get; set; }
@@ -23,44 +29,14 @@ namespace Final_E_Commerce.Entities
         public Nullable<double> DiscountPercent { get; set; }
         public Nullable<double> DiscountPrice { get; set; }
 
-
         [Required, Range(50, 1000000, ErrorMessage = "Product count must be between 50 and 1 million")]
         public int? Count { get; set; }
-        public int? Sold { get; set; }
-        public double? Profit { get; set; }
-        public int Views { get; set; }
-        public bool IsFeatured { get; set; }
-        public bool Bestseller { get; set; }
-        public bool NewArrival { get; set; }
-        public bool InStock { get; set; }
-
-
-        [NotMapped]
-        public List<IFormFile>? Photo { get; set; }
-
-        [NotMapped]
-        public List<int>? TagId { get; set; }
-
-
-
-
-        public string? AppUserId { get; set; }
-        public AppUser? AppUser { get; set; }
-
+        public List<IFormFile>? Photos { get; set; }
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
-
         public int BrandId { get; set; }
         public Brand? Brand { get; set; }
-
-
-
-
-        public List<ProductTag>? ProductTags { get; set; }
-
-        public List<ProductImage>? ProductImages { get; set; }
-
-        public List<OrderItem>? OrderItem { get; set; }
-        public List<Wishlist>? Wishlists { get; set; }
+        public List<int>? TagId { get; set; }
+        public List<Tag>? Tags { get; set; }
     }
 }
