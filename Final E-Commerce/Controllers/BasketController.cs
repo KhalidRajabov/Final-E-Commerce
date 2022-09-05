@@ -313,44 +313,23 @@ namespace Final_E_Commerce.Controllers
 
 
         [Authorize]
-        public IActionResult CheckOut()
+        public async Task<IActionResult> CheckOut()
         {
-            string username = "";
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("login", "account");
-            }
-            else
-            {
-                username = User.Identity.Name;
-            }
-            string basket = Request.Cookies[$"basket{username}"];
-            List<BasketVM> products;
-            if (basket != null)
-            {
-                products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
-                ViewBag.Products = products;
-
-                foreach (var item in products)
-                {
-                    Product dbProduct = _context.Products
-                    .FirstOrDefault(p => p.Id == item.Id);
-                    if (dbProduct.DiscountPercent > 0)
-                    {
-                        item.Price = dbProduct.DiscountPrice;
-                    }
-                    else
-                    {
-                        item.Price = dbProduct.Price;
-                    }
-                    item.Name = dbProduct.Name;
-                }
-            }
-            else
-            {
-                products = new List<BasketVM>();
-            }
-            return View();
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            UserDetails userDetails = new UserDetails();
+            userDetails = await _context.UserDetails.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
+            CheckoutVM checkoutVM = new CheckoutVM();
+            checkoutVM.Firstname=userDetails.Firstname;
+            checkoutVM.Lastname = userDetails.Lastname;
+            checkoutVM.Country = userDetails.Country;
+            checkoutVM.City = userDetails.City;
+            checkoutVM.ZipCode = userDetails.ZipCode;
+            checkoutVM.Email = userDetails.Email;
+            checkoutVM.Address = userDetails.Street;
+            checkoutVM.PhoneNumber = userDetails.PhoneNumber;
+            checkoutVM.Company = userDetails.Company;
+            
+            return View(checkoutVM);
         }
 
         [HttpPost]

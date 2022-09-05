@@ -1,0 +1,148 @@
+﻿@model CheckoutVM
+@{
+    ViewData["Title"] = "CheckOut";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<nav class="bg-gray py-3">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+        </ol>
+    </div>
+</nav>
+<!-- /breadcrumb -->
+
+<div class="section">
+    <div class="checkout shopping">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="block billing-details">
+                        <h4 class="widget-title">Billing Details</h4>
+                        <form class="checkout-form">
+                            <div class="form-group">
+                                <label asp-for="Firstname"></label>
+                                <input class="form-control" asp-for="Firstname" placeholder="Firstname">
+                                <span class="text-danger" asp-validation-for="Firstname"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Lastname"></label>
+                                <input class="form-control" asp-for="Lastname" placeholder="Lastname">
+                                <span class="text-danger" asp-validation-for="Lastname"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PhoneNumber"></label>
+                                <input class="form-control" asp-for="PhoneNumber" placeholder="Phone number">
+                                <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Address"></label>
+                                <input class="form-control" asp-for="Address" placeholder="Address">
+                                <span class="text-danger" asp-validation-for="Address"></span>
+                            </div>
+                            <div class="checkout-country-code clearfix">
+                                <div class="form-group">
+                                    <label asp-for="ZipCode"></label>
+                                    <input class="form-control" id="user_post_code" asp-for="ZipCode">
+                                    <span class="text-danger" asp-validation-for="ZipCode"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="City"></label>
+                                    <input class="form-control" id="user_city" asp-for="City">
+                                    <span class="text-danger" asp-validation-for="City"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Country"></label>
+                                <input class="form-control" asp-for="Country" placeholder="Country">
+                                <span class="text-danger" asp-validation-for="Country"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Company"></label>
+                                <input class="form-control" asp-for="Company" placeholder="Company">
+                                <span class="text-danger" asp-validation-for="Company"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Buy</button>
+                        </form>
+                    </div>
+
+                    
+                    @*<div class="block">
+                        <h4 class="widget-title">Payment Method</h4>
+                        <p>Credit Cart Details (Secure payment)</p>
+                        <div class="checkout-product-details">
+                            <div class="payment">
+                                <div class="card-details">
+                                    <form class="checkout-form">
+                                        <div class="form-group">
+                                            <label for="card-number">Card Number <span class="required">*</span></label>
+                                            <input id="card-number" class="form-control" type="tel" placeholder="•••• •••• •••• ••••">
+                                        </div>
+                                        <div class="form-group half-width padding-right">
+                                            <label for="card-expiry">Expiry (MM/YY) <span class="required">*</span></label>
+                                            <input id="card-expiry" class="form-control" type="tel" placeholder="MM / YY">
+                                        </div>
+                                        <div class="form-group half-width padding-left">
+                                            <label for="card-cvc">Card Code <span class="required">*</span></label>
+                                            <input id="card-cvc" class="form-control" type="tel" maxlength="4" placeholder="CVC">
+                                        </div>
+                                        <a href="confirmation.html" class="btn btn-primary mt-3">Place Order</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                </div>
+                @*<div class="col-md-4">
+                    <div class="product-checkout-details">
+                        <div class="block">
+                            <h4 class="widget-title">Order Summary</h4>
+                            @foreach (var item in Model.Baskets)
+                            {
+                                <div class="media product-card">
+                                    <a class="pull-left" href="product-single.html">
+                                        <img class="media-object" src="~/images/products/@item.ImageUrl" alt="Image" />
+                                    </a>
+                                    <div class="media-body">
+                                        <h4 class="media-heading"><a class="text-color" href="product-single.html">@item.Name</a></h4>
+                                        <p class="price">@item.ProductCount x $@item.Price</p>
+                                        <a class="remove" asp-action="removeitem" asp-controller="basket" asp-route-id="@item.Id" asp-route-ReturnUrl="@Context.Request.Path">Remove</a>
+                                    </div>
+                                </div>
+                            }a
+                            <div class="discount-code">
+                                <p>Have a discount ? <a data-toggle="modal" data-target="#coupon-modal" href="#">enter it here</a></p>
+                            </div>
+                            <ul class="summary-prices">
+                                <li>
+                                    <span>Subtotal:</span>
+                                    <span class="price">$190</span>
+                                </li>
+                                <li>
+                                    <span>Shipping:</span>
+                                    <span>Free</span>
+                                </li>
+                            </ul>
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span>$250</span>
+                            </div>
+                            <div class="verified-icon">
+                                <img src="images/verified.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section checkout {
+
+    <partial name="_ValidationScriptsPartial" />
+}

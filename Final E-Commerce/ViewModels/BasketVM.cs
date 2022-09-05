@@ -1,4 +1,6 @@
-﻿namespace Final_E_Commerce.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Final_E_Commerce.ViewModels
 {
     public class BasketVM
     {
