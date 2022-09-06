@@ -334,7 +334,7 @@ namespace Final_E_Commerce.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Order(Order newOrder)
+        public async Task<IActionResult> Order(CheckoutVM newOrder)
         {
             if (!ModelState.IsValid)
             {
@@ -350,10 +350,10 @@ namespace Final_E_Commerce.Controllers
                 order.City = newOrder.City;
                 order.Country = newOrder.Country;
                 order.Email = newOrder.Email;
-                order.Phone = newOrder.Phone;
-                order.Zipcode = newOrder.Zipcode;
+                order.Phone = newOrder.PhoneNumber;
+                order.Zipcode = newOrder.ZipCode;
                 order.Address = newOrder.Address;
-                order.Companyname = newOrder.Companyname;
+                order.Companyname = newOrder.Company;
                 order.OrderedAt = DateTime.Now;
                 order.AppUserId = user.Id;
                 order.OrderStatus = OrderStatus.Pending;
@@ -386,13 +386,31 @@ namespace Final_E_Commerce.Controllers
                 }
                 order.OrderItems = orderItems;
                 order.Price = total;
-                order.OrderStatus = OrderStatus.Pending;
+                //List<string> roles = new List<string>();
+                var roles =await _usermanager.GetRolesAsync(user);
+                foreach (var item in roles)
+                {
+                    if (item.ToLower().Contains("admin"))
+                    {
+                        order.OrderStatus = OrderStatus.Approved;
+                        foreach (var product in basketProducts)
+                        {
+                            Product dbproduct = _context.Products.Find(product.Id);
+                            dbproduct.Profit = product.ProductCount * product.Price;
+                            dbproduct.Sold = product.ProductCount;
+                        }
+                    }
+                    else
+                    {
+                        order.OrderStatus = OrderStatus.Pending;
+                    }
+                }
 
                 await _context.AddAsync(order);
                 await _context.SaveChangesAsync();
 
                 TempData["success"] = "Satış uğurla başa çatdı..";
-                return RedirectToAction("ShowItem");
+                return RedirectToAction("index");
             }
             else
             {

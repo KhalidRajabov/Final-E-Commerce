@@ -78,8 +78,15 @@ namespace Final_E_Commerce.Controllers
             ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             return View();
         }
+        [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductCreateVM vm)
         {
+            var mainCategories = await _context.Categories.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
+            var altCategories = await _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
+            ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            ViewBag.Brands = new SelectList(_context.Brands.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             if (!ModelState.IsValid)
             {
@@ -106,7 +113,7 @@ namespace Final_E_Commerce.Controllers
                     return View();
                 }
                 ProductImage image = new ProductImage();
-                image.ImageUrl = item.SaveImage(_env, "images/product");
+                image.ImageUrl = item.SaveImage(_env, "images/products");
                 Images.Add(image);
             }
             Product product = new Product
@@ -137,8 +144,9 @@ namespace Final_E_Commerce.Controllers
                 InStock = true,
                 Views = 0
             };
+            product.ProductImages = Images;
             product.ProductImages[0].IsMain = true;
-            List<ProductTag> tags = new List<ProductTag>();
+            /*List<ProductTag> tags = new List<ProductTag>();
             foreach (var item in vm.TagId)
             {
                 ProductTag tag = new ProductTag();
@@ -146,7 +154,7 @@ namespace Final_E_Commerce.Controllers
                 tag.ProductId = product.Id;
                 tags.Add(tag);
             }
-            product.ProductTags = tags;
+            product.ProductTags = tags;*/
             _context.Add(product);
             _context.SaveChanges();
             
@@ -155,6 +163,13 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> ProductDetail(int id)
         {
             return View();
+        }
+        public IActionResult GetSubCategory(int cid)
+        {
+            var SubCategory_List = _context.Categories
+                .Where(s => s.ParentId == cid).Where(s => s.ParentId != null)
+                .Select(c => new { Id = c.Id, Name = c.Name }).ToList();
+            return Json(SubCategory_List);
         }
     }
 }

@@ -104,11 +104,11 @@
                     <h4 class="text-primary">View: <span class="text-color">@Model.Product.Views</span></h4>
                     <div class="col-8 d-flex flex-row">
                         <input id="quantity" class="quantity mr-sm-2 mb-3 mb-sm-0" type="text" value="" name="quantity">
-                        <a class="btn btn-primary mb-4" asp-action="additem" asp-controller="basket" asp-route-id="@Model.Product.Id"> add to cart</a>
+                        <a class="btn btn-primary mb-4" asp-action="additem" asp-controller="basket" asp-route-id="@Model.Product.Id" asp-route-ReturnUrl="@Context.Request.Path"> add to cart</a>
                     </div>
                     @if (!ViewBag.ExistWishlist)
                     {
-                        <a class="btn btn-success" asp-action="add" asp-controller="wishlist" asp-route-id="@Model.Product.Id">Add to wishlist</a>
+                        <a class="btn btn-success" asp-action="add" asp-controller="wishlist" asp-route-id="@Model.Product.Id" asp-route-ReturnUrl="@Context.Request.Path">Add to wishlist</a>
                     }
 
                     <h4 class="mb-3"><span class="text-primary">Harry up!</span> Sale ends in</h4>

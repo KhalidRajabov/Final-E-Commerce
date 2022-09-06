@@ -1,0 +1,169 @@
+﻿@model ProductCreateVM
+@{
+    ViewData["Title"] = "CreateProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<nav class="bg-gray py-3">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create new product</li>
+        </ol>
+    </div>
+</nav>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-between">
+            <!-- form -->
+            <div class="col-lg-7 mb-5 mb-lg-0 text-center text-md-left">
+                <h2 class="section-title">Contact Us</h2>
+                <form  class="row" method="post" enctype="multipart/form-data">
+                    <div class="col-md-6">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="form-control mb-4 rounded-0" placeholder="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Price"></label>
+                        <input asp-for="Price" class="form-control mb-4 rounded-0" placeholder="Price">
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description" class="form-control rounded-0 mb-4" placeholder="Description"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ReleaseDate"></label>
+                        <input asp-for="ReleaseDate" class="form-control mb-4 rounded-0" placeholder="Release Date">
+                        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="OperationSystem"></label>
+                        <input asp-for="OperationSystem" class="form-control mb-4 rounded-0" placeholder="Operation System">
+                        <span asp-validation-for="OperationSystem" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="GPU"></label>
+                        <input asp-for="GPU" class="form-control mb-4 rounded-0" placeholder="GPU">
+                        <span asp-validation-for="GPU" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Chipset"></label>
+                        <input asp-for="Chipset" class="form-control mb-4 rounded-0" placeholder="Chipset">
+                        <span asp-validation-for="Chipset" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Memory"></label>
+                        <input asp-for="Memory" class="form-control mb-4 rounded-0" placeholder="Memory">
+                        <span asp-validation-for="Memory" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Body"></label>
+                        <input asp-for="Body" class="form-control mb-4 rounded-0" placeholder="Body">
+                        <span asp-validation-for="Body" class="text-danger"></span>
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+                        <label asp-for="Display"></label>
+                        <input asp-for="Display" class="form-control mb-4 rounded-0" placeholder="Display">
+                        <span asp-validation-for="Display" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FrontCamera"></label>
+                        <input asp-for="FrontCamera" class="form-control mb-4 rounded-0" placeholder="Front Camera">
+                        <span asp-validation-for="FrontCamera" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="RearCamera"></label>
+                        <input asp-for="RearCamera" class="form-control mb-4 rounded-0" placeholder="Rear Camera">
+                        <span asp-validation-for="OperationSystem" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Battery"></label>
+                        <input asp-for="Battery" class="form-control mb-4 rounded-0" placeholder="Battery">
+                        <span asp-validation-for="Battery" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Weight"></label>
+                        <input asp-for="Weight" class="form-control mb-4 rounded-0" placeholder="Weight">
+                        <span asp-validation-for="Weight" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="DiscountPercent"></label>
+                        <input asp-for="DiscountPercent" class="form-control mb-4 rounded-0" placeholder="Discount Percent">
+                        <span asp-validation-for="DiscountPercent" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Count"></label>
+                        <input asp-for="Count" class="form-control mb-4 rounded-0" placeholder="Count">
+                        <span asp-validation-for="Count" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group d-flex flex-row justify-content-around">
+                        <div class="col-md-4">
+                            <select asp-for="BrandId" class="form-select" asp-items="ViewBag.Brands">
+                                <option selected>Choose Brand</option>
+                            </select>
+                            <span style="color: red;" asp-validation-for="BrandId"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                                <option selected>Choose Category</option>
+                            </select>
+                            <span style="color: red;" asp-validation-for="Category"></span>
+                        </div>
+                        <div class="form-group">
+                            <select id="SubCategoryTypeId" class="form-select" >
+                               <option selected>Sub category</option>
+                            </select>
+                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Photos"></label>
+                        <input asp-for="Photos" class="form-control">
+                        <span style="color: red;" asp-validation-for="Photos"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+            $("select#CategoryId").change(function () {
+                var cid = $(this).val();
+
+                $("select#SubCategoryTypeId").empty();
+                let sub = document.getElementById("SubCategoryTypeId")
+                $.getJSON(`/Product/GetSubCategory?cid=${cid}`, function (data) {
+                    $.each(data, function (i, item) {
+                        let option = document.createElement("option")
+                        option.setAttribute("value", `${i}`)
+                        option.innerText=`${item.name}`
+                        sub.append(option)
+                        sub.classList.add("fuck")
+                        console.log("request ",sub)
+
+                        //sub.append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                });
+                console.log("outside ",sub)
+            })
+        });
+    </script>
+}

@@ -27,13 +27,14 @@ namespace Final_E_Commerce.ViewModels
         public string? Weight { get; set; }
 
         public Nullable<double> DiscountPercent { get; set; }
-        public Nullable<double> DiscountPrice { get; set; }
 
         [Required, Range(50, 1000000, ErrorMessage = "Product count must be between 50 and 1 million")]
         public int? Count { get; set; }
         public List<IFormFile>? Photos { get; set; }
+        [Required]
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
+        [Required]
         public int BrandId { get; set; }
         public Brand? Brand { get; set; }
         public List<int>? TagId { get; set; }

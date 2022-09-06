@@ -25,7 +25,7 @@
                         <p class="card-text"><small class="text-muted">@item.Price</small></p>
                     </div>
 
-                    <div class="card-body"><a class="btn btn-success" asp-action="additem" asp-controller="basket" asp-route-id="@item.Id">Add to basket</a> <a class="btn btn-danger" asp-action="remove" asp-controller="wishlist" asp-route-id="@item.Id">Remove from wishlist</a></div>
+                    <div class="card-body"><a class="btn btn-success" asp-action="additem" asp-controller="basket" asp-route-id="@item.Id" asp-route-ReturnUrl="@Context.Request.Path">Add to basket</a> <a class="btn btn-danger" asp-action="remove" asp-controller="wishlist" asp-route-id="@item.Id">Remove from wishlist</a></div>
                 </div>
             </div>
         </div>

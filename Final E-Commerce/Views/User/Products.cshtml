@@ -25,7 +25,7 @@
                     <li class="list-inline-item"><a class="active" asp-action="products" asp-controller="user">Products</a></li>
                 </ul>
                 <div class="container d-flex flex-row justify-content-center">
-                    <a class="btn btn-primary" asp-action="createproduct">Add a new product</a>
+                    <a class="btn btn-primary mt-4" asp-action="CreateProduct">Add a new product</a>
                 </div>
                 <div class="dashboard-wrapper user-dashboard">
                     <div class="table-responsive">
@@ -55,7 +55,7 @@
                                             }
                                         </td>
 
-                                        <td>@item.Name</td>
+                                        <td><a class="text-dark" asp-action="detail" asp-controller="home" asp-route-id="@item.Id">@item.Name</a></td>
                                         <td>$@item.Price</td>
                                         <td>@item.Sold</td>
                                         <td>$<span class="text-success">@item.Profit</span></td>

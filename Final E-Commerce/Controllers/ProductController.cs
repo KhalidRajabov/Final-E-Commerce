@@ -111,6 +111,7 @@ namespace Final_E_Commerce.Controllers
                 Description = product.Description,
                 CreatedTime = DateTime.Now
             };
+
             NewProduct.ProductImages[0].IsMain = true;
             if (product.Category == null)
             {
