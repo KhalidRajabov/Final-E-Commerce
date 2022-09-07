@@ -1,6 +1,7 @@
 ﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Extensions;
+using Final_E_Commerce.Helper;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,14 +17,17 @@ namespace Final_E_Commerce.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _usermanager;
         private readonly IWebHostEnvironment _env;
+        private IConfiguration _config { get; }
 
         public UserController(AppDbContext context,
         UserManager<AppUser> userManager,
-        IWebHostEnvironment env)
+        IWebHostEnvironment env,
+        IConfiguration config)
         {
             _context = context;
             _usermanager = userManager;
             _env = env;
+            _config = config;
         }
         public async Task<IActionResult> Index()
         {
@@ -135,7 +139,7 @@ namespace Final_E_Commerce.Controllers
                 Weight = vm.Weight,
                 DiscountPercent = vm.DiscountPercent,
                 DiscountPrice = vm.Price - (vm.Price * vm.DiscountPercent) / 100,
-                CategoryId = vm.CategoryId,
+                CategoryId = vm.SubCategory,
                 BrandId = vm.BrandId,
                 Count = vm.Count,
                 Sold = 0,
@@ -162,14 +166,276 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> ProductDetail(int id)
         {
-            return View();
+            Product product = _context.Products.Include(c=>c.Category).Include(p=>p.ProductImages).FirstOrDefault(p => p.Id == id);
+            DetailVM detailVM = new DetailVM();
+            detailVM.Product = product;
+            return View(detailVM);
         }
-        public IActionResult GetSubCategory(int cid)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            var SubCategory_List = _context.Categories
-                .Where(s => s.ParentId == cid).Where(s => s.ParentId != null)
-                .Select(c => new { Id = c.Id, Name = c.Name }).ToList();
-            return Json(SubCategory_List);
+            Product product = await _context.Products.FirstOrDefaultAsync(p=>p.Id==id);
+            product.IsDeleted = true;
+            return RedirectToAction("Products");
+        }
+        public async Task<IActionResult> EditProduct(int id)
+        {
+            var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
+            ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            if (id == null) return NotFound();
+            Product p = await _context.Products
+                .Include(i => i.ProductImages)
+                .Include(c => c.Category)
+                .Include(b => b.Brand)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            if (p == null) return NotFound();
+            ProductUpdateVM vm = new ProductUpdateVM
+            {
+                Name=p.Name,
+                Price=p.Price,
+                Description=p.Description,
+                ReleaseDate=p.ReleaseDate,
+                OperationSystem=p.OperationSystem,
+                GPU=p.GPU,
+                Chipset=p.Chipset,
+                Memory=p.Memory,
+                Body=p.Body,
+                Display=p.Display,
+                FrontCamera=p.FrontCamera,
+                RearCamera=p.RearCamera,
+                Battery=p.Battery,
+                Weight=p.Weight,
+                DiscountPercent=p.DiscountPercent,
+                Count=p.Count,
+                CategoryId=p.CategoryId,
+                BrandId=p.BrandId,
+                Product=p
+                
+            };
+            
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProduct(int id, ProductUpdateVM product)
+        {
+            var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
+            ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            Product dbProduct = await _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductTags)
+                .ThenInclude(t => t.Tags)
+                .Include(b => b.Brand)
+                .Include(c => c.Category)
+                .Where(c => c.IsDeleted != true)
+                .FirstOrDefaultAsync(b => b.Id == id);
+            if (dbProduct == null)
+            {
+                return View();
+            }
+            List<ProductImage> images = new List<ProductImage>();
+            string path = "";
+            if (product.Photos == null)
+            {
+                foreach (var item in dbProduct.ProductImages)
+                {
+                    item.ImageUrl = item.ImageUrl;
+                    _context.Add(item);
+                }
+            }
+            else
+            {
+                foreach (var item in product.Photos)
+                {
+                    if (item == null)
+                    {
+                        ModelState.AddModelError("Photo", "Can not be empty");
+                        return View();
+                    }
+                    if (!item.IsImage())
+                    {
+                        ModelState.AddModelError("Photo", "Only images");
+                        return View();
+                    }
+
+                    if (item.ValidSize(20000))
+                    {
+                        ModelState.AddModelError("Photo", "The image size is larger than required size(max 20 mb)");
+                        return View();
+                    }
+                    ProductImage image = new ProductImage();
+                    image.ImageUrl = item.SaveImage(_env, "images/product");
+
+                    if (product.Photos.Count == 1)
+                    {
+                        image.IsMain = true;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < images.Count; i++)
+                        {
+                            images[0].IsMain = true;
+                        }
+                    }
+                    images.Add(image);
+                }
+
+                foreach (var item in product.Photos)
+                {
+                    if (!item.IsImage())
+                    {
+                        ModelState.AddModelError("Photo", "Images only");
+                        return View();
+                    }
+
+                    if (item.ValidSize(20000))
+                    {
+                        ModelState.AddModelError("Photo", "The image size is larger than required size(max 20 mb)");
+                        return View();
+                    }
+                }
+            }
+
+            foreach (var item in dbProduct.ProductImages)
+            {
+                if (item.ImageUrl != null)
+                {
+                    path = Path.Combine(_env.WebRootPath, "assets/images/product", item.ImageUrl);
+                }
+            }
+            if (path != null)
+            {
+                Helper.Helper.DeleteImage(path);
+            }
+            else return NotFound();
+
+            if (product.TagId == null)
+            {
+                foreach (var item1 in dbProduct.ProductTags)
+                {
+                    item1.TagId = item1.TagId;
+                }
+            }
+            else
+            {
+                List<ProductTag> productTags = new List<ProductTag>();
+                foreach (int item in product.TagId)
+                {
+                    ProductTag productTag = new ProductTag();
+                    productTag.TagId = item;
+                    productTag.ProductId = dbProduct.Id;
+                    productTags.Add(productTag);
+                }
+                dbProduct.ProductTags = productTags;
+            }
+            if (product.Category == null && product.Category == null)
+            {
+                dbProduct.CategoryId = dbProduct.CategoryId;
+            }
+            else
+            {
+                dbProduct.CategoryId = product.CategoryId;
+            }
+
+            if (product.Count == 0)
+            {
+                dbProduct.InStock = false;
+            }
+            List<Category> categories = _context.Categories.Where(p => p.IsDeleted != true).Where(c => c.ImageUrl != null).ToList();
+            for (int i = 0; i < categories.Count; i++)
+            {
+                if (product.Category == categories[0])
+                {
+                    dbProduct.CategoryId = dbProduct.CategoryId;
+                }
+            }
+
+
+
+
+            dbProduct.Name = product.Name;
+            dbProduct.Price = product.Price;
+            dbProduct.Description = product.Description;
+            dbProduct.ReleaseDate = product.ReleaseDate;
+            dbProduct.OperationSystem = product.OperationSystem;
+            dbProduct.GPU = product.GPU;
+            dbProduct.Chipset = product.Chipset;
+            dbProduct.Memory = product.Memory;
+            dbProduct.Body = product.Body;
+            dbProduct.Display = product.Display;
+            dbProduct.FrontCamera = product.FrontCamera; 
+            dbProduct.RearCamera = product.RearCamera;
+            dbProduct.Battery = product.Battery;
+            dbProduct.Weight = product.Weight;
+
+            dbProduct.ProductImages = images;
+            dbProduct.Count = product.Count;
+            dbProduct.DiscountPercent = product.DiscountPercent;
+            dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
+            dbProduct.BrandId = product.BrandId;
+            dbProduct.CategoryId = product.CategoryId;
+            
+            dbProduct.LastUpdatedAt = DateTime.Now;
+            if (dbProduct.DiscountPercent > 30)
+            {
+                List<Subscriber> subscribers = await _context.Subscribers.ToListAsync();
+                var token = "";
+                string subject = "Endirim var!";
+                EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+                foreach (var receiver in subscribers)
+                {   
+                    token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
+                        $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
+                    var emailResult = helper.SendNews(receiver.Email, token, subject);
+                    continue;
+                }
+                string confirmation = Url.Action("ConfirmEmail", "Account", new
+                {
+                    token
+                }, Request.Scheme);
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("products","user");
+        }
+        public async Task<IActionResult> MainImage(int? imageid, int? productid, string Returnurl)
+        {
+            if (imageid == null || productid == null) return NotFound();
+            var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
+            if (image == null) return NotFound();
+
+            var product = await _context.Products.Include(x => x.ProductImages).FirstOrDefaultAsync(x => x.Id == productid);
+            var mainImage = product.ProductImages.FirstOrDefault(x => x.IsMain);
+            mainImage.IsMain = false;
+
+            image.IsMain = true;
+            await _context.SaveChangesAsync();
+
+            return Redirect(Returnurl);
+        }
+        public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
+        {
+            if (imageid == null || productid == null) return NotFound();
+            var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
+            if (image == null) return NotFound();
+
+            string path = Path.Combine(_env.WebRootPath, @"images\products", image.ImageUrl);
+            Helper.Helper.DeleteImage(path);
+
+            _context.ProductImages.Remove(image);
+            await _context.SaveChangesAsync();
+
+            return Redirect(Returnurl);
         }
     }
 }

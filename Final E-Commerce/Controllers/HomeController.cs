@@ -53,5 +53,9 @@ namespace Final_E_Commerce.Controllers
 
             return View(detailVM);
         }
+        public IActionResult Error()
+        {
+            return View();
+        }
     }
 }

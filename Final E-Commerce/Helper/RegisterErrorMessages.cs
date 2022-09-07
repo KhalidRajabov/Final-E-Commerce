@@ -20,7 +20,5 @@ namespace Final_E_Commerce.Helper
                 Description = "Password requires a lowercase letter"
             };
         }
-
-
     }
 }

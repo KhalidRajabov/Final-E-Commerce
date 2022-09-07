@@ -1,11 +1,9 @@
 ﻿using Final_E_Commerce.Entities;
-using Microsoft.Build.Framework;
 using System.ComponentModel.DataAnnotations;
-using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
 
 namespace Final_E_Commerce.ViewModels
 {
-    public class ProductCreateVM
+    public class ProductUpdateVM
     {
         [Required, MaxLength(100, ErrorMessage = "Can not be more than 15"), MinLength(5, ErrorMessage = "Can not be less than 5")]
         public string? Name { get; set; }
@@ -40,5 +38,7 @@ namespace Final_E_Commerce.ViewModels
         public Brand? Brand { get; set; }
         public List<int>? TagId { get; set; }
         public List<Tag>? Tags { get; set; }
+
+        public Product? Product { get; set; }
     }
 }

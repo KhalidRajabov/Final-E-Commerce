@@ -158,8 +158,6 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(int? id, Product product)
@@ -252,7 +250,7 @@ namespace Final_E_Commerce.Controllers
             {
                 if (item.ImageUrl != null)
                 {
-                    path = Path.Combine(_env.WebRootPath, "assets/images/product", item.ImageUrl);
+                    path = Path.Combine(_env.WebRootPath, "images/products", item.ImageUrl);
                 }
             }
             if (path != null)
@@ -261,7 +259,7 @@ namespace Final_E_Commerce.Controllers
             }
             else return NotFound();
 
-            if (product.TagId == null)
+            /*if (product.TagId == null)
             {
                 foreach (var item1 in dbProduct.ProductTags)
                 {
@@ -279,7 +277,7 @@ namespace Final_E_Commerce.Controllers
                     productTags.Add(productTag);
                 }
                 dbProduct.ProductTags = productTags;
-            }
+            }*/
             if (product.Category == null && product.Category == null)
             {
                 dbProduct.CategoryId = dbProduct.CategoryId;

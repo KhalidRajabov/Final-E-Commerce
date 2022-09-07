@@ -1,25 +1,26 @@
-﻿@model ProductCreateVM
+﻿@model ProductUpdateVM
 @{
-    ViewData["Title"] = "CreateProduct";
+    ViewData["Title"] = "EditProduct";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <nav class="bg-gray py-3">
     <div class="container">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create new product</li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Product</li>
         </ol>
     </div>
 </nav>
+
+
 
 <section class="section">
     <div class="container">
         <div class="row justify-content-between">
             <!-- form -->
-            <div class="col-lg-7 mb-5 mb-lg-0 text-center text-md-left">
-                <h2 class="section-title">Contact Us</h2>
-                <form  class="row" method="post" enctype="multipart/form-data">
+            
+                <h2 class="section-title">@Model.Name</h2>
+                <form class="row" method="post" enctype="multipart/form-data">
                     <div class="col-md-6">
                         <label asp-for="Name"></label>
                         <input asp-for="Name" class="form-control mb-4 rounded-0" placeholder="Name">
@@ -105,44 +106,65 @@
                         <input asp-for="Count" class="form-control mb-4 rounded-0" placeholder="Count">
                         <span asp-validation-for="Count" class="text-danger"></span>
                     </div>
-                    
-                    
-                        <div class="col-md-4">
-                            <select asp-for="BrandId" class="form-select" asp-items="ViewBag.Brands">
-                                <option selected>Choose Brand</option>
-                            </select>
-                            <span style="color: red;" asp-validation-for="BrandId"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
-                                <option selected>Choose Category</option>
-                            </select>
-                            <span style="color: red;" asp-validation-for="Category"></span>
-                        </div>
-                        <div class="form-group">
-                            <select id="SubCategoryTypeId" class="form-select" >
-                               <option selected>Sub category</option>
 
-                            </select>
-                         </div>
-                    
+
+                    <div class="col-md-4">
+                        <select asp-for="BrandId" class="form-select" asp-items="ViewBag.Brands">
+                            <option selected>Choose Brand</option>
+                        </select>
+                        <span style="color: red;" asp-validation-for="BrandId"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                            <option selected>Choose Category</option>
+                        </select>
+                        <span style="color: red;" asp-validation-for="Category"></span>
+                    </div>
+                    <div class="form-group">
+                        <select id="SubCategoryTypeId" class="form-select">
+                            <option selected>Sub category</option>
+
+                        </select>
+                    </div>
+
 
                     <div class="form-group">
                         <label asp-for="Photos"></label>
                         <input asp-for="Photos" class="form-control">
                         <span style="color: red;" asp-validation-for="Photos"></span>
                     </div>
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary">Create</button>
-                    </div>
-                    <div class="col-md-12">
-                        <a class="btn btn-light" asp-action="products" asp-controller="user">Go back</a>
+                    <div class="col-md-12 d-flex flex-row justify-content-around">
+                        <button type="submit" class="btn btn-success">Update</button>
+                        <a class="btn btn-info" asp-action="ProductDetail" asp-controller="user" asp-route-id="@Model.Product.Id">Go back</a>
                     </div>
                 </form>
-            </div>
         </div>
     </div>
 </section>
+
+
+<div class="container">
+    <div style="display:flex; flex-direction:row; justify-content:space-around; flex-wrap: wrap;">
+        @foreach (var item in Model.Product.ProductImages)
+        {
+            <div class="product-update-image-card col-2 d-flex flex-column justify-content-around align-content-around">
+                <img width="100%" style="align-self: center" class="m-3" src="~/images/products/@item.ImageUrl" />
+                @if (item.IsMain)
+                {
+                    <span style="align-self: center" class="text-success">Main image</span>
+                }
+                else
+                {
+                    <div class="row d-flex flex-row justify-content-around">
+                        <a asp-action="MainImage" asp-controller="user" asp-route-imageid="@item.Id" asp-route-productid="@Model.Product.Id" asp-route-Returnurl="@Context.Request.Path" class="btn p-2 m-2 text-light btn-info">Make it main</a>
+                        <a asp-action="RemoveImage" asp-controller="user" asp-route-imageid="@item.Id" asp-route-productid="@Model.Product.Id" asp-route-Returnurl="@Context.Request.Path" class="btn p-2 m-2 btn-danger">Remove</a>
+                    </div>
+
+                }
+            </div>
+        }
+    </div>
+</div>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
@@ -158,16 +180,17 @@
                     $.each(data, function (i, item) {
                         let option = document.createElement("option")
                         option.setAttribute("value", `${i}`)
-                        option.innerText=`${item.name}`
+                        option.innerText = `${item.name}`
                         sub.append(option)
-                        sub.style.display="block"
-                        console.log("request ",sub)
+                        sub.style.display = "block"
+                        console.log("request ", sub)
 
                         //sub.append(`<option value="${item.id}">${item.name}</option>`);
                     });
                 });
-                console.log("outside ",sub)
+                console.log("outside ", sub)
             })
         });
     </script>
 }
+
