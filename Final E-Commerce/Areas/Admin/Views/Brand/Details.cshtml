@@ -6,10 +6,12 @@
 
 <div class="row">
     <div class="card col-6">
-        <img class="card-img-top" style="width:300px" src="~/images/brand/@Model.Brand.ImageUrl" alt="Card image cap">
+        <img class="card-img-top" style="width:300px" src="~/images/brands/@Model.Brand.ImageUrl" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">@Model.Name</h5>
             <p class="card-text">Added on: @Model.Brand.CreatedTime</p>
+            <p class="card-text">Total products: @ViewBag.BrandProducts</p>
+            
             @if (Model.Brand.LastUpdatedAt != null)
             {
                 <p class="card-text">Updated: @Model.Brand.LastUpdatedAt</p>

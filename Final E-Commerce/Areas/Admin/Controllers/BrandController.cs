@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Final_E_Commerce.Areas.Admin.Controllers
 {
-    [Area("AdminPanel")]
+    [Area("Admin")]
     [Authorize(Roles = "Admin, SuperAdmin")]
     public class BrandController : Controller
     {
@@ -135,7 +135,8 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             brand.Brand=await _context.Brands.FindAsync(id); 
             
             if (brand.Brand == null) return NotFound();
-            
+            ViewBag.BrandProducts = _context.Products.Where(p => p.BrandId == id).Count();
+
             return View(brand);
 
         }

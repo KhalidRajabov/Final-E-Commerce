@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Areas.Admin.Controllers
 {
-    [Area("AdminPanel")]
+    [Area("Admin")]
     [Authorize(Roles = "Admin, SuperAdmin")]
     public class UserManagerController : Controller
     {

@@ -1,4 +1,4 @@
-﻿@model List<Brand>
+﻿@model ListBrandVM
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -23,12 +23,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.Brands)
                             {
                                 
                                 <tr>
                                     <td>@item.Id</td>
-                                    <td><img style="border-radius:0; width:100px; height:75px" src="~/images/brand/@item.ImageUrl" /></td>
+                                    <td><img style="border-radius:0; width:100px; height:75px" src="~/images/brands/@item.ImageUrl" /></td>
                                     <td>@item.Name</td>
                                     <td>
                                         <a class="btn btn-warning fs-5" asp-action="update" asp-route-id="@item.Id"><i class="mdi mdi-key-plus"></i></a>
