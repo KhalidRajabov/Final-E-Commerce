@@ -8,7 +8,7 @@ using Final_E_Commerce.Helper;
 
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigurationManager config = builder.Configuration;
+
 
 
 // Add services to the container.
@@ -25,7 +25,7 @@ builder.Services.AddAutoMapper(opt =>
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddSession(opt =>
 {
@@ -66,8 +66,16 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
+    );
+
+    endpoints.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+});
 app.Run();

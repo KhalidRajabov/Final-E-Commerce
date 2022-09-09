@@ -232,6 +232,9 @@ namespace Final_E_Commerce.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -459,6 +462,7 @@ namespace Final_E_Commerce.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Count")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedTime")

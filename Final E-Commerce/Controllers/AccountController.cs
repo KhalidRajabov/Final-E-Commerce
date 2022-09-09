@@ -178,7 +178,7 @@ namespace Final_E_Commerce.Controllers
 
 
 
-        /*public async Task CreateRole()
+        public async Task CreateRole()
         {
 
             if (!await _roleManager.RoleExistsAsync("Admin"))
@@ -197,7 +197,15 @@ namespace Final_E_Commerce.Controllers
             {
                 await _roleManager.CreateAsync(new IdentityRole { Name = "Ban" });
             }
-        }*/
+            if (!await _roleManager.RoleExistsAsync("Editor"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole { Name = "Editor" });
+            }
+            if (!await _roleManager.RoleExistsAsync("Moderator"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole { Name = "Moderator" });
+            }
+        }
 
         /*[HttpPost]
         [AllowAnonymous]

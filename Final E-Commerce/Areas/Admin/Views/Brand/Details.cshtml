@@ -1,0 +1,20 @@
+﻿@model BrandVM
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="card col-6">
+        <img class="card-img-top" style="width:300px" src="~/images/brand/@Model.Brand.ImageUrl" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">Added on: @Model.Brand.CreatedTime</p>
+            @if (Model.Brand.LastUpdatedAt != null)
+            {
+                <p class="card-text">Updated: @Model.Brand.LastUpdatedAt</p>
+            }
+            <a asp-action="index" class="btn btn-primary">Go back</a>
+        </div>
+    </div>
+</div>

@@ -176,7 +176,7 @@
 
                 $("select#SubCategoryTypeId").empty();
                 let sub = document.getElementById("SubCategoryTypeId")
-                $.getJSON(`/Product/GetSubCategory?cid=${cid}`, function (data) {
+                $.getJSON(`/user/GetSubCategory?cid=${cid}`, function (data) {
                     $.each(data, function (i, item) {
                         let option = document.createElement("option")
                         option.setAttribute("value", `${i}`)

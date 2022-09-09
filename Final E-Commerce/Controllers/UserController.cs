@@ -175,6 +175,8 @@ namespace Final_E_Commerce.Controllers
         {
             Product product = await _context.Products.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
+            product.DeletedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
             return RedirectToAction("Products");
         }
         public async Task<IActionResult> EditProduct(int id)
@@ -436,6 +438,11 @@ namespace Final_E_Commerce.Controllers
             await _context.SaveChangesAsync();
 
             return Redirect(Returnurl);
+        }
+        public IActionResult GetSubCategory(int cid)
+        {
+            var SubCategory_List = _context.Categories.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).Select(c => new { Id = c.Id, Name = c.Name }).ToList();
+            return Json(SubCategory_List);
         }
     }
 }

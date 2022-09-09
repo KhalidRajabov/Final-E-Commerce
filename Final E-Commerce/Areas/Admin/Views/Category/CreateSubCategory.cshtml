@@ -1,0 +1,47 @@
+﻿@model CategoryVM
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+
+
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Create Product</h4>
+                <form class="forms-sample" method="POST">
+
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="form-control" placeholder="Name">
+                        <span style="color: red;" asp-validation-for="Name"></span>
+                    </div>
+
+
+
+
+                    <div class="form-group">
+                        <select asp-for="ParentId" class="form-select" asp-items="ViewBag.MainCategories">
+                            <option selected>Select category</option>
+                        </select>
+                        <span style="color: red;" asp-validation-for="ParentId"></span>
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-success me-2">Save</button>
+                    <a asp-action="index" class="btn btn-primary"> Go Back</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section JqueryValidationScript{
+    <partial name="_Validation" />
+}

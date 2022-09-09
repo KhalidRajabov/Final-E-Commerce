@@ -68,7 +68,7 @@ namespace Final_E_Commerce.Controllers
             return View(basketVM);
         }
 
-        [Authorize]
+        
         public async Task<IActionResult> AddItem(int? id, string returnurl)
         {
             string? username = "";

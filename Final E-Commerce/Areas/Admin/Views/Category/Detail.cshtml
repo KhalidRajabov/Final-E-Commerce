@@ -1,0 +1,31 @@
+﻿@model CategoryVM
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="col-md-4">
+                <img src="~/images/categories/@Model.Category.ImageUrl" width="100%" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">@Model.Name</h4>
+                <p class="text-dark">@Model.Category.Description</p>
+                <h5 class="card-text">Create time: @Model.Category.CreatedTime</h5>
+                <h5 class="card-text">Total products in this category: @ViewBag.ProductCount</h5>
+
+                @if (Model.Category.LastUpdatedAt != null)
+                {
+                    <h5 class="card-text">Update time:@Model.Category.LastUpdatedAt</h5>
+                }
+
+            </div>
+            <a style="align-self:center; margin-bottom: 40px; margin-top: 40px;" asp-controller="category" asp-action="index" class="btn btn-info w-25">Go Back</a>
+        </div>
+    </div>
+
+</div>
+
