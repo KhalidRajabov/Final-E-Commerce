@@ -6,5 +6,6 @@ namespace Final_E_Commerce.ViewModels
     {
         public Product? Product { get; set; }
         public List<Product>? RelatedProducts { get; set; }
+        public List<Product> ListProducts { get; set; }
     }
 }

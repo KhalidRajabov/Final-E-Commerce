@@ -34,7 +34,13 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Detail(int? id)
         {
-            Product product = _context.Products.Include(p=>p.ProductImages).FirstOrDefault(p=>p.Id==id);
+            Product product = _context.Products
+                .Include(p => p.ProductImages)
+                .Include(c => c.Category)
+                .Include(p => p.Brand)
+                .Include(p => p.ProductTags)
+                .ThenInclude(t => t.Tags)
+                .FirstOrDefault(p => p.Id == id);
             ViewBag.ExistWishlist = false;
             if (User.Identity.IsAuthenticated)
             {
@@ -56,6 +62,28 @@ namespace Final_E_Commerce.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+        public IActionResult SearchProduct(string search)
+        {
+            List<Product> products = _context.Products
+                .Where(p => 
+                p.Name.ToLower().Contains(search.ToLower()) || 
+                p.Description.ToLower().Contains(search.ToLower()) ||
+                p.Body.ToLower().Contains(search.ToLower())||
+                p.RearCamera.ToLower().Contains(search.ToLower())||
+                p.FrontCamera.ToLower().Contains(search.ToLower())||
+                p.Weight.ToLower().Contains(search.ToLower())||
+                p.Display.ToLower().Contains(search.ToLower())||
+                p.GPU.ToLower().Contains(search.ToLower())||
+                p.OperationSystem.ToLower().Contains(search.ToLower())||
+                p.Memory.ToLower().Contains(search.ToLower()))
+                .Include(p => p.Category).Include(p=>p.ProductImages)
+                .OrderBy(p => p.Id)
+                .Take(10).ToList();
+            DetailVM detailVM = new DetailVM();
+            detailVM.ListProducts = products;
+
+            return PartialView("_SearchPartial", detailVM);
         }
     }
 }

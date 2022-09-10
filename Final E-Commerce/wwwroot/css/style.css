@@ -2546,3 +2546,9 @@ label {
     transition: 0.5s;
 }
 /*# sourceMappingURL=maps/style.css.map */
+
+
+.search-list-content:hover {
+    background-color: rgb(56,56,56);
+    transition: .3s;
+}

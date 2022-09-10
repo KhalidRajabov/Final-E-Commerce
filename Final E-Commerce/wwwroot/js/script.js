@@ -1,8 +1,22 @@
 (function ($) {
-  //'use strict';
+  'use strict';
 
 
+  //search
 
+
+    $(document).on("keyup", "#search", function () {
+        let inputValue = $(this).val();
+        $("#SearchList li").slice(1).remove();
+        $("#SearchList").html()
+        $.ajax({
+            url: "home/searchProduct?search=" + inputValue,
+            method: "get",
+            success: function (res) {
+                $("#SearchList").append(res);
+            }
+        })
+    })
   
   // Background-images
   $('[data-background]').each(function () {
