@@ -287,6 +287,23 @@ namespace Final_E_Commerce.DAL
                     ImageUrl = "32ff69fafded8e6b986bc76f410e0ce5.jpg",
                 }
                 );
+            builder.Entity<Tag>().HasData(
+                new Tag
+                {
+                    Id=1,
+                    Name="flagman"
+                }, 
+                new Tag
+                {
+                    Id = 2,
+                    Name = "gaming"
+                },
+                new Tag
+                {
+                    Id = 3,
+                    Name = ""
+                }
+                );
         }
         
     }
