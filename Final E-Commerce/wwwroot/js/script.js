@@ -12,8 +12,8 @@
 
         add.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
-            console.log(dataId)
-            axios.post("/basket/additem?id=" + dataId)
+            let quantity = $("#quantity").val()
+            axios.post("/basket/additem?id=" + dataId+"&quantity="+quantity)
                 .then(function (response) {
                     // handle success
                     if (response.data.online) {
@@ -28,8 +28,7 @@
                 })
                 .catch(function (error) {
                     // handle error
-                    alert("error" + dataId)
-                    console.log(error);
+                    console.log("error "+error);
                 })
         })
     )
@@ -73,14 +72,15 @@
 
             let dataId = this.getAttribute("data-id")
             let span = this.nextElementSibling
-            let tr = span.parentElement.parentElement;
-            let tabletotalprice = this.parentElement.previousElementSibling;
-            console.log(container)
+            let tr = span.parentElement.parentElement.parentElement.parentElement;
+            console.log(tr)
+            let tabletotalprice = this.parentElement.parentElement.parentElement.nextElementSibling;
             axios.post("/basket/minus?id=" + dataId)
                 .then(function (response) {
 
 
                     if (response.data.count == 0) {
+                        console.log("data zero")
                         bTotal.innerText = response.data.main
                         tPrice.innerText = response.data.price
                         tr.remove();
@@ -103,7 +103,7 @@
                     //tr.remove();
 
 
-                    console.log(error);
+                    console.log(error.message);
                 })
         })
     )
@@ -118,7 +118,7 @@
         add.addEventListener("click", function () {
 
             let dataId = this.getAttribute(`data-id`)
-            let tr = this.parentElement.parentElement;
+            let tr = this.parentElement.parentElement.parentElement;
             console.log(dataId)
             axios.post("/basket/RemoveItem?id=" + dataId)
                 .then(function (response) {
@@ -127,9 +127,9 @@
                     bTotal.innerText = response.data.count;
                     tPrice.innerText = response.data.price;
                     tr.remove();
-                    if (response.data.count == 0) {
+                    /*if (response.data.count == 0) {
                         location.reload();
-                    }
+                    }*/
                 })
                 .catch(function (error) {
 

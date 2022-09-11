@@ -68,8 +68,8 @@ namespace Final_E_Commerce.Controllers
             return View(basketVM);
         }
 
-        
-        public async Task<IActionResult> AddItem(int? id, string returnurl)
+        [Authorize]
+        public async Task<IActionResult> AddItem(int? id, int? quantity)
         {
             string? username = "";
             bool? online = false;
@@ -114,6 +114,10 @@ namespace Final_E_Commerce.Controllers
                 }
                 products.Add(basketvm);
             }
+            else if(quantity>=0)
+            {
+                IsExist.ProductCount+= quantity;
+            }
             else
             {
                 IsExist.ProductCount++;
@@ -137,11 +141,7 @@ namespace Final_E_Commerce.Controllers
             };
             //obj data-id ile baghlidir. response "obj" obyektidir,
             //Ok'in icnde return edilmelidir ki API'de response gorsun
-            if (returnurl != null)
-            {
-                return Redirect(returnurl);
-            }
-            return RedirectToAction("index", "home");
+            return Ok(obj);
         }
 
         
@@ -188,7 +188,7 @@ namespace Final_E_Commerce.Controllers
             {
                 return Redirect(returnurl);
             }
-            return RedirectToAction("showitem");
+            return Ok(obj);
         }
 
 
@@ -263,7 +263,7 @@ namespace Final_E_Commerce.Controllers
                 main = basketCount,
                 itemTotal = dbproducts.Price * dbproducts.ProductCount
             };
-            return RedirectToAction("index");
+            return Ok(obj);
         }
 
 

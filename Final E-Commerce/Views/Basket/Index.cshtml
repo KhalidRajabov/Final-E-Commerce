@@ -69,8 +69,8 @@
                 <td>
                     <div class="product-quantity">
                         <div class="quantity mt-15 d-flex justify-content-around">
-                            <a asp-action="minus" asp-controller="basket" asp-route-id="@item.Id"><i class="fa-regular fa-square-minus"></i></a>
-                            <span> @item.ProductCount</span>
+                                <a class="minusitem" data-id="@item.Id"><i class="fa-regular fa-square-minus"></i></a>
+                                <span> @item.ProductCount</span>
                                 <a data-id="@item.Id" class="plusitem"><i class="fa-regular fa-square-plus "></i></a>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                 </td>
                 <td>
                     <div class="product-delete">
-                            <a asp-action="removeitem" asp-controller="basket" asp-route-id="@item.Id"><i class="text-danger fa-solid fa-trash"></i></a>
+                            <a class="deleteitem" data-id="@item.Id"><i class="text-danger fa-solid fa-trash"></i></a>
                     </div>
                 </td>
             </tr>
