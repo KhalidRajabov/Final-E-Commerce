@@ -71,13 +71,13 @@
                         <div class="quantity mt-15 d-flex justify-content-around">
                             <a asp-action="minus" asp-controller="basket" asp-route-id="@item.Id"><i class="fa-regular fa-square-minus"></i></a>
                             <span> @item.ProductCount</span>
-                            <a asp-action="plus" asp-controller="basket" asp-route-id="@item.Id" asp-route-count="count"><i class="fa-regular fa-square-plus"></i></a>
+                                <a data-id="@item.Id" class="plusitem"><i class="fa-regular fa-square-plus "></i></a>
                         </div>
                     </div>
                 </td>
                 <td>
                     <div class="product-total">
-                        <span class="total-amount">€@(item.Price * item.ProductCount)</span>
+                            <span class="total-amount">$@(item.Price * item.ProductCount)</span>
                     </div>
                 </td>
                 <td>

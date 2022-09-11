@@ -1,5 +1,149 @@
 (function ($) {
-  'use strict';
+  //'use strict';
+
+
+
+    //add product to basket
+
+    let addBtn = document.querySelectorAll(".add")
+    let bTotal = document.getElementById("basketTotal")
+    let tPrice = document.getElementById("basketPrice")
+    addBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+            let dataId = this.getAttribute("data-id")
+            console.log(dataId)
+            axios.post("/basket/additem?id=" + dataId)
+                .then(function (response) {
+                    // handle success
+                    if (response.data.online) {
+
+                        bTotal.innerHTML = response.data.count
+                        tPrice.innerHTML = ` $${response.data.price}`
+                    }
+                    else {
+                        window.location.href = "account/login"
+                    }
+                    //console.log(response);
+                })
+                .catch(function (error) {
+                    // handle error
+                    alert("error" + dataId)
+                    console.log(error);
+                })
+        })
+    )
+
+    //plus item in basket
+
+    let plusBtn = document.querySelectorAll(".plusitem")
+    plusBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+
+            let dataId = this.getAttribute("data-id")
+            let span = this.previousElementSibling;
+            let tabletotalprice = this.parentElement.parentElement.parentElement.nextElementSibling;
+            console.log(dataId)
+            axios.post("/basket/plus?id=" + dataId)
+                .then(function (response) {
+
+                    // handle success
+                    bTotal.innerText = response.data.count
+                    tPrice.innerText = response.data.price
+                    span.innerText = response.data.main
+                    tabletotalprice.innerText ='$'+ response.data.itemTotal
+                   // console.log(response.data.main)
+                })
+                .catch(function (error) {
+                    // handle error
+
+                    console.log(error);
+                })
+        })
+    )
+
+
+    //minus item in basket
+
+
+    let minusBtn = document.querySelectorAll(".minusitem")
+    minusBtn.forEach(add =>
+        add.addEventListener("click", function () {
+
+            let dataId = this.getAttribute("data-id")
+            let span = this.nextElementSibling
+            let tr = span.parentElement.parentElement;
+            let tabletotalprice = this.parentElement.previousElementSibling;
+            console.log(container)
+            axios.post("/basket/minus?id=" + dataId)
+                .then(function (response) {
+
+
+                    if (response.data.count == 0) {
+                        bTotal.innerText = response.data.main
+                        tPrice.innerText = response.data.price
+                        tr.remove();
+                        if (response.data.main == 0) {
+                            location.reload();
+
+                        }
+                    }
+                    else {
+                        bTotal.innerText = response.data.main
+                        tPrice.innerText = response.data.price
+                        span.innerText = response.data.count
+                        tabletotalprice.innerText = response.data.itemTotal;
+                    }
+                    //console.log(response);
+                })
+                .catch(function (error) {
+                    // handle error
+
+                    //tr.remove();
+
+
+                    console.log(error);
+                })
+        })
+    )
+
+
+    //delete item in basket
+
+
+    let delBtn = document.querySelectorAll(".deleteitem")
+    delBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+
+            let dataId = this.getAttribute(`data-id`)
+            let tr = this.parentElement.parentElement;
+            console.log(dataId)
+            axios.post("/basket/RemoveItem?id=" + dataId)
+                .then(function (response) {
+
+
+                    bTotal.innerText = response.data.count;
+                    tPrice.innerText = response.data.price;
+                    tr.remove();
+                    if (response.data.count == 0) {
+                        location.reload();
+                    }
+                })
+                .catch(function (error) {
+
+                    console.log(error);
+                })
+        })
+    )
+
+
+
+
+
+
+
 
 
   //search
@@ -10,13 +154,38 @@
         $("#SearchList li").slice(1).remove();
         $("#SearchList").html()
         $.ajax({
-            url: "home/searchProduct?search=" + inputValue,
+            url: "search/searchProduct?search=" + inputValue,
             method: "get",
             success: function (res) {
                 $("#SearchList").append(res);
+                console.log("success")
             }
         })
-    })
+    });
+    $(document).on("click", "#search", function () {
+        $("#SearchList li").slice(1).remove();
+        $("#SearchList").html()
+        $.ajax({
+            url: "search/PopularProducts",
+            method: "get",
+            success: function (res) {
+                $("#SearchList").append(res);
+                console.log("success ", res)
+            },
+            error: function (res) {
+                console.log("error ", res)
+            }
+        })
+    });
+
+
+
+
+
+
+
+
+
   
   // Background-images
   $('[data-background]').each(function () {

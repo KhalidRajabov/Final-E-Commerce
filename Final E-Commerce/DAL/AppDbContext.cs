@@ -301,7 +301,7 @@ namespace Final_E_Commerce.DAL
                 new Tag
                 {
                     Id = 3,
-                    Name = ""
+                    Name = "Office"
                 }
                 );
         }

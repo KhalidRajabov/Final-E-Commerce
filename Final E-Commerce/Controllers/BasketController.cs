@@ -307,7 +307,7 @@ namespace Final_E_Commerce.Controllers
                 itemTotal = dbproducts.Price * dbproducts.ProductCount
             };
 
-            return RedirectToAction("index");
+            return Ok(obj);
         }
 
 

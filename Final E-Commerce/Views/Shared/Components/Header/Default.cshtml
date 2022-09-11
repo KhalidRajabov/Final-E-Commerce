@@ -146,7 +146,7 @@
             </div>
             <!-- cart -->
             <div class="cart">
-                <button id="cartOpen" class="cart-btn"><i class="ti-bag"></i><span class="d-xs-none">CART</span> @ViewBag.BasketCount</button>
+                <button id="cartOpen" class="cart-btn"><i class="ti-bag"></i><span class="d-xs-none">CART</span> <span id="basketTotal">@ViewBag.BasketCount</span></button>
                 <div class="cart-wrapper">
                     <i id="cartClose" class="ti-close cart-close"></i>
                     <h4 class="mb-4">Your Cart</h4>
@@ -170,7 +170,7 @@
                     </ul>
                     <div class="mb-3">
                         <span>Cart Total</span>
-                        <span class="float-right">$@ViewBag.TotalPrice</span>
+                        <span class="float-right" id="basketPrice">$@ViewBag.TotalPrice</span>
                     </div>
                     <div class="text-center">
                         <a asp-action="index" asp-controller="basket" class="btn btn-dark btn-mobile rounded-0">view cart</a>

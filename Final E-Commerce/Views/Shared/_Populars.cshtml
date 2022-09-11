@@ -2,15 +2,15 @@
 
 @foreach (var item in Model.ListProducts)
 {
-    <li class=" px-3  bg-dark p-2 search-list-content"  style="width:80%;">
+    <li class=" px-3  bg-dark p-2 search-list-content" style="width:80%;">
         <a class="text-dark d-flex flex-row align-content-center justify-content-between" style="width:100%" asp-controller="home" asp-action="detail" asp-route-Id="@item.Id">
-            <span class="text-danger col-8">@item.Name</span> 
+            <span class="text-danger col-8">@item.Name</span>
             @foreach (var image in item.ProductImages)
             {
-             if (image.IsMain)
+                if (image.IsMain)
                 {
                     <img width="100" src="~/images/products/@image.ImageUrl">
-                }   
+                }
             }
         </a>
     </li>
