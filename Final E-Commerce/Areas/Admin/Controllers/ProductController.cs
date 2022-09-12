@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace Final_E_Commerce.Areas.Admin.Controllers
 {
@@ -20,18 +21,21 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
         private IConfiguration _config { get; }
-        public ProductController(AppDbContext context, IWebHostEnvironment env, IConfiguration config)
+        private readonly UserManager<AppUser> _usermanager;
+        public ProductController(AppDbContext context, IWebHostEnvironment env, IConfiguration config, UserManager<AppUser> usermanager)
         {
             _context = context;
             _env = env;
             _config = config;
+            _usermanager = usermanager;
         }
 
 
         public IActionResult Index(int page = 1, int take = 5)
         {
 
-            List<Product> product = _context.Products.OrderByDescending(p => p.Id).Include(p => p.Category).Include(pi => pi.ProductImages)
+            List<Product> product = _context.Products.OrderByDescending(p => p.Id)
+                .Include(p => p.Category).Include(pi => pi.ProductImages)
                 .Where(p => p.IsDeleted != true).Skip((page - 1) * take).Take(take).ToList();
             PaginationVM<Product> paginationVM = new PaginationVM<Product>(product, PageCount(take), page);
 
@@ -114,8 +118,6 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 RearCamera = product.RearCamera,
                 Battery = product.Battery,
                 Weight = product.Weight,
-                DiscountPercent = product.DiscountPercent,
-                DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100,
                 Count = product.Count,
                 Sold = 0,
                 Profit = 0,
@@ -127,6 +129,17 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 CreatedTime = DateTime.Now,
                 InStock = true
             };
+            if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.Now)
+            {
+                ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
+                return View(product);
+            }
+            else if (product.DiscountUntil > DateTime.Now && product.DiscountUntil != null && product.DiscountPercent > 0)
+            {
+                NewProduct.DiscountUntil = product.DiscountUntil;
+                NewProduct.DiscountPercent = product.DiscountPercent;
+                NewProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
+            }
             NewProduct.ProductImages[0].IsMain = true;
             if (product.Category == null)
             {
@@ -271,7 +284,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             {
                 if (item.ImageUrl != null)
                 {
-                    path = Path.Combine(_env.WebRootPath, "assets/images/product", item.ImageUrl);
+                    path = Path.Combine(_env.WebRootPath, "images/products", item.ImageUrl);
                 }
             }
             if (path != null)
@@ -328,8 +341,6 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.Price = product.Price;
             dbProduct.ProductImages = images;
             dbProduct.Count = product.Count;
-            dbProduct.DiscountPercent = product.DiscountPercent;
-            dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
             dbProduct.BrandId = product.BrandId;
             dbProduct.CategoryId = product.CategoryId;
             dbProduct.Description = product.Description; 
@@ -345,6 +356,17 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.RearCamera = product.RearCamera;
             dbProduct.Battery = product.Battery;
             dbProduct.Weight = product.Weight;
+            if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.Now)
+            {
+                ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
+                return View(product);
+            }
+            else if (product.DiscountUntil > DateTime.Now && product.DiscountUntil != null && product.DiscountPercent > 0)
+            {
+                dbProduct.DiscountUntil = product.DiscountUntil;
+                dbProduct.DiscountPercent = product.DiscountPercent;
+                dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
+            }
             if (dbProduct.DiscountPercent > 30)
             {
                 List<Subscriber> subscribers = await _context.Subscribers.ToListAsync();
@@ -379,8 +401,10 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 .Include(pi => pi.ProductImages)
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (dbProduct == null) return NotFound();
+            AppUser user = await _usermanager.FindByIdAsync(dbProduct.AppUserId);
             DetailVM detailVM = new DetailVM();
-            detailVM.Product=dbProduct;
+            detailVM.Product = dbProduct;
+            detailVM.User = user;
             return View(detailVM);
         }
         public async Task<IActionResult> Delete(int? id)

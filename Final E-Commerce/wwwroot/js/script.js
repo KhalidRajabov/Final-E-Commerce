@@ -362,9 +362,7 @@
     initval: 40
   });
 
-  // nice select
-  $('select').niceSelect();
-
+ 
   // checked
   $('.label').click(function () {
     $(this).find('.size-checkbox').toggleClass('checked');

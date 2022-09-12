@@ -17,7 +17,8 @@
                     <table id="user-table" class="table table-hover">
                         <thead>
                             <tr>
-                                <th>ProductId</th>
+                                <th>Id</th>
+
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Price</th>
@@ -46,9 +47,9 @@
                                     <td> @item.Category.Name</td>
                                     <td> @item.Sold</td>
                                     <td>
-                                        <a class="btn btn-warning fs-5" asp-action="update" asp-route-id="@item.Id"><i class="mdi mdi-key-plus"></i></a>
-                                        <a class="btn btn-success fs-5" asp-action="detail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
-                                        <a class="btn btn-danger fs-5" asp-action="delete" asp-route-id="@item.Id"><i class="mdi mdi-delete-forever"></i></a>
+                                        <a class="btn btn-warning" asp-action="update" asp-route-id="@item.Id"><i class="mdi mdi-key-plus"></i></a>
+                                        <a class="btn btn-success" asp-action="detail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
+                                        <a class="btn btn-danger" asp-action="delete" asp-route-id="@item.Id"><i class="mdi mdi-delete-forever"></i></a>
                                     </td>
                                 </tr>
                             }

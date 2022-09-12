@@ -152,7 +152,7 @@
                 var cid = $(this).val();
 
                 $("select#SubCategoryTypeId").empty();
-                $.getJSON(`/AdminPanel/Product/GetSubCategory?cid=${cid}`, function (data) {
+                $.getJSON(`/Admin/Product/GetSubCategory?cid=${cid}`, function (data) {
                     //console.log(data);
                     $.each(data, function (i, item) {
                         $("select#SubCategoryTypeId").append(`<option value="${item.id}">${item.name}</option>`);

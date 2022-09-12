@@ -13,6 +13,8 @@ namespace Final_E_Commerce.Controllers
             _userManager = userManager;
         }
 
+
+
         public async Task<IActionResult> ConfirmEmail(string token, string email)
         {
             AppUser user = await _userManager.FindByEmailAsync(email);

@@ -146,11 +146,16 @@ namespace Final_E_Commerce.Controllers
                 InStock = true,
                 Views = 0
             };
-            if (vm.DiscountUntil>DateTime.Now&&vm.DiscountUntil!=null&&vm.DiscountPercent>0)
+            if (vm.DiscountPercent > 0 && vm.DiscountUntil < DateTime.Now)
             {
+                ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
+                return View(vm);
+            }
+            else if (vm.DiscountUntil > DateTime.Now && vm.DiscountUntil != null && vm.DiscountPercent > 0)
+            {
+                product.DiscountUntil = vm.DiscountUntil;
                 product.DiscountPercent = vm.DiscountPercent;
                 product.DiscountPrice = vm.Price - (vm.Price * vm.DiscountPercent) / 100;
-                product.DiscountUntil = vm.DiscountUntil;
             }
             product.ProductImages = Images;
             product.ProductImages[0].IsMain = true;
@@ -386,7 +391,12 @@ namespace Final_E_Commerce.Controllers
 
             dbProduct.ProductImages = images;
             dbProduct.Count = product.Count;
-            if (product.DiscountUntil>DateTime.Now&&product.DiscountUntil!=null&&product.DiscountPercent>0)
+            if(product.DiscountPercent>0&&product.DiscountUntil<DateTime.Now)
+            {
+                ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
+                return View(product);
+            }
+            else if (product.DiscountUntil>DateTime.Now&&product.DiscountUntil!=null&&product.DiscountPercent>0)
             {
                 dbProduct.DiscountUntil = product.DiscountUntil;
                 dbProduct.DiscountPercent = product.DiscountPercent;
@@ -418,6 +428,13 @@ namespace Final_E_Commerce.Controllers
 
             return RedirectToAction("products","user");
         }
+        public async Task<IActionResult> EditPictures(int id)
+        {
+            Product product = await _context.Products.Include(p => p.ProductImages).FirstOrDefaultAsync(p=>p.Id==id);
+            ProductUpdateVM vm = new ProductUpdateVM();
+            vm.Product = product;
+            return View(vm);
+        }
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string Returnurl)
         {
             if (imageid == null || productid == null) return NotFound();
@@ -429,6 +446,7 @@ namespace Final_E_Commerce.Controllers
             mainImage.IsMain = false;
 
             image.IsMain = true;
+            product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return Redirect(Returnurl);
@@ -443,6 +461,8 @@ namespace Final_E_Commerce.Controllers
             Helper.Helper.DeleteImage(path);
 
             _context.ProductImages.Remove(image);
+            Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == image.ProductId);
+            product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return Redirect(Returnurl);
