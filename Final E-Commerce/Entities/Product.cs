@@ -22,6 +22,7 @@ namespace Final_E_Commerce.Entities
 
         public Nullable<double> DiscountPercent { get; set; }
         public Nullable<double> DiscountPrice { get; set; }
+        public Nullable<DateTime> DiscountUntil { get; set; }
 
 
         [Required, Range(50, 1000000, ErrorMessage = "Product count must be between 50 and 1 million")]

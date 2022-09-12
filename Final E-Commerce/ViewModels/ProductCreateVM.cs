@@ -27,6 +27,7 @@ namespace Final_E_Commerce.ViewModels
         public string? Weight { get; set; }
 
         public Nullable<double> DiscountPercent { get; set; }
+        public Nullable<DateTime> DiscountUntil { get; set; }
 
         [Required, Range(50, 1000000, ErrorMessage = "Product count must be between 50 and 1 million")]
         public int? Count { get; set; }

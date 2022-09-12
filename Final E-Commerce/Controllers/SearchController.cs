@@ -53,10 +53,11 @@ namespace Final_E_Commerce.Controllers
 
         public IActionResult PopularProducts()
         {
-            List<Product> PopularProducts = _context.Products.OrderByDescending(p => p.Views).Take(3).ToList();
+            List<Product> PopularProducts = _context.Products.OrderByDescending(p => p.Views).Take(3).Include(p=>p.ProductImages).ToList();
             DetailVM detailVM = new DetailVM();
             detailVM.ListProducts= PopularProducts;
-            return PartialView("_Populars", detailVM);
+            return PartialView("_Popular", detailVM);
+            
         }
     }
 }

@@ -101,6 +101,11 @@
                         <input asp-for="DiscountPercent" class="form-control mb-4 rounded-0" placeholder="Discount Percent">
                         <span asp-validation-for="DiscountPercent" class="text-danger"></span>
                     </div>
+                <div class="col-md-6">
+                    <label asp-for="DiscountUntil">Discount's end date</label>
+                    <input asp-for="DiscountUntil" class="form-control mb-4 rounded-0" placeholder="Discount end date">
+                    <span asp-validation-for="DiscountUntil" class="text-danger"></span>
+                </div>
                     <div class="col-md-6">
                         <label asp-for="Count"></label>
                         <input asp-for="Count" class="form-control mb-4 rounded-0" placeholder="Count">

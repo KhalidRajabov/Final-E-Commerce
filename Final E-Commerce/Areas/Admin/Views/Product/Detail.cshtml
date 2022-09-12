@@ -210,9 +210,9 @@
         </div>
     </div>
     <div class="row bg-gray d-flex flex-row justify-content-around mt-5 flex-wrap">
-        <a class="btn btn-secondary w-25" asp-action="Products" asp-controller="user">Go back</a>
+        <a class="btn btn-secondary w-25" asp-action="index" asp-controller="product">Go back</a>
 
-        <a class="btn btn-warning text-light w-25" asp-action="editproduct" asp-controller="user" asp-route-id="@Model.Product.Id">Edit</a>
+        <a class="btn btn-warning text-light w-25" asp-action="update" asp-controller="product" asp-route-id="@Model.Product.Id">Edit</a>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-danger w-25" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Delete

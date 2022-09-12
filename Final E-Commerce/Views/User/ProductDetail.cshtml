@@ -38,13 +38,26 @@
                 <div style="max-height:400px" class="col-9 flex-nowrap">
                     @if (Model.Product.DiscountPercent>0)
                     {
-                        <span>@Model.Product.DiscountPrice </span> <span> (@Model.Product.DiscountPercent %)</span>
+                        <span>@Model.Product.DiscountPrice </span> <span> (@Model.Product.DiscountPercent%) </span> 
+
                     }
                     else{
                         <span>0</span>
                     }
                 </div>
             </div>
+            @if (Model.Product.DiscountPercent > 0)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    <b style="max-height:400px" class="col-2">
+                        Discount ends:
+                    </b>
+                    <div style="max-height:400px" class="col-9 flex-nowrap">
+                        <span class="text-dark">@Model.Product.DiscountUntil?.ToString("dddd, dd MMMM yyyy HH:mm:ss")</span>
+                    </div>
+                </div>
+
+            }
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Info:

@@ -85,7 +85,8 @@
                         tPrice.innerText = response.data.price
                         tr.remove();
                         if (response.data.main == 0) {
-                            location.reload();
+                            tr.remove();
+                            //location.reload();
 
                         }
                     }
@@ -127,9 +128,6 @@
                     bTotal.innerText = response.data.count;
                     tPrice.innerText = response.data.price;
                     tr.remove();
-                    /*if (response.data.count == 0) {
-                        location.reload();
-                    }*/
                 })
                 .catch(function (error) {
 
@@ -154,28 +152,33 @@
         $("#SearchList li").slice(1).remove();
         $("#SearchList").html()
         $.ajax({
-            url: "search/searchProduct?search=" + inputValue,
+            url: "https://localhost:44393/search/searchProduct?search=" + inputValue,
             method: "get",
             success: function (res) {
                 $("#SearchList").append(res);
-                console.log("success")
+                console.log("success brought searched objects")
             }
         })
     });
     $(document).on("click", "#search", function () {
-        $("#SearchList li").slice(1).remove();
-        $("#SearchList").html()
-        $.ajax({
-            url: "search/PopularProducts",
-            method: "get",
-            success: function (res) {
-                $("#SearchList").append(res);
-                console.log("success ", res)
-            },
-            error: function (res) {
-                console.log("error ", res)
-            }
-        })
+        let inputValue = $(this).val();
+
+        if (inputValue.length==0) {
+            $("#SearchList li").slice(1).remove();
+            $("#SearchList").html()
+            $.ajax({
+                url: "https://localhost:44393/search/PopularProducts/",
+                method: "get",
+                success: function (res) {
+                    $("#SearchList").append(res);
+                    console.log("popular products successfully brought for onlcick on search input")
+                },
+                error: function (res) {
+                    console.log("error ", res.responseText)
+                }
+            })
+        }
+
     });
 
 
@@ -288,6 +291,10 @@
   var saleMonth = $('#sale-timer').attr('data-month');
   var saleDay = $('#sale-timer').attr('data-day');
   var saleHour = $('#sale-timer').attr('data-hour');
+  var saleMinute = $('#sale-timer').attr('data-minute');
+  var fulldate = $('#sale-timer').attr('value')
+  console.log(saleYear, saleMonth, saleDay, saleHour, saleMinute)
+  console.log(fulldate);
   $('#sale-timer').syotimer({
     year: saleYear,
     month: saleMonth,

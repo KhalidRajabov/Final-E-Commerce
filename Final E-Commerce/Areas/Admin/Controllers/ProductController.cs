@@ -93,7 +93,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     return View();
                 }
                 ProductImage image = new ProductImage();
-                image.ImageUrl = item.SaveImage(_env, "images/product");
+                image.ImageUrl = item.SaveImage(_env, "images/products");
                 Images.Add(image);
             }
 

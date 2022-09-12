@@ -137,8 +137,6 @@ namespace Final_E_Commerce.Controllers
                 RearCamera = vm.RearCamera,
                 Battery = vm.Battery,
                 Weight = vm.Weight,
-                DiscountPercent = vm.DiscountPercent,
-                DiscountPrice = vm.Price - (vm.Price * vm.DiscountPercent) / 100,
                 CategoryId = vm.SubCategory,
                 BrandId = vm.BrandId,
                 Count = vm.Count,
@@ -148,6 +146,12 @@ namespace Final_E_Commerce.Controllers
                 InStock = true,
                 Views = 0
             };
+            if (vm.DiscountUntil>DateTime.Now&&vm.DiscountUntil!=null&&vm.DiscountPercent>0)
+            {
+                product.DiscountPercent = vm.DiscountPercent;
+                product.DiscountPrice = vm.Price - (vm.Price * vm.DiscountPercent) / 100;
+                product.DiscountUntil = vm.DiscountUntil;
+            }
             product.ProductImages = Images;
             product.ProductImages[0].IsMain = true;
             /*List<ProductTag> tags = new List<ProductTag>();
@@ -210,11 +214,11 @@ namespace Final_E_Commerce.Controllers
                 Battery=p.Battery,
                 Weight=p.Weight,
                 DiscountPercent=p.DiscountPercent,
+                DiscountUntil=p.DiscountUntil,
                 Count=p.Count,
                 CategoryId=p.CategoryId,
                 BrandId=p.BrandId,
                 Product=p
-                
             };
             
             return View(vm);
@@ -312,7 +316,7 @@ namespace Final_E_Commerce.Controllers
             {
                 if (item.ImageUrl != null)
                 {
-                    path = Path.Combine(_env.WebRootPath, "assets/images/product", item.ImageUrl);
+                    path = Path.Combine(_env.WebRootPath, "images/products", item.ImageUrl);
                 }
             }
             if (path != null)
@@ -382,8 +386,12 @@ namespace Final_E_Commerce.Controllers
 
             dbProduct.ProductImages = images;
             dbProduct.Count = product.Count;
-            dbProduct.DiscountPercent = product.DiscountPercent;
-            dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
+            if (product.DiscountUntil>DateTime.Now&&product.DiscountUntil!=null&&product.DiscountPercent>0)
+            {
+                dbProduct.DiscountUntil = product.DiscountUntil;
+                dbProduct.DiscountPercent = product.DiscountPercent;
+                dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
+            }
             dbProduct.BrandId = product.BrandId;
             dbProduct.CategoryId = product.CategoryId;
             
