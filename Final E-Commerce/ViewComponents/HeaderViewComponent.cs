@@ -51,6 +51,7 @@ namespace Final_E_Commerce.ViewComponents
             ViewBag.Products = "";
             int? TotalCount = 0;
             double? TotalPrice = 0;
+            HeaderVM hdVM = new HeaderVM();
             string basket = Request.Cookies[$"basket{username}"];
             if (basket != null)
             {
@@ -63,10 +64,10 @@ namespace Final_E_Commerce.ViewComponents
                 {
                     TotalPrice += item.Price * item.ProductCount;
                 }
+                hdVM.Basket = products;
             }
             ViewBag.BasketCount = TotalCount;
             ViewBag.TotalPrice = TotalPrice;
-            HeaderVM hdVM = new HeaderVM();
             Bio bio = await _context.Bios.FirstOrDefaultAsync();
             BioReturnDTO biodto = new BioReturnDTO();
             hdVM.Bio = _mapper.Map<BioReturnDTO>(bio);

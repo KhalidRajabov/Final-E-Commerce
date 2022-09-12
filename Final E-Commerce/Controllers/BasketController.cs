@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NuGet.ContentModel;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -68,6 +69,11 @@ namespace Final_E_Commerce.Controllers
             return View(basketVM);
         }
 
+        public async Task<IActionResult> Info()
+        {
+            return View();
+        }
+
         [Authorize]
         public async Task<IActionResult> AddItem(int? id, int? quantity)
         {
@@ -85,7 +91,7 @@ namespace Final_E_Commerce.Controllers
             }
             if (id == null)
                 if (id == null) return NotFound();
-            Product? dbProduct = await _context.Products.FindAsync(id);
+            Product? dbProduct = await _context.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id ==id);
             if (dbProduct == null) return NotFound();
             List<BasketVM>? products;
             if (Request.Cookies[$"basket{username}"] == null)
@@ -132,12 +138,23 @@ namespace Final_E_Commerce.Controllers
                 price += product.Price * product.ProductCount;
                 count += product.ProductCount;
             }
-
+            string mainimage = dbProduct.ProductImages[0].ImageUrl;
+            /*foreach (var item in dbProduct.ProductImages)
+            {
+                if (item.IsMain)
+                {
+                    mainimage = item.ImageUrl;
+                }
+            }*/
             var obj = new
             {
                 Price = price,
                 Count = count,
-                online = online
+                online = online,
+                Name = dbProduct.Name,
+                Image = mainimage,
+                itemprice = dbProduct.Price,
+                id=dbProduct.Id
             };
             //obj data-id ile baghlidir. response "obj" obyektidir,
             //Ok'in icnde return edilmelidir ki API'de response gorsun
@@ -182,7 +199,7 @@ namespace Final_E_Commerce.Controllers
             var obj = new
             {
                 Price = $"(${subtotal})",
-                Count = basketCount
+                Count = basketCount,
             };
             if (returnurl != null)
             {
@@ -242,7 +259,7 @@ namespace Final_E_Commerce.Controllers
                     main = basketCount
                 };
 
-                return RedirectToAction("showitem");
+                return Ok(obje);
             }
             Response.Cookies.Append($"basket{username}", JsonConvert.SerializeObject(products), new CookieOptions
             {
@@ -315,9 +332,25 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> CheckOut()
         {
+            string username = "";
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("login", "account");
+            }
+            else
+            {
+                username = User.Identity.Name;
+            }
+            string basket = Request.Cookies[$"basket{username}"];
+            List<BasketVM> products= JsonConvert.DeserializeObject<List<BasketVM>>(basket);
+            if (products==null||products.Count<=0)
+            {
+                return RedirectToAction("index", "home");
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetails userDetails = new UserDetails();
             userDetails = await _context.UserDetails.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
+
             CheckoutVM checkoutVM = new CheckoutVM();
             checkoutVM.Firstname=userDetails.Firstname;
             checkoutVM.Lastname = userDetails.Lastname;

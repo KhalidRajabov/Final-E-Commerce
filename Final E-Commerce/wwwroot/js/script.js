@@ -8,6 +8,7 @@
     let addBtn = document.querySelectorAll(".add")
     let bTotal = document.getElementById("basketTotal")
     let tPrice = document.getElementById("basketPrice")
+    let cartlist = $("#cartlist")
     addBtn.forEach(add =>
 
         add.addEventListener("click", function () {
@@ -17,9 +18,18 @@
                 .then(function (response) {
                     // handle success
                     if (response.data.online) {
-
                         bTotal.innerHTML = response.data.count
                         tPrice.innerHTML = ` $${response.data.price}`
+                        let cartitem = `<li class="d-flex border-bottom">
+                            <img width="70" src="~/images/products/${response.data.image}" alt="product-img">
+                            <div class="mx-3">
+                                <h6>${response.data.name}</h6>
+                                <span>${response.data.count} X</span> <span>$${response.data.itemprice}</span>
+                            </div>
+                            <i class="ti-close deletefromcart" data-id="${response.data.id}"></i>
+                        </li>`
+                        cartlist.append(cartitem)
+                        console.log(cartlist)
                     }
                     else {
                         window.location.href = "account/login"
@@ -73,21 +83,24 @@
             let dataId = this.getAttribute("data-id")
             let span = this.nextElementSibling
             let tr = span.parentElement.parentElement.parentElement.parentElement;
-            console.log(tr)
+            let table = tr.parentElement.parentElement;
+            let checkoutBtn = table.nextElementSibling;
             let tabletotalprice = this.parentElement.parentElement.parentElement.nextElementSibling;
+            let cntnr = $("#basketcontainer")
             axios.post("/basket/minus?id=" + dataId)
                 .then(function (response) {
+                    console.log(response.data.count)
 
-
-                    if (response.data.count == 0) {
+                    if (response.data.count==0) {
                         console.log("data zero")
                         bTotal.innerText = response.data.main
                         tPrice.innerText = response.data.price
                         tr.remove();
                         if (response.data.main == 0) {
-                            tr.remove();
-                            //location.reload();
-
+                            table.remove();
+                            checkoutBtn.remove();
+                            window.location.reload();
+                           // cntnr.html(`<div class="container d-flex flex-row justify-content-center">< a class="text-light btn btn-danger" asp-controller="home" asp-action="index" > Your cart is empty</a ></div >`);
                         }
                     }
                     else {
@@ -120,6 +133,9 @@
 
             let dataId = this.getAttribute(`data-id`)
             let tr = this.parentElement.parentElement.parentElement;
+            let table = tr.parentElement.parentElement;
+            let checkoutBtn = table.nextElementSibling;
+            //let cntnr = $("#basketcontainer")
             console.log(dataId)
             axios.post("/basket/RemoveItem?id=" + dataId)
                 .then(function (response) {
@@ -128,6 +144,12 @@
                     bTotal.innerText = response.data.count;
                     tPrice.innerText = response.data.price;
                     tr.remove();
+                    if (response.data.count == 0) {
+                        table.remove();
+                        checkoutBtn.remove();
+                        window.location.reload();
+                        // cntnr.html(`<div class="container d-flex flex-row justify-content-center">< a class="text-light btn btn-danger" asp-controller="home" asp-action="index" > Your cart is empty</a ></div >`);
+                    }
                 })
                 .catch(function (error) {
 
@@ -292,15 +314,13 @@
   var saleDay = $('#sale-timer').attr('data-day');
   var saleHour = $('#sale-timer').attr('data-hour');
   var saleMinute = $('#sale-timer').attr('data-minute');
-  var fulldate = $('#sale-timer').attr('value')
-  console.log(saleYear, saleMonth, saleDay, saleHour, saleMinute)
-  console.log(fulldate);
+
   $('#sale-timer').syotimer({
     year: saleYear,
     month: saleMonth,
     day: saleDay,
     hour: saleHour,
-    minute: 0
+    minute: saleMinute
   });
 
   // Count Down JS

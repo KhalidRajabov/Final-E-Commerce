@@ -150,23 +150,21 @@
                 <div class="cart-wrapper">
                     <i id="cartClose" class="ti-close cart-close"></i>
                     <h4 class="mb-4">Your Cart</h4>
-                    <ul class="pl-0 mb-3">
-                        <li class="d-flex border-bottom">
-                            <img src="~/images/cart/product-1.jpg" alt="product-img">
-                            <div class="mx-3">
-                                <h6>Eleven Paris Skinny Jeans</h6>
-                                <span>1</span> X <span>$79.00</span>
-                            </div>
-                            <i class="ti-close"></i>
-                        </li>
-                        <li class="d-flex border-bottom">
-                            <img src="~/images/cart/product-2.jpg" alt="product-img">
-                            <div class="mx-3">
-                                <h6>Eleven Paris Skinny Jeans top</h6>
-                                <span>1 X</span> <span>$79.00</span>
-                            </div>
-                            <i class="ti-close"></i>
-                        </li>
+                    <ul id="cartlist" class="pl-0 mb-3">
+                        @if (Model.Basket!=null)
+                        {
+                            @foreach (var item in Model.Basket)
+                            {
+                                <li class="d-flex border-bottom">
+                                    <img width="70px" src="~/images/products/@item.ImageUrl" alt="product-img">
+                                    <div class="mx-3">
+                                        <h6>@item.Name</h6>
+                                        <span>@item.ProductCount X</span> <span>$@item.Price</span>
+                                    </div>
+                                    <i class="ti-close" data-id="@item.Id"></i>
+                                </li>
+                            }
+                        }
                     </ul>
                     <div class="mb-3">
                         <span>Cart Total</span>
