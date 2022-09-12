@@ -29,7 +29,10 @@ namespace Final_E_Commerce.Controllers
             HomeVM homeVM = new HomeVM();
             homeVM.Bio = _context.Bios.FirstOrDefault();
             homeVM.Category = _context.Categories.FirstOrDefault(c=>c.Id==1);
-            homeVM.Products = _context.Products.OrderByDescending(p=>p.Views).Take(3).Include(p=>p.ProductImages).ToList();
+            homeVM.Products = _context.Products
+                .OrderByDescending(p=>p.Views).Take(3).Include(p=>p.ProductImages).ToList();
+            homeVM.BestSellerProducts = _context.Products
+                .OrderByDescending(p => p.Sold).Take(8).Include(p => p.ProductImages).ToList();
             return View(homeVM);
         }
         public async Task<IActionResult> Detail(int? id)

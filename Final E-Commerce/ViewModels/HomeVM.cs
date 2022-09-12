@@ -10,5 +10,6 @@ namespace Final_E_Commerce.ViewModels
         public Bio? Bio { get; set; }
         public Category? Category { get; set; }
         public List<Product>? Products { get; set; }
+        public List<Product>? BestSellerProducts { get; set; }
     }
 }
