@@ -13,7 +13,7 @@
 
         add.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
-            alert("clicked")
+            //alert("clicked")
             let quantity = $("#quantity").val()
             axios.post("/basket/additem?id=" + dataId+"&quantity="+quantity)
                 .then(function (response) {
@@ -160,6 +160,32 @@
     )
 
 
+    //delete from basket cart
+
+    let deleteBtn = document.querySelectorAll(".deletefromcart")
+    deleteBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+            alert("clicked")
+            let dataId = this.getAttribute(`data-id`)
+            let basketcart = this.parentElement;
+            
+            console.log(dataId)
+            axios.post("/basket/RemoveItem?id=" + dataId)
+                .then(function (response) {
+
+
+                    bTotal.innerText = response.data.count;
+                    tPrice.innerText = response.data.price;
+                    basketcart.remove();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        })
+    )
+
+
 
     //cart-modal
     let modalBtn = document.querySelectorAll(".modal-open-btn")
@@ -176,7 +202,7 @@
             console.log(dataId)
             axios.post("/search/GetProductForModal?id=" + dataId)
                 .then(function (response) {
-                    modalAdd.attr(`data-id`, `${dataId}`);
+                    modalAdd.attr(`href`, `home/detail/${dataId}`);
                     productName.text(response.data.name)
                     productPrice.text(`$`+response.data.price) 
                     productDesc.text(response.data.description)

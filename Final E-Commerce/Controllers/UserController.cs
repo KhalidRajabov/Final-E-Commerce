@@ -168,6 +168,7 @@ namespace Final_E_Commerce.Controllers
                 tags.Add(tag);
             }
             product.ProductTags = tags;*/
+            product.Status = ProductConfirmationStatus.Pending;
             _context.Add(product);
             _context.SaveChanges();
             

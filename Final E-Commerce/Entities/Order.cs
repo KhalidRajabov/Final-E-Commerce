@@ -40,7 +40,7 @@ namespace Final_E_Commerce.Entities
 
     public enum OrderStatus
     {
-        Pending,
+        Pending=1,
         Approved,
         Refused
     }

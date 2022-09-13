@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220913215944_productconfirmationstatus")]
+    partial class productconfirmationstatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,7 +147,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bios", (string)null);
+                    b.ToTable("Bios");
 
                     b.HasData(
                         new
@@ -197,7 +199,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
 
                     b.HasData(
                         new
@@ -254,7 +256,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -400,7 +402,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
@@ -429,7 +431,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Product", b =>
@@ -548,7 +550,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -664,7 +666,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.ToTable("ProductImages");
 
                     b.HasData(
                         new
@@ -773,7 +775,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ProductTags", (string)null);
+                    b.ToTable("ProductTags");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Slider", b =>
@@ -798,7 +800,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders", (string)null);
+                    b.ToTable("Sliders");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Subscriber", b =>
@@ -814,7 +816,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subscribers", (string)null);
+                    b.ToTable("Subscribers");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Tag", b =>
@@ -833,7 +835,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
 
                     b.HasData(
                         new
@@ -900,7 +902,7 @@ namespace Final_E_Commerce.Migrations
                         .IsUnique()
                         .HasFilter("[AppUserId] IS NOT NULL");
 
-                    b.ToTable("UserDetails", (string)null);
+                    b.ToTable("UserDetails");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.UserProfile", b =>
@@ -944,7 +946,7 @@ namespace Final_E_Commerce.Migrations
                         .IsUnique()
                         .HasFilter("[AppUserId] IS NOT NULL");
 
-                    b.ToTable("UserProfiles", (string)null);
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
@@ -965,7 +967,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Wishlists", (string)null);
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1113,7 +1115,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("WishlistsId");
 
-                    b.ToTable("ProductWishlist", (string)null);
+                    b.ToTable("ProductWishlist");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Category", b =>

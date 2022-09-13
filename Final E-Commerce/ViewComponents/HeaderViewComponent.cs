@@ -51,17 +51,19 @@ namespace Final_E_Commerce.ViewComponents
             int? TotalCount = 0;
             double? TotalPrice = 0;
             HeaderVM hdVM = new HeaderVM();
-            List<BasketVM> ListbasketVM = new List<BasketVM>();
             string basket = Request.Cookies[$"basket{username}"];
+
+
+            List<BasketVM> basketVM;
             if (basket != null)
             {
-                ListbasketVM = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
-                foreach (var item in ListbasketVM)
+                basketVM = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
+                foreach (var item in basketVM)
                 {
                     TotalCount += item.ProductCount;
                     TotalPrice += item.Price * item.ProductCount;
-                    Product dbProducts = _context.Products
-                        .Include(p => p.ProductImages).FirstOrDefault(p=>p.Id==item.Id);
+                    Product? dbProducts = _context.Products.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
+                    item.Name = dbProducts.Name;
                     if (dbProducts.DiscountPercent > 0)
                     {
                         item.Price = dbProducts.DiscountPrice;
@@ -81,12 +83,11 @@ namespace Final_E_Commerce.ViewComponents
             }
             else
             {
-                ListbasketVM = new List<BasketVM>();
+                basketVM = new List<BasketVM>();
             }
+            hdVM.BasketProducts = basketVM;
             ViewBag.BasketCount = TotalCount;
             ViewBag.TotalPrice = TotalPrice;
-            
-            hdVM.Basket = ListbasketVM;
             hdVM.Bio = await _context.Bios.FirstOrDefaultAsync();
             return View(await Task.FromResult(hdVM));
         }

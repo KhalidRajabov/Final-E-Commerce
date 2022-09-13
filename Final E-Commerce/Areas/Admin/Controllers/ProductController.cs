@@ -127,7 +127,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
                 CreatedTime = DateTime.Now,
-                InStock = true
+                InStock = true,
+                Status = ProductConfirmationStatus.Approved
+                
             };
             if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.Now)
             {
@@ -161,6 +163,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 }
                 NewProduct.ProductTags = productTags;
             }
+            
             await _context.AddAsync(NewProduct);
             await _context.SaveChangesAsync();
 

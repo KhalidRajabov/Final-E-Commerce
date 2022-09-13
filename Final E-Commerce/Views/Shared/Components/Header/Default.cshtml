@@ -1,19 +1,6 @@
 ﻿@model HeaderVM
 <header>
-    <!-- top advertise -->
-    <!-- <div class="alert alert-secondary alert-dismissible fade show rounded-0 pb-0 mb-0" role="alert">
-      <div class="d-flex justify-content-between">
-        <p>SAVE UP TO $50</p>
-        <h4>SALE!</h4>
-        <div class="shop-now">
-          <a href="~/shop.html" class="btn btn-sm btn-primary">Shop Now</a>
-        </div>
-      </div>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div> -->
-    <!-- top header -->
+   
     <div class="top-header">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
@@ -150,20 +137,26 @@
                 <div class="cart-wrapper">
                     <i id="cartClose" class="ti-close cart-close"></i>
                     <h4 class="mb-4">Your Cart</h4>
+
                     <ul id="cartlist" class="pl-0 mb-3">
-                        @if (ViewBag.Products!= null)
-                                    {
-                            @foreach (var item in Model.Basket)
+                        @if (Model.BasketProducts!= null)
+                        {
+                            @foreach (var item in Model.BasketProducts)
                             {
                                 <li class="d-flex border-bottom">
-                                    <img width="70px" src="~/images/products/@item.ImageUrl" alt="product-img">
+                                    
+                                     <img width="70px" src="~/images/products/@item.ImageUrl" alt="product-img">
+                                     
                                     <div class="mx-3">
                                         <h6>@item.Name</h6>
                                         <span>@item.ProductCount X</span> <span>$@item.Price</span>
                                     </div>
-                                    <i class="ti-close" data-id="@item.Id"></i>
+                                    <i class="ti-close deletefromcart" data-id="@item.Id"></i>
                                 </li>
                             }
+                        }
+                        else{
+                            <li>Your basket is empty</li>
                         }
                     </ul>
                     <div class="mb-3">

@@ -6,6 +6,6 @@ namespace Final_E_Commerce.ViewModels
     public class HeaderVM
     {
         public Bio? Bio { get; set; }
-        public List<BasketVM>? Basket { get; set; }
+        public List<BasketVM>? BasketProducts { get; set; }
     }
 }

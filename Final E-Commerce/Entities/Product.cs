@@ -36,6 +36,8 @@ namespace Final_E_Commerce.Entities
         public bool InStock { get; set; }
 
 
+
+
         [NotMapped]
         public List<IFormFile>? Photo { get; set; }
 
@@ -55,6 +57,7 @@ namespace Final_E_Commerce.Entities
         public Brand? Brand { get; set; }
 
 
+        public ProductConfirmationStatus Status { get; set; }
 
 
         public List<ProductTag>? ProductTags { get; set; }
@@ -63,5 +66,11 @@ namespace Final_E_Commerce.Entities
 
         public List<OrderItem>? OrderItem { get; set; }
         public List<Wishlist>? Wishlists { get; set; }
+    }
+    public enum ProductConfirmationStatus
+    {
+        Pending=1,
+        Approved,
+        Refused
     }
 }

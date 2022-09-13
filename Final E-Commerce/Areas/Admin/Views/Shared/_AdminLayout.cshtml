@@ -399,11 +399,21 @@
                             <span style="margin-left: 16px" class="menu-title">Brands</span>
                         </a>
                     </li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="product" asp-action="index">
-                            <i style="font-size:180%" class="mdi mdi-cards-playing-outline"></i>
-                            <span style="margin-left: 16px" class="menu-title">Products</span>
+                        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                            <i class="menu-icon mdi mdi-recycle"></i>
+                            <span class="menu-title">Products</span>
+                            <i class="menu-arrow"></i>
                         </a>
+                        <div class="collapse" id="ui-basic">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" asp-action="index" asp-controller="Product">
+                                        <i style="font-size:180%" class="mdi mdi-cards-playing-outline"></i>
+                                        <span style="margin-left: 16px" class="menu-title">Products</span>
+                                </a></li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="slider" asp-action="index">
