@@ -56,8 +56,30 @@ namespace Final_E_Commerce.Controllers
             List<Product> PopularProducts = _context.Products.OrderByDescending(p => p.Views).Take(3).Include(p=>p.ProductImages).ToList();
             DetailVM detailVM = new DetailVM();
             detailVM.ListProducts= PopularProducts;
-            return PartialView("_Popular", detailVM);
-            
+            return PartialView("_Popular", detailVM);       
+        }
+        public async Task<IActionResult> GetProductForModal(int id)
+        {
+            Product product = await _context.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
+            DetailVM detailVM = new DetailVM();
+            string image = "";
+            foreach (var item in product.ProductImages)
+            {
+                if (item.IsMain)
+                {
+                    image = item.ImageUrl;
+                    break;
+                }
+            }
+            detailVM.Product = product;
+            var obj = new
+            {
+                image = image,
+                name = product.Name,
+                price = product.Price,
+                description = product.Description
+            };
+            return Ok(obj);
         }
     }
 }

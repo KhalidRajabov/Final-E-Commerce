@@ -171,25 +171,14 @@
 <div id="quickView" class="quickview">
   <div class="row w-100">
     <div class="col-lg-6 col-md-6 mb-5 mb-md-0 pl-5 pt-4 pt-lg-0 pl-lg-0">
-      <img src="~/images/feature/product.png" alt="product-img" class="img-fluid">
+      <img id="modal-image" src="" alt="product-img" class="img-fluid">
     </div>
     <div class="col-lg-5 col-md-6 text-center text-md-left align-self-center pl-5">
-      <h3 class="mb-lg-2 mb-2">Woven Crop Cami</h3>
-      <span class="mb-lg-4 mb-3 h5">$90.00</span>
-      <p class="mb-lg-4 mb-3 text-gray">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. sed ut perspic atis unde omnis iste natus</p>
-      <form action="#">
-        <select class="form-control w-100 mb-2" name="color">
-          <option value="brown">Brown Color</option>
-          <option value="gray">Gray Color</option>
-          <option value="black">Black Color</option>
-        </select>
-        <select class="form-control w-100 mb-3" name="size">
-          <option value="small">Small Size</option>
-          <option value="medium">Medium Size</option>
-          <option value="large">Large Size</option>
-        </select>
-        <button class="btn btn-primary w-100 mb-lg-4 mb-3">add to cart</button>
-      </form>
+      <h3 id="modal-product-name" class="mb-lg-2 mb-2"></h3>
+      <span id="modal-product-price" class="mb-lg-4 mb-3 h5"></span>
+      <p  id="modal-product-desc" class="mb-lg-4 mb-3 text-gray"></p>
+
+            <a id="modal-add-btn" class="btn btn-primary w-100 mb-lg-4 mb-3 add" data-id="">add to cart</a>
       <ul class="list-inline social-icon-alt">
         <li class="list-inline-item"><a href="#"><i class="ti-facebook"></i></a></li>
         <li class="list-inline-item"><a href="#"><i class="ti-twitter-alt"></i></a></li>
@@ -246,8 +235,8 @@
                                         <a href="#" class="product-icon cart" data-toggle="tooltip" data-placement="left" title="Compare">
                                             <i class="ti-direction-alt"></i>
                                         </a>
-                                        <a data-vbtype="inline" href="#quickView" class="product-icon view venobox" data-toggle="tooltip"
-                                       data-placement="left" title="Quick View"><i class="ti-search"></i></a>
+                                        <a data-vbtype="inline" href="#quickView" class="modal-open-btn product-icon view venobox" data-toggle="tooltip"
+                                       data-placement="left" title="Quick View" data-id="@item.Id"><i class="ti-search"></i></a>
                                     </div>
                                 </div>
                                 <div class="product-info">

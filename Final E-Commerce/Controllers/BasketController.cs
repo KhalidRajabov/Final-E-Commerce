@@ -71,7 +71,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Info()
         {
-            return View();
+            return Content("");
         }
 
         [Authorize]
@@ -109,6 +109,7 @@ namespace Final_E_Commerce.Controllers
                 {
                     Id = dbProduct.Id,
                     ProductCount = 1,
+                    Name = dbProduct.Name,
                 };
                 if (dbProduct.DiscountPercent > 0)
                 {
@@ -323,7 +324,6 @@ namespace Final_E_Commerce.Controllers
                 main = dbproducts.ProductCount,
                 itemTotal = dbproducts.Price * dbproducts.ProductCount
             };
-
             return Ok(obj);
         }
 

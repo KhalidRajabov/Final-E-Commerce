@@ -13,6 +13,7 @@
 
         add.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
+            alert("clicked")
             let quantity = $("#quantity").val()
             axios.post("/basket/additem?id=" + dataId+"&quantity="+quantity)
                 .then(function (response) {
@@ -21,7 +22,7 @@
                         bTotal.innerHTML = response.data.count
                         tPrice.innerHTML = ` $${response.data.price}`
                         let cartitem = `<li class="d-flex border-bottom">
-                            <img width="70" src="~/images/products/${response.data.image}" alt="product-img">
+                            <img width="70" src="https://localhost:44393/images/products/${response.data.image}" alt="product-img">
                             <div class="mx-3">
                                 <h6>${response.data.name}</h6>
                                 <span>${response.data.count} X</span> <span>$${response.data.itemprice}</span>
@@ -158,6 +159,36 @@
         })
     )
 
+
+
+    //cart-modal
+    let modalBtn = document.querySelectorAll(".modal-open-btn")
+    modalBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+            let modalImage = $("#modal-image")
+            let dataId = this.getAttribute(`data-id`)
+            let modalAdd = $("#modal-add-btn")
+            let productName = $("#modal-product-name")
+            let productPrice = $("#modal-product-price")
+            let productDesc = $("#modal-product-desc")
+            console.log(dataId, modalAdd, productName, productPrice, productDesc)
+            console.log(dataId)
+            axios.post("/search/GetProductForModal?id=" + dataId)
+                .then(function (response) {
+                    modalAdd.attr(`data-id`, `${dataId}`);
+                    productName.text(response.data.name)
+                    productPrice.text(`$`+response.data.price) 
+                    productDesc.text(response.data.description)
+                    modalImage.attr(`src`, `https://localhost:44393/images/products/${response.data.image}`)
+                    modalImage.attr(`width`, `100%`)
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        })
+    )
 
 
 

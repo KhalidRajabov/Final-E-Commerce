@@ -151,8 +151,8 @@
                     <i id="cartClose" class="ti-close cart-close"></i>
                     <h4 class="mb-4">Your Cart</h4>
                     <ul id="cartlist" class="pl-0 mb-3">
-                        @if (Model.Basket!=null)
-                        {
+                        @if (ViewBag.Products!= null)
+                                    {
                             @foreach (var item in Model.Basket)
                             {
                                 <li class="d-flex border-bottom">

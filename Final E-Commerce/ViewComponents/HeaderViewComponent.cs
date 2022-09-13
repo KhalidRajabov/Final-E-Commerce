@@ -48,29 +48,46 @@ namespace Final_E_Commerce.ViewComponents
             }
             ViewBag.BasketCount = 0;
             ViewBag.TotalPrice = 0;
-            ViewBag.Products = "";
             int? TotalCount = 0;
             double? TotalPrice = 0;
             HeaderVM hdVM = new HeaderVM();
+            List<BasketVM> ListbasketVM = new List<BasketVM>();
             string basket = Request.Cookies[$"basket{username}"];
             if (basket != null)
             {
-                List<BasketVM> products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
-                foreach (var item in products)
+                ListbasketVM = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
+                foreach (var item in ListbasketVM)
                 {
                     TotalCount += item.ProductCount;
-                }
-                foreach (var item in products)
-                {
                     TotalPrice += item.Price * item.ProductCount;
+                    Product dbProducts = _context.Products
+                        .Include(p => p.ProductImages).FirstOrDefault(p=>p.Id==item.Id);
+                    if (dbProducts.DiscountPercent > 0)
+                    {
+                        item.Price = dbProducts.DiscountPrice;
+                    }
+                    else
+                    {
+                        item.Price = dbProducts.Price;
+                    }
+                    foreach (var image in dbProducts.ProductImages)
+                    {
+                        if (image.IsMain)
+                        {
+                            item.ImageUrl = image.ImageUrl;
+                        }
+                    }
                 }
-                hdVM.Basket = products;
+            }
+            else
+            {
+                ListbasketVM = new List<BasketVM>();
             }
             ViewBag.BasketCount = TotalCount;
             ViewBag.TotalPrice = TotalPrice;
-            Bio bio = await _context.Bios.FirstOrDefaultAsync();
-            BioReturnDTO biodto = new BioReturnDTO();
-            hdVM.Bio = _mapper.Map<BioReturnDTO>(bio);
+            
+            hdVM.Basket = ListbasketVM;
+            hdVM.Bio = await _context.Bios.FirstOrDefaultAsync();
             return View(await Task.FromResult(hdVM));
         }
     }
