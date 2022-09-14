@@ -143,7 +143,7 @@
                         {
                             @foreach (var item in Model.BasketProducts)
                             {
-                                <li class="d-flex border-bottom">
+                                <li id="cart-item@(item.Id)" class="d-flex border-bottom">
                                     
                                      <img width="70px" src="~/images/products/@item.ImageUrl" alt="product-img">
                                      

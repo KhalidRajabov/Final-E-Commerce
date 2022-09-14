@@ -23,7 +23,7 @@
                         if (response.data.productcount==1) {
                         bTotal.innerHTML = response.data.count
                         tPrice.innerHTML = ` $${response.data.price}`
-                        let cartitem = `<li  class="d-flex border-bottom">
+                            let cartitem = `<li id="cart-item${dataId}"  class="d-flex border-bottom">
                                             <img width="70" src="https://localhost:44393/images/products/${response.data.image}" alt="product-img">
                                             <div class="mx-3">
                                                 <h6>${response.data.name}</h6>
@@ -62,20 +62,18 @@
             let dataId = this.getAttribute("data-id")
             let span = this.previousElementSibling;
             let tabletotalprice = this.parentElement.parentElement.parentElement.nextElementSibling;
-            console.log(dataId)
             axios.post("/basket/plus?id=" + dataId)
                 .then(function (response) {
 
                     // handle success
                     bTotal.innerText = response.data.count
-                    tPrice.innerText = response.data.price
+                    tPrice.innerText = "$"+response.data.price
                     span.innerText = response.data.main
-                    tabletotalprice.innerText ='$'+ response.data.itemTotal
-                   // console.log(response.data.main)
+                    tabletotalprice.innerText = '$' + response.data.itemTotal
+                    $(`#oneproductCount${dataId}`).html(`${response.data.productcount}`)
+                    console.log(response.data.main)
                 })
                 .catch(function (error) {
-                    // handle error
-
                     console.log(error);
                 })
         })
@@ -93,6 +91,7 @@
             let span = this.nextElementSibling
             let tr = span.parentElement.parentElement.parentElement.parentElement;
             let table = tr.parentElement.parentElement;
+            let cart_list_item = $(`#cart-item${dataId}`)
             let checkoutBtn = table.nextElementSibling;
             let tabletotalprice = this.parentElement.parentElement.parentElement.nextElementSibling;
             let cntnr = $("#basketcontainer")
@@ -100,11 +99,12 @@
                 .then(function (response) {
                     console.log(response.data.count)
 
-                    if (response.data.count==0) {
+                    if (response.data.productcount ==0) {
                         console.log("data zero")
                         bTotal.innerText = response.data.main
                         tPrice.innerText = response.data.price
                         tr.remove();
+                        cart_list_item.remove()
                         if (response.data.main == 0) {
                             table.remove();
                             checkoutBtn.remove();
@@ -114,9 +114,14 @@
                     }
                     else {
                         bTotal.innerText = response.data.main
-                        tPrice.innerText = response.data.price
+                        tPrice.innerText = "$"+response.data.price 
                         span.innerText = response.data.count
                         tabletotalprice.innerText = response.data.itemTotal;
+                        console.log("count " + response.data.count);
+                        $(`#oneproductCount${dataId}`).html(`${response.data.count} X`)
+                        console.log("productcount " + response.data.productcount);
+                        console.log(itemcount)
+                        
                     }
                     //console.log(response);
                 })

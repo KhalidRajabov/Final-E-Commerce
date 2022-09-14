@@ -239,10 +239,12 @@ namespace Final_E_Commerce.Controllers
 
             double? subtotal = 0;
             int? basketCount = 0;
+            int? ProductCount = 0;
 
             if (dbproducts.ProductCount > 1)
             {
                 dbproducts.ProductCount--;
+                ProductCount = dbproducts.ProductCount;
                 Response.Cookies.Append($"basket{username}", JsonConvert.SerializeObject(dbproducts));
             }
             else
@@ -264,7 +266,8 @@ namespace Final_E_Commerce.Controllers
                 {
                     count = 0,
                     price = subtotal,
-                    main = basketCount
+                    main = basketCount,
+                    productcount = ProductCount
                 };
 
                 return Ok(obje);
@@ -286,7 +289,8 @@ namespace Final_E_Commerce.Controllers
                 Price = subtotal,
                 Count = dbproducts.ProductCount,
                 main = basketCount,
-                itemTotal = dbproducts.Price * dbproducts.ProductCount
+                itemTotal = dbproducts.Price * dbproducts.ProductCount,
+                productcount = ProductCount
             };
             return Ok(obj);
         }
@@ -311,6 +315,7 @@ namespace Final_E_Commerce.Controllers
             BasketVM dbproducts = products.Find(p => p.Id == id);
             if (dbproducts == null) return NotFound();
             dbproducts.ProductCount++;
+            int? ProductCount = dbproducts.ProductCount;
             Response.Cookies.Append($"basket{username}", JsonConvert.SerializeObject(products), new CookieOptions
             {
                 MaxAge = TimeSpan.FromDays(100)
@@ -329,7 +334,9 @@ namespace Final_E_Commerce.Controllers
                 Price = price,
                 Count = count,
                 main = dbproducts.ProductCount,
-                itemTotal = dbproducts.Price * dbproducts.ProductCount
+                itemTotal = dbproducts.Price * dbproducts.ProductCount,
+                id = id,
+                productcount = ProductCount
             };
             return Ok(obj);
         }
@@ -431,6 +438,10 @@ namespace Final_E_Commerce.Controllers
 
 
                 List<BasketVM> basketProducts = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies[$"basket{userName}"]);
+                if (basketProducts==null)
+                {
+                    return RedirectToAction("index");
+                }
                 ViewBag.Products = basketProducts;
                 List<OrderItem> orderItems = new List<OrderItem>();
                 double? total = 0;
@@ -440,7 +451,7 @@ namespace Final_E_Commerce.Controllers
                     if (basketProduct.ProductCount > dbProduct.Count)
                     {
                         TempData["fail"] = "Satış uğursuzdur..";
-                        return RedirectToAction("ShowItem");
+                        return RedirectToAction("Index");
                     }
                     OrderItem orderItem = new OrderItem();
                     orderItem.ProductId = dbProduct.Id;
