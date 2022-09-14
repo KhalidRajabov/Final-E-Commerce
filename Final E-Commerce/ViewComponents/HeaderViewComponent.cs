@@ -48,8 +48,6 @@ namespace Final_E_Commerce.ViewComponents
             }
             ViewBag.BasketCount = 0;
             ViewBag.TotalPrice = 0;
-            int? TotalCount = 0;
-            double? TotalPrice = 0;
             HeaderVM hdVM = new HeaderVM();
             string basket = Request.Cookies[$"basket{username}"];
 
@@ -60,8 +58,8 @@ namespace Final_E_Commerce.ViewComponents
                 basketVM = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
                 foreach (var item in basketVM)
                 {
-                    TotalCount += item.ProductCount;
-                    TotalPrice += item.Price * item.ProductCount;
+                    ViewBag.BasketCount += item.ProductCount;
+                    ViewBag.TotalPrice += item.Price * item.ProductCount;
                     Product? dbProducts = _context.Products.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
                     item.Name = dbProducts.Name;
                     if (dbProducts.DiscountPercent > 0)
@@ -86,8 +84,6 @@ namespace Final_E_Commerce.ViewComponents
                 basketVM = new List<BasketVM>();
             }
             hdVM.BasketProducts = basketVM;
-            ViewBag.BasketCount = TotalCount;
-            ViewBag.TotalPrice = TotalPrice;
             hdVM.Bio = await _context.Bios.FirstOrDefaultAsync();
             return View(await Task.FromResult(hdVM));
         }

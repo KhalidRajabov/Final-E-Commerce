@@ -149,7 +149,7 @@
                                      
                                     <div class="mx-3">
                                         <h6>@item.Name</h6>
-                                        <span>@item.ProductCount X</span> <span>$@item.Price</span>
+                                        <span id="oneproductCount@(item.Id)">@item.ProductCount X</span> <span>$@item.Price</span>
                                     </div>
                                     <i class="ti-close deletefromcart" data-id="@item.Id"></i>
                                 </li>
@@ -165,7 +165,7 @@
                     </div>
                     <div class="text-center">
                         <a asp-action="index" asp-controller="basket" class="btn btn-dark btn-mobile rounded-0">view cart</a>
-                        <a href="~/shipping.html" class="btn btn-dark btn-mobile rounded-0">check out</a>
+                        <a href="~/basket/checkout"  class="btn btn-dark btn-mobile rounded-0">check out</a>
                     </div>
                 </div>
             </div>

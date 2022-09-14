@@ -18,19 +18,27 @@
             axios.post("/basket/additem?id=" + dataId+"&quantity="+quantity)
                 .then(function (response) {
                     // handle success
+                    console.log(response.data.count)
                     if (response.data.online) {
+                        if (response.data.productcount==1) {
                         bTotal.innerHTML = response.data.count
                         tPrice.innerHTML = ` $${response.data.price}`
-                        let cartitem = `<li class="d-flex border-bottom">
-                            <img width="70" src="https://localhost:44393/images/products/${response.data.image}" alt="product-img">
-                            <div class="mx-3">
-                                <h6>${response.data.name}</h6>
-                                <span>${response.data.count} X</span> <span>$${response.data.itemprice}</span>
-                            </div>
-                            <i class="ti-close deletefromcart" data-id="${response.data.id}"></i>
-                        </li>`
+                        let cartitem = `<li  class="d-flex border-bottom">
+                                            <img width="70" src="https://localhost:44393/images/products/${response.data.image}" alt="product-img">
+                                            <div class="mx-3">
+                                                <h6>${response.data.name}</h6>
+                                                <span id="oneproductCount${response.data.id}">${response.data.productcount} X</span> 
+                                                <span>$${response.data.itemprice}</span>
+                                            </div>
+                                            <i class="ti-close deletefromcart" data-id="${response.data.id}"></i>
+                                        </li>`
                         cartlist.append(cartitem)
-                        console.log(cartlist)
+                        }
+                        else if (response.data.productcount > 1) {
+                            bTotal.innerHTML = response.data.count
+                            tPrice.innerHTML = ` $${response.data.price}`
+                            $(`#oneproductCount${response.data.id}`).html(`${response.data.productcount}`)
+                        }
                     }
                     else {
                         window.location.href = "account/login"
@@ -166,7 +174,6 @@
     deleteBtn.forEach(add =>
 
         add.addEventListener("click", function () {
-            alert("clicked")
             let dataId = this.getAttribute(`data-id`)
             let basketcart = this.parentElement;
             

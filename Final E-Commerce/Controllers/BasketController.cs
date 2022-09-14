@@ -102,6 +102,7 @@ namespace Final_E_Commerce.Controllers
             {
                 products = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies[$"basket{username}"]);
             }
+            int? ProductCount = 0;
             BasketVM? IsExist = products.Find(x => x.Id == id);
             if (IsExist == null)
             {
@@ -110,7 +111,9 @@ namespace Final_E_Commerce.Controllers
                     Id = dbProduct.Id,
                     ProductCount = 1,
                     Name = dbProduct.Name,
+
                 };
+                ProductCount = basketvm.ProductCount;
                 if (dbProduct.DiscountPercent > 0)
                 {
                     basketvm.Price = dbProduct.DiscountPrice;
@@ -124,15 +127,17 @@ namespace Final_E_Commerce.Controllers
             else if(quantity>=0)
             {
                 IsExist.ProductCount+= quantity;
+                ProductCount = IsExist.ProductCount;
             }
             else
             {
                 IsExist.ProductCount++;
+                ProductCount = IsExist.ProductCount;
             }
 
-            Response.Cookies.Append($"basket{username}", JsonConvert.SerializeObject(products), new CookieOptions { MaxAge = TimeSpan.FromDays(100) });
             double? price = 0;
             double? count = 0;
+            
 
             foreach (var product in products)
             {
@@ -140,6 +145,7 @@ namespace Final_E_Commerce.Controllers
                 count += product.ProductCount;
             }
             string mainimage = dbProduct.ProductImages[0].ImageUrl;
+            Response.Cookies.Append($"basket{username}", JsonConvert.SerializeObject(products), new CookieOptions { MaxAge = TimeSpan.FromDays(100) });
             /*foreach (var item in dbProduct.ProductImages)
             {
                 if (item.IsMain)
@@ -155,6 +161,7 @@ namespace Final_E_Commerce.Controllers
                 Name = dbProduct.Name,
                 Image = mainimage,
                 itemprice = dbProduct.Price,
+                productcount = ProductCount,
                 id=dbProduct.Id
             };
             //obj data-id ile baghlidir. response "obj" obyektidir,
@@ -341,11 +348,38 @@ namespace Final_E_Commerce.Controllers
             {
                 username = User.Identity.Name;
             }
+            ViewBag.BasketCount = 0;
+            ViewBag.TotalPrice = 0;
             string basket = Request.Cookies[$"basket{username}"];
             List<BasketVM> products= JsonConvert.DeserializeObject<List<BasketVM>>(basket);
             if (products==null||products.Count<=0)
             {
                 return RedirectToAction("index", "home");
+            }
+            else
+            {
+                foreach (var item in products)
+                {
+                    ViewBag.BasketCount += item.ProductCount;
+                    ViewBag.TotalPrice += item.Price * item.ProductCount;
+                    Product? dbProducts = _context.Products.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
+                    item.Name = dbProducts.Name;
+                    if (dbProducts.DiscountPercent > 0)
+                    {
+                        item.Price = dbProducts.DiscountPrice;
+                    }
+                    else
+                    {
+                        item.Price = dbProducts.Price;
+                    }
+                    foreach (var image in dbProducts.ProductImages)
+                    {
+                        if (image.IsMain)
+                        {
+                            item.ImageUrl = image.ImageUrl;
+                        }
+                    }
+                }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetails userDetails = new UserDetails();
@@ -361,6 +395,7 @@ namespace Final_E_Commerce.Controllers
             checkoutVM.Address = userDetails.Street;
             checkoutVM.PhoneNumber = userDetails.PhoneNumber;
             checkoutVM.Company = userDetails.Company;
+            checkoutVM.Baskets = products;
             
             return View(checkoutVM);
         }

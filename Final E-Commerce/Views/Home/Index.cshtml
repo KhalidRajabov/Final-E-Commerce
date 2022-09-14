@@ -81,10 +81,18 @@
       <div class="col-lg-4 col-md-6 mb-50" >
                 <div class="card p-0">
           <div class="border-bottom text-center hover-zoom-img">
-            <a href="shop.html"><img src="~/images/categories/@Model.Category.ImageUrl" class="rounded-top img-fluid w-100" alt="product-img"></a>
+            <a asp-action="detail" asp-controller="home" asp-route-id="@Model.MostPopularProduct.Id">
+                @foreach (var item in Model.MostPopularProduct.ProductImages)
+                {
+                    if (item.IsMain)
+                    {
+                       <img src="~/images/products/@item.ImageUrl" class="rounded-top img-fluid w-100" alt="product-img"> 
+                    }
+                }
+                </a>
           </div>
           <ul class="d-flex list-unstyled pl-0 categories-list">
-            @foreach (var item in Model.Products)
+            @foreach (var item in Model.PopularProducts)
             {
                 foreach (var images in item.ProductImages)
                             {
@@ -92,7 +100,7 @@
                                 {
                                 <li class="m-0 hover-zoom-img">
                                   <a asp-controller="home" asp-action="detail" asp-route-id="@item.Id">
-                                      <img src="~/images/products/@images.ImageUrl" class="img-fluid w-100" alt="product-img">
+                                      <img src="~/images/products/@images.ImageUrl" class="img-fluid w-100 h-100" alt="product-img">
                                       </a>
                                 </li>
                                 }
@@ -100,7 +108,7 @@
             }
           </ul>
           <div class="px-4 py-3 border-top">
-            <h4 class="d-inline-block mb-0 mt-1">Clothing</h4>
+            <h4 class="d-inline-block mb-0 mt-1">@Model.Category.Name</h4>
             <a href="shop.html" class="btn btn-sm btn-outline-primary float-right">view more</a>
           </div>
         </div>

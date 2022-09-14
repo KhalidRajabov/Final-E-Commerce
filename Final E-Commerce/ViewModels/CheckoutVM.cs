@@ -24,6 +24,6 @@ namespace Final_E_Commerce.ViewModels
         public string? Email { get; set; }
 
 
-        //public List<BasketVM>? Baskets { get; set; }
+        public List<BasketVM>? Baskets { get; set; }
     }
 }
