@@ -78,8 +78,8 @@
         <h2 class="section-title">Top Categories</h2>
       </div>
       <!-- categories item -->
-      <div class="col-lg-4 col-md-6 mb-50" >
-                <div class="card p-0">
+      <div class="col-lg-4 col-md-6 mb-50 " >
+                <div class="card p-0 " style="min-height:400px">
           <div class="border-bottom text-center hover-zoom-img">
             <a asp-action="detail" asp-controller="home" asp-route-id="@Model.MostPopularProduct.Id">
                 @foreach (var item in Model.MostPopularProduct.ProductImages)
@@ -115,7 +115,7 @@
       </div>
       <!-- categories item -->
       <div class="col-lg-4 col-md-6 mb-50">
-        <div class="card p-0">
+                <div class="card p-0 " style="min-height:400px">
           <div class="border-bottom text-center hover-zoom-img">
             <a href="shop.html"><img src="~/images/categories/product-big-2.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
@@ -138,7 +138,7 @@
       </div>
       <!-- categories item -->
       <div class="col-lg-4 col-md-6 mb-50">
-        <div class="card p-0">
+                <div class="card p-0 " style="min-height:400px">
           <div class="border-bottom text-center hover-zoom-img">
             <a href="shop.html"><img src="~/images/categories/product-big-3.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
@@ -214,7 +214,7 @@
                             <div class="product text-center h-100">
                                 <div class="product-thumb">
                                     <div class="overflow-hidden position-relative">
-                                        <a href="product-single.html" style="width:100%">
+                                        <a asp-action="detail" asp-controller="home" asp-route-id="@item.Id" style="width:100%">
                                             @foreach (var image in item.ProductImages)
                                             {
                                                 if (image.IsMain)

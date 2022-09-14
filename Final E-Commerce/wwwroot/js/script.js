@@ -30,9 +30,16 @@
                                                 <span id="oneproductCount${response.data.id}">${response.data.productcount} X</span> 
                                                 <span>$${response.data.itemprice}</span>
                                             </div>
-                                            <i class="ti-close deletefromcart" data-id="${response.data.id}"></i>
                                         </li>`
-                        cartlist.append(cartitem)
+                            cartlist.append(cartitem)
+                            Swal.fire({
+                                title: 'Added to basket!',
+                                text: `${response.data.name}`,
+                                imageUrl: `https://localhost:44393/images/products/${response.data.image}`,
+                                imageWidth: 400,
+                                imageHeight: 200,
+                                imageAlt: 'Custom image',
+                            })
                         }
                         else if (response.data.productcount > 1) {
                             bTotal.innerHTML = response.data.count
@@ -144,7 +151,7 @@
     delBtn.forEach(add =>
 
         add.addEventListener("click", function () {
-
+            
             let dataId = this.getAttribute(`data-id`)
             let tr = this.parentElement.parentElement.parentElement;
             let table = tr.parentElement.parentElement;
@@ -175,10 +182,11 @@
 
     //delete from basket cart
 
-    let deleteBtn = document.querySelectorAll(".deletefromcart")
+    /*let deleteBtn = document.querySelectorAll(".deletefromcart")
     deleteBtn.forEach(add =>
 
         add.addEventListener("click", function () {
+
             let dataId = this.getAttribute(`data-id`)
             let basketcart = this.parentElement;
             
@@ -195,7 +203,7 @@
                     console.log(error);
                 })
         })
-    )
+    )*/
 
 
 
