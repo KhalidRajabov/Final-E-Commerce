@@ -22,10 +22,16 @@
                     <div class="card-body">
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text">@item.Description</p>
-                        <p class="card-text"><small class="text-muted">@item.Price</small></p>
+                        @if (item.DiscountPercent>0)
+                        {
+                            <p class="card-text"><small class="text-muted fs-5">$@item.DiscountPrice <span style="color:red; text-decoration:line-through">@item.Price</span> </small></p>
+                        }
+                        else{
+                            <p class="card-text"><small class="text-muted fs-5">$@item.Price</small></p>
+                        }
                     </div>
 
-                    <div class="card-body"><a class="btn btn-success" asp-action="additem" asp-controller="basket" asp-route-id="@item.Id" asp-route-ReturnUrl="@Context.Request.Path">Add to basket</a> <a class="btn btn-danger" asp-action="remove" asp-controller="wishlist" asp-route-id="@item.Id">Remove from wishlist</a></div>
+                    <div class="card-body text-light"><a class="btn btn-success add " data-id="@item.Id" >Add to basket</a> <a class="btn btn-danger remove-from-wishlist" data-id="@item.Id">Remove from wishlist</a></div>
                 </div>
             </div>
         </div>

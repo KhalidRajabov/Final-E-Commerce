@@ -34,6 +34,7 @@ namespace Final_E_Commerce.Controllers
             wishlistVM.Products = listproduct;
             return View(wishlistVM);
         }
+
         public async Task<IActionResult> Add(int id)
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -42,13 +43,22 @@ namespace Final_E_Commerce.Controllers
             wishlist.ProductId = product.Id;
             wishlist.AppUserId = user.Id;
             bool IsExist = _context.Wishlists.Where(w=>w.AppUserId == user.Id&&w.ProductId==id).Any();
+            var obj = new
+            {
+                exist = true,
+            };
             if (IsExist)
             {
-                return Ok($"{product.Name} alread exists in your wishlist");
+                return Ok(obj);
             }
+            var newobj = new
+            {
+                exist = false
+            };
             await _context.AddAsync(wishlist);
             await _context.SaveChangesAsync();
-            return Ok($"{product.Name} added into your wishlist");
+
+            return Ok(newobj);
         }
 
         public async Task<IActionResult> Remove(int id)

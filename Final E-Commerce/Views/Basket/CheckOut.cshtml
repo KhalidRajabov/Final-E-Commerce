@@ -83,11 +83,11 @@
                             @foreach (var item in Model.Baskets)
                             {
                                 <div class="media product-card">
-                                    <a class="pull-left" href="product-single.html">
+                                    <a class="pull-left" asp-action="detail" asp-controller="home" asp-route-id="@item.Id">
                                         <img class="media-object" src="~/images/products/@item.ImageUrl" alt="Image" />
                                     </a>
                                     <div class="media-body">
-                                        <h4 class="media-heading"><a class="text-color" href="product-single.html">@item.Name</a></h4>
+                                        <h4 class="media-heading"><a class="text-color" asp-action="detail" asp-controller="home" asp-route-id="@item.Id">@item.Name</a></h4>
                                         <p class="price">@item.ProductCount x $@item.Price</p>
                                     </div>
                                 </div>

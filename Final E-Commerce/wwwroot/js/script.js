@@ -18,7 +18,7 @@
             axios.post("/basket/additem?id=" + dataId+"&quantity="+quantity)
                 .then(function (response) {
                     // handle success
-                    console.log(response.data.count)
+                    //console.log(response.data.count)
                     if (response.data.online) {
                         if (response.data.productcount==1) {
                         bTotal.innerHTML = response.data.count
@@ -33,6 +33,8 @@
                                         </li>`
                             cartlist.append(cartitem)
                             Swal.fire({
+                                timer: 1000,
+                                timerProgressBar: true,
                                 title: 'Added to basket!',
                                 text: `${response.data.name}`,
                                 imageUrl: `https://localhost:44393/images/products/${response.data.image}`,
@@ -44,7 +46,7 @@
                         else if (response.data.productcount > 1) {
                             bTotal.innerHTML = response.data.count
                             tPrice.innerHTML = ` $${response.data.price}`
-                            $(`#oneproductCount${response.data.id}`).html(`${response.data.productcount}`)
+                            $(`#oneproductCount${response.data.id}`).html(`${response.data.productcount} X`)
                         }
                     }
                     else {
@@ -54,7 +56,7 @@
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log("error "+error);
+                    //console.log("error "+error);
                 })
         })
     )
@@ -78,7 +80,7 @@
                     span.innerText = response.data.main
                     tabletotalprice.innerText = '$' + response.data.itemTotal
                     $(`#oneproductCount${dataId}`).html(`${response.data.productcount}`)
-                    console.log(response.data.main)
+                    //console.log(response.data.main)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -102,12 +104,19 @@
             let checkoutBtn = table.nextElementSibling;
             let tabletotalprice = this.parentElement.parentElement.parentElement.nextElementSibling;
             let cntnr = $("#basketcontainer")
+            let emptywarning = document.createElement("div")
+            emptywarning.classList.add("container", "d-flex", "flex-row", "justify-content-center")
+            let emptywarninglink = document.createElement("a")
+            emptywarninglink.classList.add("text-light", "btn", "btn-danger")
+            emptywarninglink.setAttribute("href", "home/index")
+            emptywarninglink.innerText = "Your cart is empty"
+            emptywarning.append(emptywarninglink)
             axios.post("/basket/minus?id=" + dataId)
                 .then(function (response) {
-                    console.log(response.data.count)
+                    //console.log(response.data.count)
 
                     if (response.data.productcount ==0) {
-                        console.log("data zero")
+                        //console.log("data zero")
                         bTotal.innerText = response.data.main
                         tPrice.innerText = response.data.price
                         tr.remove();
@@ -115,7 +124,7 @@
                         if (response.data.main == 0) {
                             table.remove();
                             checkoutBtn.remove();
-                            window.location.reload();
+                            cntnr.append(emptywarning)
                            // cntnr.html(`<div class="container d-flex flex-row justify-content-center">< a class="text-light btn btn-danger" asp-controller="home" asp-action="index" > Your cart is empty</a ></div >`);
                         }
                     }
@@ -124,10 +133,10 @@
                         tPrice.innerText = "$"+response.data.price 
                         span.innerText = response.data.count
                         tabletotalprice.innerText = response.data.itemTotal;
-                        console.log("count " + response.data.count);
+                        //console.log("count " + response.data.count);
                         $(`#oneproductCount${dataId}`).html(`${response.data.count} X`)
-                        console.log("productcount " + response.data.productcount);
-                        console.log(itemcount)
+                        //console.log("productcount " + response.data.productcount);
+                        //console.log(itemcount)
                         
                     }
                     //console.log(response);
@@ -156,26 +165,59 @@
             let tr = this.parentElement.parentElement.parentElement;
             let table = tr.parentElement.parentElement;
             let checkoutBtn = table.nextElementSibling;
-            //let cntnr = $("#basketcontainer")
-            console.log(dataId)
-            axios.post("/basket/RemoveItem?id=" + dataId)
-                .then(function (response) {
+            let cart_list_item = $(`#cart-item${dataId}`)
+            let cntnr = $("#basketcontainer")
+            let emptywarning = document.createElement("div")
+            emptywarning.classList.add("container", "d-flex", "flex-row", "justify-content-center")
+            let emptywarninglink = document.createElement("a")
+            emptywarninglink.classList.add("text-light", "btn", "btn-danger")
+            emptywarninglink.setAttribute("href", "home/index")
+            emptywarninglink.innerText = "Your cart is empty"
+            emptywarning.append(emptywarninglink)
+            //console.log(dataId)
+            Swal.fire({
+           
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: 'rgb(25,135,84)',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    axios.post("/basket/RemoveItem?id=" + dataId)
+                        .then(function (response) {
 
 
-                    bTotal.innerText = response.data.count;
-                    tPrice.innerText = response.data.price;
-                    tr.remove();
-                    if (response.data.count == 0) {
-                        table.remove();
-                        checkoutBtn.remove();
-                        window.location.reload();
-                        // cntnr.html(`<div class="container d-flex flex-row justify-content-center">< a class="text-light btn btn-danger" asp-controller="home" asp-action="index" > Your cart is empty</a ></div >`);
-                    }
-                })
-                .catch(function (error) {
+                            bTotal.innerText = response.data.count;
+                            tPrice.innerText = response.data.price;
+                            tr.remove();
+                            cart_list_item.remove()
+                            if (response.data.count == 0) {
+                                table.remove();
+                                checkoutBtn.remove();
+                                cntnr.append(emptywarning)
+                                //window.location.reload();
+                                
+                            }
+                        })
+                        .catch(function (error) {
 
-                    console.log(error);
-                })
+                            console.log(error);
+                        })
+
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Product has been deleted from basket',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+           
         })
     )
 
@@ -205,6 +247,74 @@
         })
     )*/
 
+    //add product to wishlist
+    let wishlistAddBtn = document.querySelectorAll(".add-to-wishlist")
+    wishlistAddBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+            let dataId = this.getAttribute("data-id")
+            axios.post("/wishlist/add?id=" + dataId)
+                .then(function (response) {
+                        add.remove();
+                    //console.log(response);
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log("error " + error);
+                })
+        })
+    )
+
+
+
+    //remove from wishlist
+    let wishlistRmvBtn = document.querySelectorAll(".remove-from-wishlist")
+    wishlistRmvBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+            let wishlistItemCard = this.parentElement.parentElement.parentElement.parentElement;
+            let dataId = this.getAttribute("data-id")
+            axios.post("/wishlist/remove?id=" + dataId)
+                .then(function (response) {
+                    // handle success
+                        wishlistItemCard.remove();
+                    //console.log(response);
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log("error " + error);
+                })
+        })
+    )
+
+
+
+    //add product to wishlist from cards
+    let cardHeartAddBtn = document.querySelectorAll(".add-to-wishlist-from-card")
+    cardHeartAddBtn.forEach(add =>
+
+        add.addEventListener("click", function () {
+            let dataId = this.getAttribute("data-id")
+            let icon = document.createElement("i")
+                axios.post("/wishlist/add?id=" + dataId)
+                    .then(function (response) {
+                        add.innerHTML = "";
+
+                        icon.classList.add("fa-heart");
+                        icon.classList.add("fa-solid");
+                        icon.classList.add("text-danger");
+                        //console.log(icon)
+                        add.append(icon);
+
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log("error " + error);
+                    })
+            }
+        )
+    )
+
 
 
     //cart-modal
@@ -218,8 +328,9 @@
             let productName = $("#modal-product-name")
             let productPrice = $("#modal-product-price")
             let productDesc = $("#modal-product-desc")
-            console.log(dataId, modalAdd, productName, productPrice, productDesc)
-            console.log(dataId)
+
+           // console.log(dataId, modalAdd, productName, productPrice, productDesc)
+            //console.log(dataId)
             axios.post("/search/GetProductForModal?id=" + dataId)
                 .then(function (response) {
                     modalAdd.attr(`href`, `home/detail/${dataId}`);
@@ -255,7 +366,7 @@
             method: "get",
             success: function (res) {
                 $("#SearchList").append(res);
-                console.log("success brought searched objects")
+                //console.log("successfully brought searched objects")
             }
         })
     });
@@ -270,7 +381,7 @@
                 method: "get",
                 success: function (res) {
                     $("#SearchList").append(res);
-                    console.log("popular products successfully brought for onlcick on search input")
+                    //console.log("popular products successfully brought for onlcick on search input")
                 },
                 error: function (res) {
                     console.log("error ", res.responseText)

@@ -100,7 +100,7 @@
                         <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
                         <li class="list-inline-item"><a href="#" class="text-gray ml-3">( 3 Reviews )</a></li>
                     </ul>
-                    @if (Model.Product.DiscountPercent>0)
+                    @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.Now)
                     {
                         <h4 class="text-primary h3">$@Model.Product.DiscountPrice <s class="text-color ml-2">$@Model.Product.Price</s></h4>
                         <h5 class="mb-4">You save: <span class="text-primary" style="color:green !important">$@(Model.Product.Price-@Model.Product.DiscountPrice) USD (@(Model.Product.DiscountPercent)%)</span></h5>
@@ -120,10 +120,10 @@
                     </div>
                     @if (!ViewBag.ExistWishlist)
                     {
-                        <a class="btn btn-success" asp-action="add" asp-controller="wishlist" asp-route-id="@Model.Product.Id" asp-route-ReturnUrl="@Context.Request.Path">Add to wishlist</a>
+                        <a class="btn btn-success add-to-wishlist text-light" data-id="@Model.Product.Id" >Add to wishlist</a>
                     }
 
-                    @if (Model.Product.DiscountUntil!=null)
+                    @if (Model.Product.DiscountUntil>DateTime.Now)
                     {
                         <h4 class="mb-3"><span class="text-primary">Hurry up!</span> Sale ends in</h4>
                         <!-- syo-timer -->

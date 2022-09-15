@@ -14,10 +14,10 @@ namespace Final_E_Commerce.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext? _context;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _usermanager;
-        public HomeController(AppDbContext context, IMapper mapper, UserManager<AppUser> usermanager)
+        public HomeController(AppDbContext? context, IMapper mapper, UserManager<AppUser> usermanager)
         {
             _context = context;
             _mapper = mapper;
@@ -25,7 +25,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Index()
         {
-
+            List<Product>? AllProducts = await _context.Products
+                .Where(p=>p.DiscountPercent>0).ToListAsync();
+            foreach (var product in AllProducts)
+            {
+                if (product.DiscountUntil<DateTime.Now)
+                {
+                    product.DiscountUntil = null;
+                    product.DiscountPercent = 0;
+                    product.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             HomeVM homeVM = new HomeVM();
             homeVM.Bio = _context.Bios.FirstOrDefault();
             homeVM.Category = _context.Categories.FirstOrDefault(c=>c.Id==1);
