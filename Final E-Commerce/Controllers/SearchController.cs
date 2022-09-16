@@ -19,13 +19,37 @@ namespace Final_E_Commerce.Controllers
             _usermanager = usermanager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             return View();
         }
 
-        public IActionResult SearchProduct(string search)
+        public async Task<IActionResult> SearchProduct(string search)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             List<Product> products = _context.Products
                 .Where(p =>
                 p.Name.ToLower().Contains(search.ToLower()) ||
@@ -51,8 +75,20 @@ namespace Final_E_Commerce.Controllers
             return PartialView("_Search", detailVM);
         }
 
-        public IActionResult PopularProducts()
+        public async Task<IActionResult> PopularProducts()
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             List<Product> PopularProducts = _context.Products.OrderByDescending(p => p.Views).Take(3).Include(p=>p.ProductImages).ToList();
             DetailVM detailVM = new DetailVM();
             detailVM.ListProducts= PopularProducts;
@@ -60,6 +96,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> GetProductForModal(int id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             Product product = await _context.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
             DetailVM detailVM = new DetailVM();
             string image = "";

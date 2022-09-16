@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Final_E_Commerce.Helper;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -22,6 +23,18 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Index()
         {
+            List<Product>? AllProducts = await _context.Products
+                   .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             WishlistVM wishlistVM = new WishlistVM();
             List<Wishlist> wihlist= _context.Wishlists.Where(w => w.AppUserId == user.Id).ToList();
@@ -37,6 +50,18 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Add(int id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist wishlist = new Wishlist();
@@ -63,6 +88,18 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Remove(int id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist IsExist = _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).FirstOrDefault();

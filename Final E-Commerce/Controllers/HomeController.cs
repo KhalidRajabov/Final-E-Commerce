@@ -51,6 +51,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Detail(int? id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             Product product = _context.Products
                 .Include(p => p.ProductImages)
                 .Include(c => c.Category)

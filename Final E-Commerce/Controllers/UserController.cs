@@ -41,6 +41,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Orders()
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             List<Order> order = _context.Orders.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
             OrderVM orderVM = new OrderVM();
@@ -50,10 +62,20 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             Order order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
-            List<OrderItem> orderItems = await _context.OrderItems.Where(o => o.OrderId == order.Id)
-                .Include(p => p.Product).ToListAsync();
+            List<OrderItem> orderItems = await _context.OrderItems.Where(o => o.OrderId == order.Id).ToListAsync();
             AppUser user = await _usermanager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
             OrderItemVM orderItemVM = new OrderItemVM();
             orderItemVM.User = user;
@@ -64,6 +86,18 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Products()
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             
             UserProductsVM userProductsVM = new UserProductsVM();
@@ -191,6 +225,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> EditProduct(int id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
             ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
@@ -431,6 +477,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> EditPictures(int id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             Product product = await _context.Products.Include(p => p.ProductImages).FirstOrDefaultAsync(p=>p.Id==id);
             ProductUpdateVM vm = new ProductUpdateVM();
             vm.Product = product;
@@ -438,6 +496,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string Returnurl)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             if (imageid == null || productid == null) return NotFound();
             var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
             if (image == null) return NotFound();
@@ -454,6 +524,18 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             if (imageid == null || productid == null) return NotFound();
             var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
             if (image == null) return NotFound();

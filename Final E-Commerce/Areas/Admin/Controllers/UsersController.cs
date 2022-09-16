@@ -95,8 +95,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> OrderDetail(int id)
         {
             Order? order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
-            List<OrderItem> orderItems = await _context.OrderItems.Where(o => o.OrderId == order.Id)
-                .Include(p => p.Product).ToListAsync();
+            List<OrderItem> orderItems = await _context.OrderItems.Where(o => o.OrderId == order.Id).ToListAsync();
             AppUser? user = await _userManager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
             OrderItemVM orderItemVM = new OrderItemVM();
             orderItemVM.User = user;

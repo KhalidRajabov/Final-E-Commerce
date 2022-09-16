@@ -44,8 +44,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             if (order == null) return NotFound();
             AppUser user = await _userManager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
             if (user == null) return NotFound();
-            List<OrderItem> orderItems = _context.OrderItems.Where(o => o.OrderId == order.Id)
-                .Include(p => p.Product).ToList();
+            List<OrderItem> orderItems = _context.OrderItems.Where(o => o.OrderId == order.Id).ToList();
             if (orderItems == null) return NotFound();
 
             OrderItemVM orderitemVM = new OrderItemVM();
@@ -70,7 +69,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             Order order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (order == null) return NotFound();
             order.OrderStatus = OrderStatus.Refused;
-            List<OrderItem> orderitem = await _context.OrderItems.Where(o => o.OrderId == order.Id).Include(p => p.Product).ToListAsync();
+            List<OrderItem> orderitem = await _context.OrderItems.Where(o => o.OrderId == order.Id).ToListAsync();
             foreach (var item in orderitem)
             {
                 Product dbProduct = _context.Products.Find(item.ProductId);

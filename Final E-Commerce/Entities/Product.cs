@@ -63,8 +63,6 @@ namespace Final_E_Commerce.Entities
         public List<ProductTag>? ProductTags { get; set; }
 
         public List<ProductImage>? ProductImages { get; set; }
-
-        public List<OrderItem>? OrderItem { get; set; }
         public List<Wishlist>? Wishlists { get; set; }
     }
     public enum ProductConfirmationStatus

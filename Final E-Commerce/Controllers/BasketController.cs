@@ -10,6 +10,7 @@ using NuGet.ContentModel;
 
 namespace Final_E_Commerce.Controllers
 {
+    [Authorize]
     public class BasketController:Controller
     {
         private readonly AppDbContext? _context;
@@ -27,6 +28,18 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public IActionResult Index()
         {
+            List<Product>? AllProducts =  _context.Products
+               .Where(p => p.DiscountPercent > 0).ToList();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             string username = "";
             if (!User.Identity.IsAuthenticated)
             {
@@ -74,9 +87,21 @@ namespace Final_E_Commerce.Controllers
             return Content("");
         }
 
-        [Authorize]
+    
         public async Task<IActionResult> AddItem(int? id, int? quantity)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             string? username = "";
             bool? online = false;
             if (!User.Identity.IsAuthenticated)
@@ -171,8 +196,20 @@ namespace Final_E_Commerce.Controllers
 
         
 
-        public IActionResult RemoveItem(int? id, string returnurl)
+        public async Task<IActionResult> RemoveItem(int? id, string returnurl)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             string? username = "";
             if (!User.Identity.IsAuthenticated)
             {
@@ -219,8 +256,20 @@ namespace Final_E_Commerce.Controllers
 
 
 
-        public IActionResult Minus(int? id)
+        public async Task<IActionResult> Minus(int? id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             string username = "";
             if (!User.Identity.IsAuthenticated)
             {
@@ -297,8 +346,20 @@ namespace Final_E_Commerce.Controllers
 
 
 
-        public IActionResult Plus(int? id)
+        public async Task<IActionResult> Plus(int? id)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             string username = "";
             if (!User.Identity.IsAuthenticated)
             {
@@ -343,9 +404,21 @@ namespace Final_E_Commerce.Controllers
 
 
 
-        [Authorize]
         public async Task<IActionResult> CheckOut()
         {
+
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             string username = "";
             if (!User.Identity.IsAuthenticated)
             {
@@ -411,6 +484,18 @@ namespace Final_E_Commerce.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Order(CheckoutVM newOrder)
         {
+            List<Product>? AllProducts = await _context.Products
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context.SaveChangesAsync();
+                }
+            }
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Fill all forms");
@@ -457,9 +542,22 @@ namespace Final_E_Commerce.Controllers
                     orderItem.ProductId = dbProduct.Id;
                     orderItem.Count = basketProduct.ProductCount;
                     orderItem.OrderId = order.Id;
-                    orderItem.Total = dbProduct.Price * basketProduct.ProductCount;
+                    orderItem.Name = basketProduct.Name;
+                    if (dbProduct.DiscountUntil>DateTime.Now && dbProduct.DiscountPercent>0)
+                    {
+                        orderItem.Price = dbProduct.DiscountPrice;
+                        orderItem.TotalPrice = dbProduct.DiscountPrice * basketProduct.ProductCount;
+                        total += basketProduct.ProductCount * dbProduct.DiscountPrice;
+                    }
+                    else
+                    {
+                        orderItem.Price = dbProduct.Price;
+                        orderItem.TotalPrice = dbProduct.Price * basketProduct.ProductCount;
+                        total += basketProduct.ProductCount * dbProduct.Price;
+                    }
                     orderItems.Add(orderItem);
-                    total += basketProduct.ProductCount * dbProduct.Price;
+
+                    
 
                     dbProduct.Count = dbProduct.Count - basketProduct.ProductCount;
                 }
