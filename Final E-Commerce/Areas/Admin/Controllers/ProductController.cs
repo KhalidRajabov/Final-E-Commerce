@@ -34,7 +34,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public IActionResult Index(int page = 1, int take = 5)
         {
 
-            List<Product> product = _context.Products.OrderByDescending(p => p.Id)
+            List<Product> product = _context.Products
+                .Where(p => p.Status == ProductConfirmationStatus.Approved)
+                .OrderByDescending(p => p.Id)
                 .Include(p => p.Category).Include(pi => pi.ProductImages)
                 .Where(p => p.IsDeleted != true).Skip((page - 1) * take).Take(take).ToList();
             PaginationVM<Product> paginationVM = new PaginationVM<Product>(product, PageCount(take), page);
@@ -44,7 +46,8 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         private int PageCount(int take)
         {
-            List<Product> products = _context.Products.Where(p => p.IsDeleted != true).ToList();
+            List<Product> products = _context.Products
+                .Where(p => p.IsDeleted != true&& p.Status == ProductConfirmationStatus.Approved).ToList();
             return (int)Math.Ceiling((decimal)products.Count() / take);
         }
 

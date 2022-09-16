@@ -56,6 +56,7 @@ namespace Final_E_Commerce.Controllers
                 Email = registerVM.Email,
                 ProfilePicture = "default.jpg"
             };
+
             IdentityResult result = await _usermanager.CreateAsync(appUser, registerVM.Password);
             if (!result.Succeeded)
             {
@@ -77,8 +78,13 @@ namespace Final_E_Commerce.Controllers
                 return View(registerVM);
             }
 
-
-            
+            UserProfile Profile = new UserProfile();
+            UserDetails Detail = new UserDetails();
+            Profile.AppUserId = appUser.Id;
+            Detail.AppUserId = appUser.Id;
+            _context.Add(Profile);
+            _context.Add(Detail);
+            _context.SaveChanges();
             return RedirectToAction("login", "account");
         }
 

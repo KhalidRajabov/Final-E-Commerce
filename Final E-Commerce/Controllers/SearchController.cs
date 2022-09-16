@@ -51,6 +51,7 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             List<Product> products = _context.Products
+                .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .Where(p =>
                 p.Name.ToLower().Contains(search.ToLower()) ||
                 p.Description.ToLower().Contains(search.ToLower()) ||
@@ -89,7 +90,9 @@ namespace Final_E_Commerce.Controllers
                     _context.SaveChangesAsync();
                 }
             }
-            List<Product> PopularProducts = _context.Products.OrderByDescending(p => p.Views).Take(3).Include(p=>p.ProductImages).ToList();
+            List<Product> PopularProducts = _context.Products
+                .Where(p => p.Status == ProductConfirmationStatus.Approved)
+                .OrderByDescending(p => p.Views).Take(3).Include(p=>p.ProductImages).ToList();
             DetailVM detailVM = new DetailVM();
             detailVM.ListProducts= PopularProducts;
             return PartialView("_Popular", detailVM);       
@@ -108,7 +111,9 @@ namespace Final_E_Commerce.Controllers
                     _context.SaveChangesAsync();
                 }
             }
-            Product product = await _context.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
+            Product product = await _context.Products
+                .Where(p => p.Status == ProductConfirmationStatus.Approved)
+                .Include(p=>p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
             DetailVM detailVM = new DetailVM();
             string image = "";
             foreach (var item in product.ProductImages)

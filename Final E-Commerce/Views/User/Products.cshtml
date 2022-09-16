@@ -27,7 +27,9 @@
                 <div class="container d-flex flex-row justify-content-center">
                     <a class="btn btn-primary mt-4" asp-action="CreateProduct">Add a new product</a>
                 </div>
-                <div class="dashboard-wrapper user-dashboard">
+                @if (Model.Products.Count>0)
+                {
+                    <div class="dashboard-wrapper user-dashboard">
                     <div class="table-responsive">
                         <table id="user-table" class="table table-hover">
                             <thead>
@@ -68,9 +70,13 @@
                         </table>
                     </div>
                 </div>
+                }
+                else{
+                <div class="mt-5 col-12 d-flex flex-row justify-content-center"><h1 class="text-primary">
+                    You currently do not have any items
+                </h1></div>
+                }
             </div>
         </div>
     </div>
 </section>
-
-

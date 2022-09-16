@@ -41,8 +41,10 @@ namespace Final_E_Commerce.Controllers
             homeVM.Bio = _context.Bios.FirstOrDefault();
             homeVM.Category = _context.Categories.FirstOrDefault(c=>c.Id==1);
             homeVM.MostPopularProduct = _context.Products
+                .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p=>p.Views).Take(1).Include(p=>p.ProductImages).FirstOrDefault();
             homeVM.PopularProducts = _context.Products
+                .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p=>p.Views).Skip(1).Take(3).Include(p=>p.ProductImages).ToList();
             homeVM.BestSellerProducts = _context.Products
                 .OrderByDescending(p => p.Sold).Take(8)
@@ -64,12 +66,15 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             Product product = _context.Products
+                .Where(p=>p.Status==ProductConfirmationStatus.Approved)
                 .Include(p => p.ProductImages)
                 .Include(c => c.Category)
                 .Include(p => p.Brand)
                 .Include(p => p.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .FirstOrDefault(p => p.Id == id);
+
+            if (product == null) return RedirectToAction("Error");
             ViewBag.ExistWishlist = false;
             if (User.Identity.IsAuthenticated)
             {

@@ -1,4 +1,5 @@
-﻿using Final_E_Commerce.DAL;
+﻿using Final_E_Commerce.Areas.Admin.ViewModels;
+using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Extensions;
 using Final_E_Commerce.Helper;
@@ -171,7 +172,7 @@ namespace Final_E_Commerce.Controllers
                 RearCamera = vm.RearCamera,
                 Battery = vm.Battery,
                 Weight = vm.Weight,
-                CategoryId = vm.SubCategory,
+                CategoryId = vm.CategoryId,
                 BrandId = vm.BrandId,
                 Count = vm.Count,
                 Sold = 0,
@@ -180,6 +181,8 @@ namespace Final_E_Commerce.Controllers
                 InStock = true,
                 Views = 0
             };
+            
+            
             if (vm.DiscountPercent > 0 && vm.DiscountUntil < DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
@@ -203,8 +206,8 @@ namespace Final_E_Commerce.Controllers
             }
             product.ProductTags = tags;*/
             product.Status = ProductConfirmationStatus.Pending;
-            _context.Add(product);
-            _context.SaveChanges();
+            await _context.AddAsync(product);
+            await _context.SaveChangesAsync();
             
             return RedirectToAction("Products");
         }
