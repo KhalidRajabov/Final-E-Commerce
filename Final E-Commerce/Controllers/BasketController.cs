@@ -431,7 +431,11 @@ namespace Final_E_Commerce.Controllers
             ViewBag.BasketCount = 0;
             ViewBag.TotalPrice = 0;
             string basket = Request.Cookies[$"basket{username}"];
-            List<BasketVM> products= JsonConvert.DeserializeObject<List<BasketVM>>(basket);
+            List<BasketVM> products = new List<BasketVM>();
+            if (basket!=null)
+            {
+                products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
+            }
             if (products==null||products.Count<=0)
             {
                 return RedirectToAction("index", "home");
@@ -462,8 +466,7 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            UserDetails userDetails = new UserDetails();
-            userDetails = await _context.UserDetails.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
+            UserDetails userDetails = await _context.UserDetails.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
 
             CheckoutVM checkoutVM = new CheckoutVM();
             checkoutVM.Firstname=userDetails.Firstname;

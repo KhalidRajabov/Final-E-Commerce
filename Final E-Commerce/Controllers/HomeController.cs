@@ -73,6 +73,7 @@ namespace Final_E_Commerce.Controllers
                 .Include(p => p.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .FirstOrDefault(p => p.Id == id);
+            AppUser ProductOwner =await _usermanager.FindByIdAsync(product.AppUserId);
 
             if (product == null) return RedirectToAction("Error");
             ViewBag.ExistWishlist = false;
@@ -89,6 +90,8 @@ namespace Final_E_Commerce.Controllers
             await _context.SaveChangesAsync();
             DetailVM detailVM = new DetailVM();
             detailVM.Product = product;
+            detailVM.Owner=ProductOwner;
+            
             //detailVM.RelatedProducts= _context.Products.Where(c => c.CategoryId == product.CategoryId).ToList();
 
             return View(detailVM);

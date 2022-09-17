@@ -37,8 +37,56 @@ namespace Final_E_Commerce.Controllers
             
             userVM.User = user;
             userVM.UserProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
-            userVM.UserDetails = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             return View(userVM);
+        }
+        public async Task<IActionResult> UserDetail()
+        {
+            AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            UserDetailsVM? userVM = new UserDetailsVM();
+            UserDetails? detail = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            userVM.Firstname = detail.Firstname;
+            userVM.Lastname = detail.Lastname;
+            userVM.City = detail.City;
+            userVM.Country = detail.Country;
+            userVM.Street = detail.Street;
+            userVM.Company = detail.Company;
+            userVM.Email=detail.Email;
+            userVM.PhoneNumber = detail.PhoneNumber;
+            userVM.ZipCode = detail.ZipCode;
+            return View(userVM);
+        }
+        public async Task<IActionResult> UpdateProfileDetail()
+        {
+            AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            UserDetailsVM? userVM = new UserDetailsVM();
+            UserDetails? detail = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            userVM.Firstname = detail.Firstname;
+            userVM.Lastname = detail.Lastname;
+            userVM.City = detail.City;
+            userVM.Country = detail.Country;
+            userVM.Street = detail.Street;
+            userVM.Company = detail.Company;
+            userVM.Email = detail.Email;
+            userVM.PhoneNumber = detail.PhoneNumber;
+            userVM.ZipCode = detail.ZipCode;
+            return View(userVM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfileDetail(UserDetailsVM detail)
+        {
+            AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            UserDetails? userDetails = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            userDetails.Firstname = detail.Firstname;
+            userDetails.Lastname = detail.Lastname;
+            userDetails.City = detail.City;
+            userDetails.Country = detail.Country;
+            userDetails.Street = detail.Street;
+            userDetails.Company = detail.Company;
+            userDetails.Email = detail.Email;
+            userDetails.PhoneNumber = detail.PhoneNumber;
+            userDetails.ZipCode = detail.ZipCode;
+            _context.SaveChanges();
+            return RedirectToAction("UserDetail", "user");
         }
         public async Task<IActionResult> Orders()
         {
@@ -335,7 +383,7 @@ namespace Final_E_Commerce.Controllers
                         return View();
                     }
                     ProductImage image = new ProductImage();
-                    image.ImageUrl = item.SaveImage(_env, "images/product");
+                    image.ImageUrl = item.SaveImage(_env, "images/products");
 
                     if (product.Photos.Count == 1)
                     {

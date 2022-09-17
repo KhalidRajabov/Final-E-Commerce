@@ -231,6 +231,14 @@
                     @Model.Product.Views
                 </div>
             </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    Link on the store:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    <a asp-action="detail" asp-controller="home" asp-route-id="@Model.Product.Id">See how it looks on store</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row bg-gray d-flex flex-row justify-content-around mt-5 flex-wrap">

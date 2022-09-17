@@ -410,7 +410,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             AppUser user = await _usermanager.FindByIdAsync(dbProduct.AppUserId);
             DetailVM detailVM = new DetailVM();
             detailVM.Product = dbProduct;
-            detailVM.User = user;
+            detailVM.Owner = user;
             return View(detailVM);
         }
         public async Task<IActionResult> Delete(int? id)

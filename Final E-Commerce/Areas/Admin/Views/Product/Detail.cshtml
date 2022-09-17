@@ -21,12 +21,12 @@
                     Added by:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @if (Model.User==null)
+                    @if (Model.Owner==null)
                     {
                         <i><b>System</b></i>
                     }
                     else{
-                        @Model.User.Fullname
+                        @Model.Owner.Fullname
                     }
                 </div>
             </div>

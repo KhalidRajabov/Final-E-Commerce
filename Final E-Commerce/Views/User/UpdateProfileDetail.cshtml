@@ -1,0 +1,60 @@
+﻿@model UserDetailsVM
+@{
+    ViewData["Title"] = "UpdateProfileDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-wrapper user-dashboard">
+    <div class="row d-flex flex-column justify-content-center align-content-center">
+        <form method="post" class="col-12">
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Firstname"></label>
+                <input class="form-control" asp-for="Firstname" placeholder="Firstname" />
+                <span class="text-danger" asp-validation-for="Firstname"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Lastname"></label>
+                <input class="form-control" asp-for="Lastname" placeholder="Lastname" />
+                <span class="text-danger" asp-validation-for="Lastname"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="City"></label>
+                <input class="form-control" asp-for="City" placeholder="City" />
+                <span class="text-danger" asp-validation-for="City"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Country"></label>
+                <input class="form-control" asp-for="Country" placeholder="Country" />
+                <span class="text-danger" asp-validation-for="Country"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Company"></label>
+                <input class="form-control" asp-for="Company" placeholder="Company" />
+                <span class="text-danger" asp-validation-for="Company"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Street"></label>
+                <input class="form-control" asp-for="Street" placeholder="Street" />
+                <span class="text-danger" asp-validation-for="Street"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Email"></label>
+                <input class="form-control" asp-for="Email" placeholder="Email" />
+                <span class="text-danger" asp-validation-for="Email"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="PhoneNumber"></label>
+                <input class="form-control" asp-for="PhoneNumber" placeholder="PhoneNumber" />
+                <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="ZipCode"></label>
+                <input class="form-control" asp-for="ZipCode" placeholder="ZipCode" />
+                <span class="text-danger" asp-validation-for="ZipCode"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-row justify-content-center">
+                <button asp-action="UpdateProfileDetail" type="submit" class="w-25 btn btn-success text-light">Done</button>
+            </div>
+        </form>
+</div>
+</div>

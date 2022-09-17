@@ -244,6 +244,21 @@
                             @Model.Product.Category.Name
                         </div>
                     </div>
+                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                        <b style="max-height:400px" class="col-2">
+                            Added by:
+                        </b>
+                        <div style="max-height:400px" class="col-9 flex-nowrap">
+                            @if (Model.Owner == null)
+                            {
+                                <i><b>System</b></i>
+                            }
+                            else
+                            {
+                                @Model.Owner.Fullname
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
