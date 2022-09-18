@@ -88,9 +88,11 @@ namespace Final_E_Commerce.Controllers
             }
             product.Views++;
             await _context.SaveChangesAsync();
+            var UsersWantThis = _context.Wishlists.Where(p=>p.ProductId==id).ToList();
             DetailVM detailVM = new DetailVM();
             detailVM.Product = product;
             detailVM.Owner=ProductOwner;
+            detailVM.UsersWantIt = UsersWantThis.Count;
             
             //detailVM.RelatedProducts= _context.Products.Where(c => c.CategoryId == product.CategoryId).ToList();
 

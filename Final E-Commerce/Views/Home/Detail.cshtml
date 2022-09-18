@@ -18,7 +18,6 @@
         discounthour = Model.Product.DiscountUntil.ToString().Split(':')[0];
         hours = discounthour.Substring(discounthour.Length - 2);    
     }
-
 }
 <div class="main-wrapper">
 
@@ -104,10 +103,15 @@
                     {
                         <i class="ti-check-box text-success"></i>
                         <span class="text-success">Instock</span>
+                        <br />
                     }
                     else{
                         <i class="ti-face-sad text-danger"></i>
                         <span class="text-danger">Out-of-stock</span>
+                    }
+                    @if (Model.UsersWantIt>0)
+                    {
+                        <span class="text-success">@Model.UsersWantIt users want this</span>
                     }
                     <ul class="list-inline mb-4">
                         <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
