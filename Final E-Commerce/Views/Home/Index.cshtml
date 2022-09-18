@@ -252,12 +252,25 @@
                                         <span class="h5">$@item.Price</span>
                                     }
                                 </div>
+                                    <div class="product-label d-flex flex-column justify-content-around" style="border-radius:5px">
                                 @if (item.DiscountPercent>0)
                                 {
-                                    <div class="product-label sale">
-                                        @(item.DiscountPercent)%
-                                    </div>
+                                        <div class="sale" style="background-color: rgb(255,51,133);padding:3px 10px;color:white;margin: 5px 0">
+                                            @(item.DiscountPercent)%
+
+                                        </div>
                                 }
+                                    @{
+                                        DateTime? date = DateTime.Now;
+                                        var time = Int32.Parse(date?.ToString("dd"));
+                                    }
+                                @*@if (time-Int32.Parse(item.CreatedTime?.ToString("dd"))!=null)
+                                {
+                                        <div class="new" style="background-color: rgb(102,126,234);padding:3px 10px;color:white;margin: 5px 0">
+                                        new
+                                    </div>
+                                }*@
+                                    </div>
                             </div>
                         </div>
                     }

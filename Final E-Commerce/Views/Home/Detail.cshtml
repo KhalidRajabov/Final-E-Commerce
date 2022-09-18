@@ -2,6 +2,23 @@
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string discountday="";
+    string discountmonth="";
+    string discountyear="";
+    string year="";
+    string discounthour="";
+    string hours="";
+    if (Model.Product.DiscountUntil > DateTime.Now && Model.Product.DiscountUntil != null && Model.Product.DiscountPercent > 0)
+    {
+        discountday = Model.Product.DiscountUntil.ToString().Split('/')[1];
+        discountmonth = Model.Product.DiscountUntil.ToString().Split('/')[0];
+        discountyear = Model.Product.DiscountUntil.ToString();
+        year = discountyear.Substring(discountyear.LastIndexOf('/') + 1).Substring(0,4);
+
+        discounthour = Model.Product.DiscountUntil.ToString().Split(':')[0];
+        hours = discounthour.Substring(discounthour.Length - 2);    
+    }
+
 }
 <div class="main-wrapper">
 
@@ -123,12 +140,16 @@
                         <a class="btn btn-success add-to-wishlist text-light" data-id="@Model.Product.Id" >Add to wishlist</a>
                     }
 
-                    @if (Model.Product.DiscountUntil>DateTime.Now)
+                    @if (Model.Product.DiscountUntil>DateTime.Now&&Model.Product.DiscountPercent>0)
                     {
                         <h4 class="mb-3"><span class="text-primary">Hurry up!</span> Sale ends in</h4>
                         <!-- syo-timer -->
+                        
                         <div class="syotimer dark">
-                            <div id="sale-timer" value="@Model.Product.DiscountUntil.ToString()" data-year="@(Model.Product.DiscountUntil.ToString().Substring(6,4))" data-month="@(Model.Product.DiscountUntil.ToString().Substring(3,2))" data-day="@(Model.Product.DiscountUntil.ToString().Substring(0,2))" data-hour="@(Model.Product.DiscountUntil.ToString().Substring(11,2))" data-minute="@(Model.Product.DiscountUntil.ToString().Substring(14,2))"></div>
+                            <div id="sale-timer" value="@Model.Product.DiscountUntil.ToString()"
+                             data-year="@year" data-month="@discountmonth"
+                             data-day="@discountday" data-hour="@hours"
+                             data-minute="@(Model.Product.DiscountUntil.ToString().Split(':')[1])"></div>
                         </div>
                         <hr>
                     }
@@ -145,6 +166,9 @@
                             </b> 
                             <div style="max-height:400px" class="col-9 flex-nowrap">
                                 @Model.Product.ReleaseDate
+
+                                @*year: @year, month: @month, day: @days,*@
+                            
                             </div>
                         </div>
                     <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
