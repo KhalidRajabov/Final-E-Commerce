@@ -135,9 +135,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> DeleteCategory(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Category category = await _context.Categories.FindAsync(id);
-            if (category == null) return NotFound();
+            if (category == null) return RedirectToAction("error", "home");
             category.IsDeleted = true;
             category.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();
@@ -146,9 +146,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Update(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Category category = await _context.Categories.FindAsync(id);
-            if (category == null) return NotFound();
+            if (category == null) return RedirectToAction("error", "home");
             CategoryVM categoryVM = new CategoryVM();
             categoryVM.Category = category;
             return View(categoryVM);
@@ -159,9 +159,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Update(int? id, CategoryVM category)
         {
             if (!ModelState.IsValid) return View();
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Category dbCategory = await _context.Categories.FindAsync(id);
-            if (dbCategory == null) return NotFound();
+            if (dbCategory == null) return RedirectToAction("error", "home");
             Category checkCategory = _context.Categories.FirstOrDefault(c => c.Name.ToLower() == category.Name.ToLower());
             if (checkCategory != null)
             {
@@ -202,9 +202,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Detail(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Category dbCategory = await _context.Categories.FindAsync(id);
-            if (dbCategory == null) return NotFound();
+            if (dbCategory == null) return RedirectToAction("error", "home");
             CategoryVM category = new CategoryVM();
             category.Category = dbCategory;
             List<Product> products = _context.Products.Where(c => c.Category.ParentId == dbCategory.Id).ToList();

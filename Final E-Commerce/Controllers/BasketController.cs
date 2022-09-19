@@ -115,9 +115,9 @@ namespace Final_E_Commerce.Controllers
                 online = true;
             }
             if (id == null)
-                if (id == null) return NotFound();
+                if (id == null) return RedirectToAction("error", "home");
             Product? dbProduct = await _context.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id ==id);
-            if (dbProduct == null) return NotFound();
+            if (dbProduct == null) return RedirectToAction("error", "home");
             List<BasketVM>? products;
             if (Request.Cookies[$"basket{username}"] == null)
             {
@@ -219,11 +219,11 @@ namespace Final_E_Commerce.Controllers
             {
                 username = User.Identity.Name;
             }
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             string? basket = Request.Cookies[$"basket{username}"];
             List<BasketVM>? products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
             BasketVM? dbProduct = products.Find(p => p.Id == id);
-            if (dbProduct == null) return NotFound();
+            if (dbProduct == null) return RedirectToAction("error", "home");
 
 
             products.Remove(dbProduct);
@@ -279,11 +279,11 @@ namespace Final_E_Commerce.Controllers
             {
                 username = User.Identity.Name;
             }
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             string basket = Request.Cookies[$"basket{username}"];
             List<BasketVM> products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
             BasketVM dbproducts = products.Find(p => p.Id == id);
-            if (dbproducts == null) return NotFound();
+            if (dbproducts == null) return RedirectToAction("error", "home");
 
 
             double? subtotal = 0;
@@ -369,12 +369,12 @@ namespace Final_E_Commerce.Controllers
             {
                 username = User.Identity.Name;
             }
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             string basket = Request.Cookies[$"basket{username}"];
             List<BasketVM> products;
             products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
             BasketVM dbproducts = products.Find(p => p.Id == id);
-            if (dbproducts == null) return NotFound();
+            if (dbproducts == null) return RedirectToAction("error", "home");
             dbproducts.ProductCount++;
             int? ProductCount = dbproducts.ProductCount;
             Response.Cookies.Append($"basket{username}", JsonConvert.SerializeObject(products), new CookieOptions

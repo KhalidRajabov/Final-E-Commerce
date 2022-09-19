@@ -76,17 +76,17 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Detail(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Slider slider = await _context.Sliders.FindAsync(id);
-            if (slider == null) return NotFound();
+            if (slider == null) return RedirectToAction("error", "home");
             return View(slider);
         }
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Slider slider = await _context.Sliders.FindAsync(id);
-            if (slider == null) return NotFound();
+            if (slider == null) return RedirectToAction("error", "home");
             string path = Path.Combine(_env.WebRootPath, "img", slider.ImageUrl);
             Helper.Helper.DeleteImage(path);
             _context.Sliders.Remove(slider);

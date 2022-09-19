@@ -301,7 +301,7 @@ namespace Final_E_Commerce.Controllers
             ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             AppUser CurrentUser =await _usermanager.FindByNameAsync(User.Identity.Name);
             Product p = await _context.Products
                 .Where(p=>p.AppUserId==CurrentUser.Id)
@@ -437,7 +437,7 @@ namespace Final_E_Commerce.Controllers
             {
                 Helper.Helper.DeleteImage(path);
             }
-            else return NotFound();
+            else return RedirectToAction("error", "home");
 
             if (product.TagId == null)
             {
@@ -583,9 +583,9 @@ namespace Final_E_Commerce.Controllers
                     _context.SaveChangesAsync();
                 }
             }
-            if (imageid == null || productid == null) return NotFound();
+            if (imageid == null || productid == null) return RedirectToAction("error", "home");
             var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
-            if (image == null) return NotFound();
+            if (image == null) return RedirectToAction("error", "home");
 
             var product = await _context.Products.Include(x => x.ProductImages).FirstOrDefaultAsync(x => x.Id == productid);
             var mainImage = product.ProductImages.FirstOrDefault(x => x.IsMain);
@@ -611,9 +611,9 @@ namespace Final_E_Commerce.Controllers
                     _context.SaveChangesAsync();
                 }
             }
-            if (imageid == null || productid == null) return NotFound();
+            if (imageid == null || productid == null) return RedirectToAction("error", "home");
             var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
-            if (image == null) return NotFound();
+            if (image == null) return RedirectToAction("error", "home");
 
             string path = Path.Combine(_env.WebRootPath, @"images\products", image.ImageUrl);
             Helper.Helper.DeleteImage(path);

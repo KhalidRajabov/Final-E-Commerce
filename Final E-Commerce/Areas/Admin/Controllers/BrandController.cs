@@ -78,9 +78,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Update(int? id)
         {
 
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Brand brand = await _context.Brands.FindAsync(id);
-            if (brand == null) return NotFound();
+            if (brand == null) return RedirectToAction("error", "home");
             BrandVM brandVM = new BrandVM();
             brandVM.Brand = brand;
             return View(brandVM);
@@ -95,9 +95,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         {
 
             if (!ModelState.IsValid) return View();
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Brand dbBrand = await _context.Brands.FindAsync(id);
-            if (dbBrand == null) return NotFound();
+            if (dbBrand == null) return RedirectToAction("error", "home");
 
             if (brand.Photo == null)
             {
@@ -130,11 +130,11 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             BrandVM brand = new BrandVM();
             brand.Brand=await _context.Brands.FindAsync(id); 
             
-            if (brand.Brand == null) return NotFound();
+            if (brand.Brand == null) return RedirectToAction("error", "home");
             ViewBag.BrandProducts = _context.Products.Where(p => p.BrandId == id).Count();
 
             return View(brand);
@@ -143,9 +143,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Brand brands = await _context.Brands.FindAsync(id);
-            if (brands == null) return NotFound();
+            if (brands == null) return RedirectToAction("error", "home");
             brands.IsDeleted = true;
             brands.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();

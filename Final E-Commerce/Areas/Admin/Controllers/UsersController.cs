@@ -44,9 +44,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null) return RedirectToAction("error", "home");
             var userRoles = await _userManager.GetRolesAsync(user);
             var dbRoles = _roleManager.Roles.ToList();
             RoleVM rolevm = new RoleVM
@@ -63,9 +63,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(List<string> roles, string id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null) return RedirectToAction("error", "home");
             var userRoles = await _userManager.GetRolesAsync(user);
             var addedRoles = roles.Except(userRoles);
             var removedRoles = userRoles.Except(roles);
@@ -75,9 +75,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Detail(string? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null) return RedirectToAction("error", "home");
             List<Order>? order = _context.Orders.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
             UserInfoVM? userVM = new UserInfoVM();
             var roles = await _userManager.GetRolesAsync(user);
@@ -105,9 +105,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null) return RedirectToAction("error", "home");
             UserInfoVM userVM = new UserInfoVM();
             var roles = await _userManager.GetRolesAsync(user);
             userVM.Role = roles.ToList();
@@ -121,9 +121,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> DeleteUser(string id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null) return RedirectToAction("error", "home");
             await _userManager.DeleteAsync(user);
             return RedirectToAction("index");
         }
@@ -180,9 +180,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Activate(string? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null) return RedirectToAction("error", "home");
             return View(user);
         }*/
     }

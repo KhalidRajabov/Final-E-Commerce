@@ -65,6 +65,7 @@ namespace Final_E_Commerce.Controllers
                     _context.SaveChangesAsync();
                 }
             }
+            DetailVM detailVM = new DetailVM();
             Product product = _context.Products
                 .Where(p=>p.Status==ProductConfirmationStatus.Approved)
                 .Include(p => p.ProductImages)
@@ -73,9 +74,17 @@ namespace Final_E_Commerce.Controllers
                 .Include(p => p.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .FirstOrDefault(p => p.Id == id);
-            AppUser ProductOwner =await _usermanager.FindByIdAsync(product.AppUserId);
 
-            if (product == null) return RedirectToAction("Error");
+            if (product == null) return RedirectToAction("Error", "home");
+            AppUser ProductOwner =await _usermanager.FindByIdAsync(product.AppUserId);
+            if (ProductOwner==null)
+            {
+                return RedirectToAction("error","home");
+            }
+            else
+            {
+                detailVM.Owner = ProductOwner;
+            }
             ViewBag.ExistWishlist = false;
             if (User.Identity.IsAuthenticated)
             {
@@ -89,9 +98,8 @@ namespace Final_E_Commerce.Controllers
             product.Views++;
             await _context.SaveChangesAsync();
             var UsersWantThis = _context.Wishlists.Where(p=>p.ProductId==id).ToList();
-            DetailVM detailVM = new DetailVM();
             detailVM.Product = product;
-            detailVM.Owner=ProductOwner;
+            
             detailVM.UsersWantIt = UsersWantThis.Count;
             
             //detailVM.RelatedProducts= _context.Products.Where(c => c.CategoryId == product.CategoryId).ToList();

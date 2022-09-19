@@ -2579,6 +2579,20 @@ label {
 .search-list-content:not(:hover){
     transition:.1s;
 }
+.order-table:hover {
+    transform: scaleX(1.04) scaleY(1.04);
+    transition: .5s;
+}
+.order-table:not(:hover) {
+    transition: .3s;
+}
+.product-table:hover {
+    transition: .5s;
+}
+
+.product-table:not(:hover) {
+    transition: .3s;
+}
 .table-shadow:hover {
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
     transform: scaleX(1.1) scaleY(1.1);

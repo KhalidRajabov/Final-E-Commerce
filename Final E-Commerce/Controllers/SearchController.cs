@@ -68,7 +68,7 @@ namespace Final_E_Commerce.Controllers
                 .Take(10).ToList();
             if (products == null)
             {
-                return NotFound();
+                return RedirectToAction("error", "home");
             }
             DetailVM detailVM = new DetailVM();
             detailVM.ListProducts = products;

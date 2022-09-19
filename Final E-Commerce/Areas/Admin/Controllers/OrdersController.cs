@@ -41,11 +41,11 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         {
             Order order = await _context.Orders.Where(o => o.Id == id)
                 .FirstOrDefaultAsync(o => o.Id == id);
-            if (order == null) return NotFound();
+            if (order == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
-            if (user == null) return NotFound();
+            if (user == null) return RedirectToAction("error", "home");
             List<OrderItem> orderItems = _context.OrderItems.Where(o => o.OrderId == order.Id).ToList();
-            if (orderItems == null) return NotFound();
+            if (orderItems == null) return RedirectToAction("error", "home");
 
             OrderItemVM orderitemVM = new OrderItemVM();
             orderitemVM.Order = order;
@@ -56,18 +56,18 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Confirm(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Order order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
-            if (order == null) return NotFound();
+            if (order == null) return RedirectToAction("error", "home");
             order.OrderStatus = OrderStatus.Approved;
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }
         public async Task<IActionResult> Decline(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Order order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
-            if (order == null) return NotFound();
+            if (order == null) return RedirectToAction("error", "home");
             order.OrderStatus = OrderStatus.Refused;
             List<OrderItem> orderitem = await _context.OrderItems.Where(o => o.OrderId == order.Id).ToListAsync();
             foreach (var item in orderitem)

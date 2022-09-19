@@ -37,17 +37,17 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public IActionResult ProductDetails(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Product product = _context.Products.Include(pi => pi.ProductImages)
             .Include(t => t.ProductTags).ThenInclude(t => t.Tags).FirstOrDefault(p => p.Id == id);
-            if (product == null) return NotFound();
+            if (product == null) return RedirectToAction("error", "home");
             return View(product);
         }
         public async Task<IActionResult> RecoverProduct(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Product product = _context.Products.Find(id);
-            if (product == null) return NotFound();
+            if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = false;
             await _context.SaveChangesAsync();
             return RedirectToAction("DeletedProducts");

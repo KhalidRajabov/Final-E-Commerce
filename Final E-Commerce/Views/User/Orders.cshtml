@@ -23,9 +23,9 @@
 					<li class="list-inline-item"><a asp-action="userdetail" asp-controller="user">Profile Details</a></li>
 					<li class="list-inline-item"><a asp-action="products" asp-controller="user">Products</a></li>
 				</ul>
-				<div class="dashboard-wrapper user-dashboard">
-					<div class="table-responsive">
-					   <table id="user-table" class="table table-hover">
+				<div class="dashboard-wrapper user-dashboard d-flex flex-row justify-content-center">
+					<div class="table-responsive col-12">
+					   <table id="user-table" class="table table-hover col-10">
                         <thead>
                             <tr>
                                 <th>Order Id</th>
@@ -39,7 +39,7 @@
                             @foreach (var item in Model.Orders)
                             {
                                 
-                                <tr>
+                                <tr class="order-table">
                                     <td>@item.Id</td>
 
                                     <td>@item.Price</td>

@@ -181,13 +181,13 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Product product = await _context.Products
                 .Include(i => i.ProductImages)
                 .Include(c => c.Category)
                 .Include(b => b.Brand)
                 .Include(t => t.ProductTags).ThenInclude(p => p.Tags).FirstOrDefaultAsync(c => c.Id == id);
-            if (product == null) return NotFound();
+            if (product == null) return RedirectToAction("error", "home");
             ProductUpdateVM productUpdateVM = new ProductUpdateVM();
             productUpdateVM.Product = product;
             return View(productUpdateVM);
@@ -296,7 +296,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             {
                 Helper.Helper.DeleteImage(path);
             }
-            else return NotFound();
+            else return RedirectToAction("error", "home");
 
             if (product.TagId == null)
             {
@@ -406,13 +406,13 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Detail(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Product dbProduct = await _context.Products.Include(c => c.Category)
                 .Include(c => c.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .Include(pi => pi.ProductImages)
                 .FirstOrDefaultAsync(c => c.Id == id);
-            if (dbProduct == null) return NotFound();
+            if (dbProduct == null) return RedirectToAction("error", "home");
             AppUser user = await _usermanager.FindByIdAsync(dbProduct.AppUserId);
             DetailVM detailVM = new DetailVM();
             detailVM.Product = dbProduct;
@@ -421,9 +421,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             Product product = await _context.Products.FindAsync(id);
-            if (product == null) return NotFound();
+            if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();

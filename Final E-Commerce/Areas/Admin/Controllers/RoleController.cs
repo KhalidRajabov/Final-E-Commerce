@@ -45,7 +45,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> DeleteRole(string id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction("error", "home");
             var role = await _roleManager.FindByIdAsync(id);
             await _roleManager.DeleteAsync(role);
             return RedirectToAction("index");
