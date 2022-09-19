@@ -287,6 +287,14 @@
                             }
                         </div>
                     </div>
+                    @if (Model.Owner.UserName==User.Identity.Name)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                            <a asp-action="EditProduct" asp-controller="user" asp-route-id="@Model.Product.Id" style="max-height:400px" class="col-2 text-warning fw-bold">
+                                Edit this product
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

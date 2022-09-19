@@ -1,10 +1,10 @@
 ﻿@model DetailVM
-<li class=" px-3  bg-dark text-light search-list-content" style="width:90%;">
+<li class=" px-3  bg-dark text-light cool-search-list" style="width:90%; text-align:start">
     Popular products:
 </li>
 @foreach (var item in Model.ListProducts)
 {
-    <li class=" px-3  bg-dark p-2 search-list-content" style="width:90%;">
+    <li class=" px-3  bg-dark p-2 search-list-content cool-search-list" style="width:90%;">
         <a class="text-dark d-flex flex-row align-content-center justify-content-between" style="width:100%;align-items: center" asp-controller="home" asp-action="detail" asp-route-Id="@item.Id">
             <span class="text-danger">@item.Name</span>
             @foreach (var image in item.ProductImages)

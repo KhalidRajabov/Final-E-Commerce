@@ -20,14 +20,16 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">@item.Name</h5>
+                        <a asp-action="detail" asp-controller="home" asp-route-id="@item.Id">
+                            <h4 class="card-title fw-bold text-decoration-underline" style="color:rgb(14,137,176) !important">@item.Name</h4>
+                        </a>
                         <p class="card-text">@item.Description</p>
                         @if (item.DiscountPercent>0)
                         {
-                            <p class="card-text"><small class="text-muted fs-5">$@item.DiscountPrice <span style="color:red; text-decoration:line-through">@item.Price</span> </small></p>
+                            <p class="card-text"><small class="text-muted fs-5 fw-bold">$@item.DiscountPrice <span style="color:red; text-decoration:line-through">@item.Price</span> </small></p>
                         }
                         else{
-                            <p class="card-text"><small class="text-muted fs-5">$@item.Price</small></p>
+                            <p class="card-text"><small class="text-muted fs-5 fw-bold">$@item.Price</small></p>
                         }
                     </div>
 

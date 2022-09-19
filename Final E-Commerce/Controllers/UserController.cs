@@ -302,12 +302,14 @@ namespace Final_E_Commerce.Controllers
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (id == null) return NotFound();
+            AppUser CurrentUser =await _usermanager.FindByNameAsync(User.Identity.Name);
             Product p = await _context.Products
+                .Where(p=>p.AppUserId==CurrentUser.Id)
                 .Include(i => i.ProductImages)
                 .Include(c => c.Category)
                 .Include(b => b.Brand)
                 .FirstOrDefaultAsync(c => c.Id == id);
-            if (p == null) return NotFound();
+            if (p == null) return RedirectToAction("error", "home");
             ProductUpdateVM vm = new ProductUpdateVM
             {
                 Name=p.Name,
@@ -348,17 +350,18 @@ namespace Final_E_Commerce.Controllers
             {
                 return View();
             }
+            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
             Product dbProduct = await _context.Products
+                .Where(p => p.AppUserId == CurrentUser.Id && p.IsDeleted != true)
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .Include(b => b.Brand)
                 .Include(c => c.Category)
-                .Where(c => c.IsDeleted != true)
                 .FirstOrDefaultAsync(b => b.Id == id);
             if (dbProduct == null)
             {
-                return View();
+                return View(product);
             }
             List<ProductImage> images = new List<ProductImage>();
             string path = "";
@@ -497,6 +500,12 @@ namespace Final_E_Commerce.Controllers
 
             dbProduct.ProductImages = images;
             dbProduct.Count = product.Count;
+            if (product.DiscountPercent==0||product.DiscountPercent==null)
+            {
+                dbProduct.DiscountUntil = null;
+                dbProduct.DiscountPercent = 0;
+                dbProduct.DiscountPrice = 0;
+            }
             if(product.DiscountPercent>0&&product.DiscountUntil<DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");

@@ -2568,12 +2568,17 @@ label {
 }
 /*# sourceMappingURL=maps/style.css.map */
 
-
+.cool-search-list {
+    margin-left: 5%;
+}
 .search-list-content:hover {
-    background-color: rgb(56,56,56);
+    background-color: #444444 !important;
+    transform: scaleX(1.1) scaleY(1.1);
     transition: .3s;
 }
-
+.search-list-content:not(:hover){
+    transition:.1s;
+}
 .table-shadow:hover {
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
     transform: scaleX(1.1) scaleY(1.1);

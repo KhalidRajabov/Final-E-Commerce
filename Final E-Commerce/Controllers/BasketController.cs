@@ -551,19 +551,20 @@ namespace Final_E_Commerce.Controllers
                         orderItem.Price = dbProduct.DiscountPrice;
                         orderItem.TotalPrice = dbProduct.DiscountPrice * basketProduct.ProductCount;
                         total += basketProduct.ProductCount * dbProduct.DiscountPrice;
+                        dbProduct.Profit += dbProduct.DiscountPrice * basketProduct.ProductCount;
                     }
                     else
                     {
                         orderItem.Price = dbProduct.Price;
                         orderItem.TotalPrice = dbProduct.Price * basketProduct.ProductCount;
+                        dbProduct.Profit += dbProduct.Price * basketProduct.ProductCount;
                         total += basketProduct.ProductCount * dbProduct.Price;
                     }
+                    dbProduct.Sold += basketProduct.ProductCount;
                     orderItems.Add(orderItem);
-
-                    
-
                     dbProduct.Count = dbProduct.Count - basketProduct.ProductCount;
                 }
+
                 order.OrderItems = orderItems;
                 order.Price = total;
                 //List<string> roles = new List<string>();
@@ -573,12 +574,6 @@ namespace Final_E_Commerce.Controllers
                     if (item.ToLower().Contains("admin"))
                     {
                         order.OrderStatus = OrderStatus.Approved;
-                        foreach (var product in basketProducts)
-                        {
-                            Product dbproduct = _context.Products.Find(product.Id);
-                            dbproduct.Profit = product.ProductCount * product.Price;
-                            dbproduct.Sold = product.ProductCount;
-                        }
                     }
                     else
                     {
