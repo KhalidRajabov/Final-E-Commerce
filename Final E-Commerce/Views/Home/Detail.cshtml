@@ -76,12 +76,12 @@
                     <!-- product image slider -->
                     
 
-                    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-                        <div class="carousel-inner">
+                    <div id="carouselExampleFade"style="z-index: 1 !important" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                        <div class="carousel-inner"style="z-index: 1 !important">
                             @foreach (var item in Model.Product.ProductImages)
                             {
-                                <div class="carousel-item active">
-                                    <img width="100%" src="~/images/products/@item.ImageUrl" class="d-block w-100" alt="...">
+                                <div class="carousel-item active w-100">
+                                    <img style="z-index: 1 !important" width="100%" src="~/images/products/@item.ImageUrl" class="d-block w-100" alt="...">
                                 </div>
                             }
                         </div>

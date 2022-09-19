@@ -220,7 +220,6 @@ namespace Final_E_Commerce.Controllers
                 RearCamera = vm.RearCamera,
                 Battery = vm.Battery,
                 Weight = vm.Weight,
-                CategoryId = vm.CategoryId,
                 BrandId = vm.BrandId,
                 Count = vm.Count,
                 Sold = 0,
@@ -229,8 +228,17 @@ namespace Final_E_Commerce.Controllers
                 InStock = true,
                 Views = 0
             };
-            
-            
+
+            if (vm.SubCategory == null)
+            {
+                product.CategoryId = vm.CategoryId;
+            }
+            else
+            {
+                product.CategoryId = vm.SubCategory;
+            }
+
+
             if (vm.DiscountPercent > 0 && vm.DiscountUntil < DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
@@ -501,7 +509,14 @@ namespace Final_E_Commerce.Controllers
                 dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
             }
             dbProduct.BrandId = product.BrandId;
-            dbProduct.CategoryId = product.CategoryId;
+            if (product.SubCategory==null)
+            {
+                dbProduct.CategoryId = product.CategoryId;
+            }
+            else
+            {
+                dbProduct.CategoryId = product.SubCategory;
+            }
             
             dbProduct.LastUpdatedAt = DateTime.Now;
             if (dbProduct.DiscountPercent > 30)
@@ -603,7 +618,8 @@ namespace Final_E_Commerce.Controllers
         }
         public IActionResult GetSubCategory(int cid)
         {
-            var SubCategory_List = _context.Categories.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).Select(c => new { Id = c.Id, Name = c.Name }).ToList();
+            var SubCategory_List = _context.Categories.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).ToList();
+            var subs = SubCategory_List.Select(c => new { Id = c.Id, Name = c.Name }).ToList();
             return Json(SubCategory_List);
         }
     }

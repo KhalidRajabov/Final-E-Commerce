@@ -127,7 +127,6 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 Views = 0,
                 IsDeleted = false,
                 ProductImages = Images,
-                CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
                 CreatedTime = DateTime.Now,
                 InStock = true,
@@ -146,13 +145,13 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 NewProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
             }
             NewProduct.ProductImages[0].IsMain = true;
-            if (product.Category == null)
+            if (product.SubCategory == null)
             {
                 NewProduct.CategoryId = product.CategoryId;
             }
             else
             {
-                NewProduct.CategoryId = product.CategoryId;
+                NewProduct.CategoryId = product.SubCategory;
             }
             if (product.TagId!=null)
             {
@@ -348,7 +347,6 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.ProductImages = images;
             dbProduct.Count = product.Count;
             dbProduct.BrandId = product.BrandId;
-            dbProduct.CategoryId = product.CategoryId;
             dbProduct.Description = product.Description; 
             dbProduct.LastUpdatedAt = System.DateTime.Now;
             dbProduct.ReleaseDate = product.ReleaseDate;
@@ -362,6 +360,14 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.RearCamera = product.RearCamera;
             dbProduct.Battery = product.Battery;
             dbProduct.Weight = product.Weight;
+            if (product.SubCategory == null)
+            {
+                dbProduct.CategoryId = product.CategoryId;
+            }
+            else
+            {
+                dbProduct.CategoryId = product.SubCategory;
+            }
             if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");

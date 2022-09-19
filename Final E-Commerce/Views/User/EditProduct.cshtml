@@ -126,7 +126,7 @@
                         <span style="color: red;" asp-validation-for="Category"></span>
                     </div>
                 <div class="col-md-4">
-                    <select id="SubCategoryTypeId" class="form-select">
+                    <select id="SubCategoryTypeId" class="form-select" asp-for="SubCategory">
                         <option selected>Sub category</option>
                     </select>
                 </div>
@@ -161,7 +161,7 @@
                 $.getJSON(`/user/GetSubCategory?cid=${cid}`, function (data) {
                     $.each(data, function (i, item) {
                         let option = document.createElement("option")
-                        option.setAttribute("value", `${i}`)
+                        option.setAttribute("value", `${item.id}`)
                         option.innerText = `${item.name}`
                         sub.append(option)
                         sub.style.display = "block"
