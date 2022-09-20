@@ -186,7 +186,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 .Include(i => i.ProductImages)
                 .Include(c => c.Category)
                 .Include(b => b.Brand)
-                .Include(t => t.ProductTags).ThenInclude(p => p.Tags).FirstOrDefaultAsync(c => c.Id == id);
+                .Include(t => t.ProductTags)
+                .ThenInclude(p => p.Tags)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (product == null) return RedirectToAction("error", "home");
             ProductUpdateVM productUpdateVM = new ProductUpdateVM();
             productUpdateVM.Product = product;
@@ -252,7 +254,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                         return View();
                     }
                     ProductImage image = new ProductImage();
-                    image.ImageUrl = item.SaveImage(_env, "images/product");
+                    image.ImageUrl = item.SaveImage(_env, "images/products");
 
                     if (product.Photos.Count == 1)
                     {
@@ -317,7 +319,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 }
                 dbProduct.ProductTags = productTags;
             }
-            if (product.Category == null && product.Category == null)
+            if (product.Category == null)
             {
                 dbProduct.CategoryId = dbProduct.CategoryId;
             }
@@ -330,14 +332,14 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             {
                 dbProduct.InStock = false;
             }
-            List<Category> categories = _context.Categories.Where(p => p.IsDeleted != true).Where(c => c.ImageUrl != null).ToList();
+            /*List<Category> categories = _context.Categories.Where(p => p.IsDeleted != true).Where(c => c.ImageUrl != null).ToList();
             for (int i = 0; i < categories.Count; i++)
             {
                 if (product.Category == categories[0])
                 {
                     dbProduct.CategoryId = dbProduct.CategoryId;
                 }
-            }
+            }*/
 
 
 

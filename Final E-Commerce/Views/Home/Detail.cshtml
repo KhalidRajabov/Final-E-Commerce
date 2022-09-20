@@ -272,6 +272,20 @@
                             @Model.Product.Category.Name
                         </div>
                     </div>
+                    @if (Model.Product.ProductTags!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                        <b style="max-height:400px" class="col-2">
+                            Tags:
+                        </b>
+                        <div style="max-height:400px" class="col-9 flex-nowrap">
+                            @foreach (var tag in Model.Product.ProductTags)
+                            {
+                                <span> @tag.Tags.Name </span>
+                            }
+                        </div>
+                    </div>
+                    }
                     <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                         <b style="max-height:400px" class="col-2">
                             Added by:

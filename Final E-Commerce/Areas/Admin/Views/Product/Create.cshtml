@@ -122,7 +122,12 @@
                             </select>
                         </div>
 
-
+                        <div class="col-md-4">
+                            <select asp-for="TagId" class="form-select" asp-items="ViewBag.Tags">
+                                <option selected>Choose Tags</option>
+                            </select>
+                            <span style="color: red;" asp-validation-for="Tags"></span>
+                        </div>
                         <div class="form-group">
                             <label asp-for="Photos"></label>
                             <input asp-for="Photos" class="form-control">

@@ -151,7 +151,10 @@ namespace Final_E_Commerce.Controllers
             
             UserProductsVM userProductsVM = new UserProductsVM();
             userProductsVM.Products = await _context.Products.Where(p => p.AppUserId == user.Id)
-                .Include(c => c.Category).Include(p => p.ProductImages).Include(t => t.ProductTags)
+                .Include(c => c.Category)
+                .Include(p => p.ProductImages)
+                .Include(p=>p.ProductTags)
+                .ThenInclude(t => t.Tags)
                 .ToListAsync();
             return View(userProductsVM);
         }
@@ -252,7 +255,7 @@ namespace Final_E_Commerce.Controllers
             }
             product.ProductImages = Images;
             product.ProductImages[0].IsMain = true;
-            /*List<ProductTag> tags = new List<ProductTag>();
+            List<ProductTag> tags = new List<ProductTag>();
             foreach (var item in vm.TagId)
             {
                 ProductTag tag = new ProductTag();
@@ -260,7 +263,7 @@ namespace Final_E_Commerce.Controllers
                 tag.ProductId = product.Id;
                 tags.Add(tag);
             }
-            product.ProductTags = tags;*/
+            product.ProductTags = tags;
             product.Status = ProductConfirmationStatus.Pending;
             await _context.AddAsync(product);
             await _context.SaveChangesAsync();
@@ -269,7 +272,12 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> ProductDetail(int id)
         {
-            Product product = _context.Products.Include(c=>c.Category).Include(p=>p.ProductImages).FirstOrDefault(p => p.Id == id);
+            Product product = _context.Products
+                .Include(c=>c.Category)
+                .Include(p=>p.ProductImages)
+                .Include(p=>p.ProductTags)
+                .ThenInclude(p => p.Tags)
+                .FirstOrDefault(p => p.Id == id);
             DetailVM detailVM = new DetailVM();
             detailVM.Product = product;
             return View(detailVM);
@@ -307,6 +315,8 @@ namespace Final_E_Commerce.Controllers
                 .Where(p=>p.AppUserId==CurrentUser.Id)
                 .Include(i => i.ProductImages)
                 .Include(c => c.Category)
+                .Include(t => t.ProductTags)
+                .ThenInclude(p => p.Tags)
                 .Include(b => b.Brand)
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (p == null) return RedirectToAction("error", "home");
@@ -331,7 +341,7 @@ namespace Final_E_Commerce.Controllers
                 Count=p.Count,
                 CategoryId=p.CategoryId,
                 BrandId=p.BrandId,
-                Product=p
+                Product=p,
             };
             
             return View(vm);
@@ -458,7 +468,7 @@ namespace Final_E_Commerce.Controllers
                 }
                 dbProduct.ProductTags = productTags;
             }
-            if (product.Category == null && product.Category == null)
+            if (product.Category == null)
             {
                 dbProduct.CategoryId = dbProduct.CategoryId;
             }

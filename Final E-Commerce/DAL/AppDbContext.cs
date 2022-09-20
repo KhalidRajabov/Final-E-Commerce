@@ -304,6 +304,11 @@ namespace Final_E_Commerce.DAL
                 {
                     Id = 3,
                     Name = "Office"
+                },
+                new Tag
+                {
+                    Id = 4,
+                    Name = "Budget"
                 }
                 );
         }

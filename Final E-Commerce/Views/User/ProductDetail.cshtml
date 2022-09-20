@@ -70,6 +70,23 @@
                     @Model.Product.Category.Name
                 </div>
             </div>
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    <b style="max-height:400px" class="col-2">
+                        Tags:
+                    </b>
+                    <div style="max-height:400px" class="col-9 flex-nowrap">
+            @if (Model.Product.ProductTags != null)
+            {
+                        @foreach (var tag in Model.Product.ProductTags)
+                        {
+                            @tag.Tags.Name
+                        }
+            }
+            else{
+                <span>no tag added</span>
+            }
+                    </div>
+                </div>
 
 
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -167,7 +184,8 @@
                 <div style="max-height:400px" class="col-9 flex-nowrap">
                     @Model.Product.Battery
                 </div>
-            </div><div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Weight:
                 </b>
@@ -175,6 +193,7 @@
                     @Model.Product.Weight
                 </div>
             </div>
+            
         </div>
      </div>
 
