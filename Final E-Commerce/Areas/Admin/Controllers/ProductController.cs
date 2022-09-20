@@ -381,23 +381,28 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 dbProduct.DiscountPercent = product.DiscountPercent;
                 dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
             }
-            if (dbProduct.DiscountPercent > 30)
+            if (dbProduct.DiscountPercent > 0)
             {
-                List<Subscriber> subscribers = await _context.Subscribers.ToListAsync();
-                var token = "";
-                string subject = "Endirim var!";
-                EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
-                foreach (var receiver in subscribers)
+                List<Wishlist> wishlist = _context.Wishlists.Where(p => p.ProductId == dbProduct.Id).ToList();
+                foreach (var user in wishlist)
                 {
+                    AppUser appUser = await _usermanager.FindByIdAsync(user.AppUserId);
+
+                    var token = "";
+                    string subject = "Endirim var!";
+                    EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
                     token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
+                        $"Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n" +
                         $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
-                    var emailResult = helper.SendNews(receiver.Email, token, subject);
-                    continue;
+                    var emailResult = helper.SendNews(appUser.Email, token, subject);
+
+                    string discountemail = Url.Action("ConfirmEmail", "Account", new
+                    {
+                        token
+                    }, Request.Scheme);
                 }
-                string confirmation = Url.Action("ConfirmEmail", "Account", new
-                {
-                    token
-                }, Request.Scheme);
+
             }
             await _context.SaveChangesAsync();
 

@@ -77,14 +77,11 @@ namespace Final_E_Commerce.Controllers
 
             if (product == null) return RedirectToAction("Error", "home");
             AppUser ProductOwner =await _usermanager.FindByIdAsync(product.AppUserId);
-            if (ProductOwner==null)
-            {
-                return RedirectToAction("error","home");
-            }
-            else
+            if (ProductOwner!=null)
             {
                 detailVM.Owner = ProductOwner;
             }
+            
             ViewBag.ExistWishlist = false;
             if (User.Identity.IsAuthenticated)
             {

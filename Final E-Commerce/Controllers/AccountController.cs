@@ -136,7 +136,7 @@ namespace Final_E_Commerce.Controllers
                     {
                         return Redirect(ReturnUrl);
                     }
-                    return RedirectToAction("index", "dashboard", new { Area = "AdminPanel" });
+                    return RedirectToAction("index", "dashboard", new { Area = "Admin" });
                 }
             }
             SignInResult result = await _signInManager.PasswordSignInAsync(appUser, loginvm.Password, loginvm.RememberMe, true);
@@ -145,8 +145,7 @@ namespace Final_E_Commerce.Controllers
                 ModelState.AddModelError("", "Your account is blocked");
                 return View(loginvm);
             }
-
-
+            
             if (!appUser.EmailConfirmed)
             {
                 ModelState.AddModelError("", "Please confirm your email");

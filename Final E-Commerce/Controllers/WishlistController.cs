@@ -62,6 +62,11 @@ namespace Final_E_Commerce.Controllers
                     _context.SaveChangesAsync();
                 }
             }
+            bool online = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                online = true;
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist wishlist = new Wishlist();
@@ -71,6 +76,7 @@ namespace Final_E_Commerce.Controllers
             var obj = new
             {
                 exist = true,
+                online = online
             };
             if (IsExist)
             {
@@ -78,7 +84,8 @@ namespace Final_E_Commerce.Controllers
             }
             var newobj = new
             {
-                exist = false
+                exist = false,
+                online = online
             };
             await _context.AddAsync(wishlist);
             await _context.SaveChangesAsync();

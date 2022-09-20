@@ -238,7 +238,7 @@ namespace Final_E_Commerce.DAL
                     Id = 4,
                     ProductId = 2,
                     ImageUrl = "s22-2.jpg",
-                }, 
+                },
                 new ProductImage
                 {
                     Id = 5,

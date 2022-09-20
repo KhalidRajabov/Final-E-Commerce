@@ -255,7 +255,23 @@
             let dataId = this.getAttribute("data-id")
             axios.post("/wishlist/add?id=" + dataId)
                 .then(function (response) {
+                    if (response.data.online) {
                         add.remove();
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'You need to login to add to wishlist',
+                            showDenyButton: false,
+                            showCancelButton: true,
+                            confirmButtonText: 'Login',
+                            denyButtonText: `Don't save`,
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                location.replace("https://localhost:44393/account/login")
+                            }
+                        })
+                    }
                     //console.log(response);
                 })
                 .catch(function (error) {

@@ -547,14 +547,38 @@ namespace Final_E_Commerce.Controllers
                 foreach (var receiver in subscribers)
                 {   
                     token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
+                        $"Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n"+
                         $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
                     var emailResult = helper.SendNews(receiver.Email, token, subject);
                     continue;
                 }
-                string confirmation = Url.Action("ConfirmEmail", "Account", new
+                string discountemail = Url.Action("ConfirmEmail", "Account", new
                 {
                     token
                 }, Request.Scheme);
+            }
+            if (dbProduct.DiscountPercent>0)
+            {
+                List<Wishlist> wishlist = _context.Wishlists.Where(p => p.ProductId == dbProduct.Id).ToList();
+                foreach (var user in wishlist)
+                {
+                    AppUser appUser = await _usermanager.FindByIdAsync(user.AppUserId);
+
+                    var token = "";
+                    string subject = "Endirim var!";
+                    EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+                    
+                        token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
+                            $"Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n" +
+                            $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
+                        var emailResult = helper.SendNews(appUser.Email, token, subject);
+                        
+                    string discountemail = Url.Action("ConfirmEmail", "Account", new
+                    {
+                        token
+                    }, Request.Scheme);
+                }
+                
             }
             await _context.SaveChangesAsync();
 
