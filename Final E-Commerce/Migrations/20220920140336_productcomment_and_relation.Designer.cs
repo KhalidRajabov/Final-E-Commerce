@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220920140336_productcomment_and_relation")]
+    partial class productcomment_and_relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,104 +166,6 @@ namespace Final_E_Commerce.Migrations
                             Phone = "+994515186423",
                             Twitter = "https://twitter.com/slayer_dante_?t=G-VmlfAok6IC_vxmQnYfLQ&s=08"
                         });
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.BlogComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CommentContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique()
-                        .HasFilter("[AppUserId] IS NOT NULL");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("BlogComments");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CommentCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ViewCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique()
-                        .HasFilter("[AppUserId] IS NOT NULL");
-
-                    b.ToTable("Blogs");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.BlogSubjects", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SubjectsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BlogId");
-
-                    b.HasIndex("SubjectsId");
-
-                    b.ToTable("BlogSubjects");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>
@@ -780,7 +684,7 @@ namespace Final_E_Commerce.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("ProductComments");
+                    b.ToTable("ProductComment");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.ProductImage", b =>
@@ -939,25 +843,6 @@ namespace Final_E_Commerce.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sliders");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Subjects", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Subscriber", b =>
@@ -1281,49 +1166,6 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("ProductWishlist");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.BlogComment", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.AppUser", "User")
-                        .WithOne("BlogComment")
-                        .HasForeignKey("Final_E_Commerce.Entities.BlogComment", "AppUserId");
-
-                    b.HasOne("Final_E_Commerce.Entities.Blogs", "Blog")
-                        .WithMany()
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
-                        .WithOne("Blogs")
-                        .HasForeignKey("Final_E_Commerce.Entities.Blogs", "AppUserId");
-
-                    b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.BlogSubjects", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.Blogs", "Blog")
-                        .WithMany("BlogSubjects")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Final_E_Commerce.Entities.Subjects", "Subjects")
-                        .WithMany("BlogSubjects")
-                        .HasForeignKey("SubjectsId");
-
-                    b.Navigation("Blog");
-
-                    b.Navigation("Subjects");
-                });
-
             modelBuilder.Entity("Final_E_Commerce.Entities.Category", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.Category", "Parent")
@@ -1518,10 +1360,6 @@ namespace Final_E_Commerce.Migrations
 
             modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
                 {
-                    b.Navigation("BlogComment");
-
-                    b.Navigation("Blogs");
-
                     b.Navigation("Orders");
 
                     b.Navigation("ProductComment");
@@ -1533,11 +1371,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("UserProfile");
 
                     b.Navigation("Wishlist");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>
-                {
-                    b.Navigation("BlogSubjects");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>
@@ -1564,11 +1397,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("ProductImages");
 
                     b.Navigation("ProductTags");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Subjects", b =>
-                {
-                    b.Navigation("BlogSubjects");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Tag", b =>

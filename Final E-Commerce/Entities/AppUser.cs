@@ -15,6 +15,9 @@ namespace Final_E_Commerce.Entities
         public List<Wishlist>? Wishlist { get; set; }
         public UserDetails? UserDetails { get; set; }
         public UserProfile? UserProfile { get; set; }
+        public ProductComment? ProductComment { get; set; }
+        public Blogs? Blogs { get; set; }
+        public BlogComment? BlogComment { get; set; }
         //public List<BasketItem> BasketItems { get; set; }
     }
 }

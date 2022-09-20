@@ -26,9 +26,13 @@ namespace Final_E_Commerce.DAL
         public DbSet<Wishlist>? Wishlists { get; set; }
         public DbSet<UserProfile>? UserProfiles { get; set; }
         public DbSet<UserDetails>? UserDetails { get; set; }
+        public DbSet<Blogs>? Blogs { get; set; }
+        public DbSet<BlogSubjects>? BlogSubjects  { get; set; }
+        public DbSet<BlogComment>? BlogComments { get; set; }
+        public DbSet<ProductComment>? ProductComments{ get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder builder)
+protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<Category>().HasData(
