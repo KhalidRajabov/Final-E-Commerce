@@ -12,4 +12,5 @@
     <div class="mt-3">
         @Html.Raw(Model.Blog.Content)
     </div>
+    <a class="btn btn-warning" asp-action="update" asp-controller="editor" asp-route-id="@Model.Blog.Id">Update</a>
 </div>

@@ -1,0 +1,42 @@
+﻿@model BlogEditVM
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Areas/Editor/Views/Shared/_EditorLayout.cshtml";
+}
+
+<div class="container">
+    <form class="forms-sample" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" placeholder="Write title">
+            <span style="color: red;" asp-validation-for="Title"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" id="editor" style="min-height: 150px" class="form-control" placeholder="Write content"> </textarea>
+            <span style="color: red;" asp-validation-for="Content"></span>
+        </div>
+        <div class="form-group d-flex flex-column">
+            <label asp-for="Subjects"></label>
+            <select asp-for="SubjectId" class="form-select" asp-items="ViewBag.Subjects">
+                <option selected>Choose Tags</option>
+            </select>
+            <span style="color: red;" asp-validation-for="Subjects"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Photo"></label>
+            <input asp-for="Photo" class="form-control" placeholder="Photo">
+            <span style="color: red;" asp-validation-for="Photo"></span>
+        </div>
+        <button type="submit" class="btn btn-success" asp-action="update" asp-controller="editor">Update</button>
+    </form>
+</div>
+
+@section JqueryValidationScript{
+    <partial name="_EditorValidation" />
+    <script>
+        CKEDITOR.replace('editor')
+    </script>
+}
+
+

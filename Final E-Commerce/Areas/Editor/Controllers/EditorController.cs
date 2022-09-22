@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Extensions;
 using Final_E_Commerce.Migrations;
+using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -94,6 +95,90 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             BlogDetailVM blogDetailVM = new BlogDetailVM();
             blogDetailVM.Blog = blog;
             return View(blogDetailVM); 
+        }
+        public async Task<IActionResult> Update(int id)
+        {
+            ViewBag.Subjects = new SelectList(_context.Subjects.Where(s => s.IsDeleted != true).ToList(), "Id", "Name");
+            Blogs? blog = await _context?.Blogs?.FirstOrDefaultAsync(b => b.Id == id);
+            BlogEditVM editVM = new BlogEditVM();
+            editVM.Title = blog.Title;
+            editVM.Content = blog.Content;
+            return View(editVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(int? id, BlogEditVM editVM)
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            Blogs? blog = await _context?.Blogs?
+                .Include(b=>b.BlogSubjects)
+                .ThenInclude(b=>b.Subjects)
+                .FirstOrDefaultAsync(b => b.Id == id);
+            if (editVM.Photo== null)
+            {
+                blog.ImageUrl = blog.ImageUrl;
+            }
+            else
+            {
+                if (!editVM.Photo.IsImage())
+                {
+                    ModelState.AddModelError("Photo", "Choose images only");
+                    return View();
+                }
+                if (editVM.Photo.ValidSize(20000))
+                {
+                    ModelState.AddModelError("Photo", "Image size can not be large");
+                    return View();
+                }
+                string oldImg = blog.ImageUrl;
+                string path = Path.Combine(_env.WebRootPath, "images", oldImg);
+                Helper.Helper.DeleteImage(path);
+                blog.ImageUrl = editVM.Photo.SaveImage(_env, "images/blog");
+            }
+            blog.Title=editVM.Title;
+            blog.Content = editVM.Content;
+            blog.LastUpdated = DateTime.Now;
+            blog.LastUpdatedBy = user.Fullname;
+            if (editVM.SubjectId== null)
+            {
+                foreach (var item1 in blog.BlogSubjects)
+                {
+                    item1.SubjectId = item1.SubjectId;
+                }
+            }
+            else
+            {
+                List<BlogSubjects> blogSubjects = new List<BlogSubjects>();
+                foreach (int item in editVM.SubjectId)
+                {
+                    BlogSubjects blogSubject = new BlogSubjects();
+                    blogSubject.SubjectId = item;
+                    blogSubject.BlogId = blog.Id;
+                    blogSubjects.Add(blogSubject);
+                }
+                blog.BlogSubjects= blogSubjects;
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("index","editor");
+        }
+        public async Task<IActionResult> SearchBlog(string search)
+        {
+            List<Blogs> blogs = _context.Blogs
+               .Where(b =>
+               b.Title.ToLower().Contains(search.ToLower()) ||
+               b.Content.ToLower().Contains(search.ToLower()))
+               .Include(b => b.BlogSubjects)
+               .ThenInclude(b=>b.Subjects)
+               .OrderBy(p => p.Date)
+               .Take(10).ToList();
+            if (blogs == null)
+            {
+                return RedirectToAction("error", "home");
+            }
+            BlogDetailVM detailVM = new BlogDetailVM();
+            detailVM.Blogs = blogs;
+
+            return PartialView("_BlogSearch", detailVM);
         }
     }
 }

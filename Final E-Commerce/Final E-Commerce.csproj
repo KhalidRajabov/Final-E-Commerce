@@ -28,4 +28,11 @@
     <Folder Include="wwwroot\admin\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Areas\Editor\Views\Shared\_BlogSearch.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -44,6 +44,24 @@
     }
   });
 
+
+    //search
+
+    $(document).on("keyup", "#search", function () {
+        let inputValue = $(this).val();
+        $("#SearchList li").slice(1).remove();
+        $("#SearchList").html()
+        $.ajax({
+            url: "https://localhost:44393/search/searchProduct?search=" + inputValue,
+            method: "get",
+            success: function (res) {
+                $("#SearchList").append(res);
+                //console.log("successfully brought searched objects")
+            }
+        })
+    });
+    
+
   // Smooth scrolling using jQuery easing
   $(document).on('click', 'a.scroll-to-top', function(e) {
     var $anchor = $(this);

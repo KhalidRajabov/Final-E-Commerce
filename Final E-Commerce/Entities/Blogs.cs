@@ -16,6 +16,8 @@ namespace Final_E_Commerce.Entities
         public int ViewCount { get; set; }
         public int CommentCount { get; set; }
         public Nullable<DateTime> Date { get; set; }
+        public Nullable<DateTime> LastUpdated { get; set; }
+        public string? LastUpdatedBy { get; set; }
         public bool IsDeleted { get; set; }
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
