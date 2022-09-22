@@ -15,9 +15,9 @@ namespace Final_E_Commerce.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext? _context;
-        private readonly IMapper _mapper;
-        private readonly UserManager<AppUser> _usermanager;
-        public HomeController(AppDbContext? context, IMapper mapper, UserManager<AppUser> usermanager)
+        private readonly IMapper? _mapper;
+        private readonly UserManager<AppUser>? _usermanager;
+        public HomeController(AppDbContext? context, IMapper? mapper, UserManager<AppUser>? usermanager)
         {
             _context = context;
             _mapper = mapper;
@@ -25,7 +25,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context.Products?
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
             foreach (var product in AllProducts)
             {
@@ -34,12 +34,12 @@ namespace Final_E_Commerce.Controllers
                     product.DiscountUntil = null;
                     product.DiscountPercent = 0;
                     product.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    _context?.SaveChangesAsync();
                 }
             }
-            HomeVM homeVM = new HomeVM();
-            homeVM.Bio = _context.Bios.FirstOrDefault();
-            homeVM.Category = _context.Categories.FirstOrDefault(c=>c.Id==1);
+            HomeVM? homeVM = new HomeVM();
+            homeVM.Bio = _context?.Bios?.FirstOrDefault();
+            homeVM.Category = _context.Categories?.FirstOrDefault(c=>c.Id==1);
             homeVM.MostPopularProduct = _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p=>p.Views).Take(1).Include(p=>p.ProductImages).FirstOrDefault();
@@ -53,7 +53,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Detail(int? id)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -62,17 +62,17 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    _context?.SaveChangesAsync();
                 }
             }
-            DetailVM detailVM = new DetailVM();
-            Product product = _context.Products
+            DetailVM? detailVM = new DetailVM();
+            Product? product = _context?.Products?
                 .Where(p=>p.Status==ProductConfirmationStatus.Approved)
-                .Include(p => p.ProductImages)
-                .Include(c => c.Category)
-                .Include(p => p.Brand)
-                .Include(p => p.ProductTags)
-                .ThenInclude(t => t.Tags)
+                ?.Include(p => p.ProductImages)
+                ?.Include(c => c.Category)
+                ?.Include(p => p.Brand)
+                ?.Include(p => p.ProductTags)
+                ?.ThenInclude(t => t.Tags)
                 .FirstOrDefault(p => p.Id == id);
 
             if (product == null) return RedirectToAction("Error", "home");
@@ -94,12 +94,12 @@ namespace Final_E_Commerce.Controllers
             }
             product.Views++;
             await _context.SaveChangesAsync();
-            var UsersWantThis = _context.Wishlists.Where(p=>p.ProductId==id).ToList();
+            var UsersWantThis = _context.Wishlists?.Where(p=>p.ProductId==id).ToList();
             detailVM.Product = product;
             
             detailVM.UsersWantIt = UsersWantThis.Count;
             
-            //detailVM.RelatedProducts= _context.Products.Where(c => c.CategoryId == product.CategoryId).ToList();
+            //detailVM.RelatedProducts= _context?.Products?.Where(c => c.CategoryId == product.CategoryId).ToList();
 
             return View(detailVM);
         }

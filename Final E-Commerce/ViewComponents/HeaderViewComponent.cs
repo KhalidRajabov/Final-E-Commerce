@@ -60,7 +60,7 @@ namespace Final_E_Commerce.ViewComponents
                 {
                     ViewBag.BasketCount += item.ProductCount;
                     ViewBag.TotalPrice += item.Price * item.ProductCount;
-                    Product? dbProducts = _context.Products.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
+                    Product? dbProducts = _context?.Products?.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
                     item.Name = dbProducts.Name;
                     if (dbProducts.DiscountPercent > 0)
                     {

@@ -42,7 +42,7 @@ namespace Final_E_Commerce.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterVM registerVM)
+        public async Task<IActionResult> Register(RegisterVM? registerVM)
         {
             if (User.Identity.IsAuthenticated) return RedirectToAction("index", "home");
 
@@ -68,7 +68,7 @@ namespace Final_E_Commerce.Controllers
             }
             await _usermanager.AddToRoleAsync(appUser, "Member");
             string token = await _usermanager.GenerateEmailConfirmationTokenAsync(appUser);
-            string ConfirmationLink = Url.Action("ConfirmEmail", "EmailConfirmation", new { token, Email = registerVM.Email }, Request.Scheme);
+            string? ConfirmationLink = Url.Action("ConfirmEmail", "EmailConfirmation", new { token, Email = registerVM.Email }, Request.Scheme);
 
             EmailHelper emailHelper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
             var emailResult = emailHelper.SendEmail(registerVM.Email, ConfirmationLink);

@@ -41,7 +41,7 @@ namespace Final_E_Commerce.Controllers
             List<Product> listproduct = new List<Product>();
             foreach (var item in wihlist)
             {
-                Product product = _context.Products.Include(p=>p.ProductImages).FirstOrDefault(p => p.Id == item.ProductId);
+                Product product = _context?.Products?.Include(p=>p.ProductImages).FirstOrDefault(p => p.Id == item.ProductId);
                 listproduct.Add(product);
             }
             wishlistVM.Products = listproduct;
@@ -68,7 +68,7 @@ namespace Final_E_Commerce.Controllers
                 online = true;
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            Product product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist wishlist = new Wishlist();
             wishlist.ProductId = product.Id;
             wishlist.AppUserId = user.Id;
@@ -108,7 +108,7 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            Product product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist IsExist = _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).FirstOrDefault();
             if (IsExist==null)
             {

@@ -150,11 +150,8 @@ namespace Final_E_Commerce.Controllers
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             
             UserProductsVM userProductsVM = new UserProductsVM();
-            userProductsVM.Products = await _context.Products.Where(p => p.AppUserId == user.Id)
-                .Include(c => c.Category)
+            userProductsVM.Products = await _context?.Products?.Where(p => p.AppUserId == user.Id)
                 .Include(p => p.ProductImages)
-                .Include(p=>p.ProductTags)
-                .ThenInclude(t => t.Tags)
                 .ToListAsync();
             return View(userProductsVM);
         }
@@ -272,19 +269,24 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> ProductDetail(int id)
         {
-            Product product = _context.Products
-                .Include(c=>c.Category)
-                .Include(p=>p.ProductImages)
-                .Include(p=>p.ProductTags)
+            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            Product p = await _context.Products
+                .Where(p => p.AppUserId == CurrentUser.Id)
+                .Include(i => i.ProductImages)
+                .Include(c => c.Category)
+                .Include(t => t.ProductTags)
                 .ThenInclude(p => p.Tags)
-                .FirstOrDefault(p => p.Id == id);
+                .Include(b => b.Brand)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            if (p == null) return RedirectToAction("error", "home");
+            
             DetailVM detailVM = new DetailVM();
-            detailVM.Product = product;
+            detailVM.Product = p;
             return View(detailVM);
         }
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            Product product = await _context.Products.FirstOrDefaultAsync(p=>p.Id==id);
+            Product product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();
@@ -373,8 +375,7 @@ namespace Final_E_Commerce.Controllers
             {
                 return View(product);
             }
-            List<ProductImage> images = new List<ProductImage>();
-            string path = "";
+            string? path = "";
             if (product.Photos == null)
             {
                 foreach (var item in dbProduct.ProductImages)
@@ -410,17 +411,11 @@ namespace Final_E_Commerce.Controllers
                     {
                         image.IsMain = true;
                     }
-                    else
-                    {
-                        for (int i = 0; i < images.Count; i++)
-                        {
-                            images[0].IsMain = true;
-                        }
-                    }
-                    images.Add(image);
+                    
+                    dbProduct.ProductImages.Add(image);
                 }
 
-                foreach (var item in product.Photos)
+                /*foreach (var item in product.Photos)
                 {
                     if (!item.IsImage())
                     {
@@ -433,21 +428,10 @@ namespace Final_E_Commerce.Controllers
                         ModelState.AddModelError("Photo", "The image size is larger than required size(max 20 mb)");
                         return View();
                     }
-                }
+                }*/
             }
 
-            foreach (var item in dbProduct.ProductImages)
-            {
-                if (item.ImageUrl != null)
-                {
-                    path = Path.Combine(_env.WebRootPath, "images/products", item.ImageUrl);
-                }
-            }
-            if (path != null)
-            {
-                Helper.Helper.DeleteImage(path);
-            }
-            else return RedirectToAction("error", "home");
+            
 
             if (product.TagId == null)
             {
@@ -508,7 +492,7 @@ namespace Final_E_Commerce.Controllers
             dbProduct.Battery = product.Battery;
             dbProduct.Weight = product.Weight;
 
-            dbProduct.ProductImages = images;
+            
             dbProduct.Count = product.Count;
             if (product.DiscountPercent==0||product.DiscountPercent==null)
             {
@@ -557,7 +541,7 @@ namespace Final_E_Commerce.Controllers
                     token
                 }, Request.Scheme);
             }
-            if (dbProduct.DiscountPercent>0)
+            if (product.DiscountPercent>0 && product.DiscountPercent>dbProduct.DiscountPercent)
             {
                 List<Wishlist> wishlist = _context.Wishlists.Where(p => p.ProductId == dbProduct.Id).ToList();
                 foreach (var user in wishlist)
@@ -573,13 +557,13 @@ namespace Final_E_Commerce.Controllers
                             $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
                         var emailResult = helper.SendNews(appUser.Email, token, subject);
                         
-                    string discountemail = Url.Action("ConfirmEmail", "Account", new
+                    string? discountemail = Url.Action("ConfirmEmail", "Account", new
                     {
                         token
                     }, Request.Scheme);
                 }
-                
             }
+            dbProduct.Status = ProductConfirmationStatus.Pending;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("products","user");
@@ -598,9 +582,18 @@ namespace Final_E_Commerce.Controllers
                     _context.SaveChangesAsync();
                 }
             }
-            Product product = await _context.Products.Include(p => p.ProductImages).FirstOrDefaultAsync(p=>p.Id==id);
+            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            Product p = await _context.Products
+                .Where(p => p.AppUserId == CurrentUser.Id)
+                .Include(i => i.ProductImages)
+                .Include(c => c.Category)
+                .Include(t => t.ProductTags)
+                .ThenInclude(p => p.Tags)
+                .Include(b => b.Brand)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            if (p == null) return RedirectToAction("error", "home");
             ProductUpdateVM vm = new ProductUpdateVM();
-            vm.Product = product;
+            vm.Product = p;
             return View(vm);
         }
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string Returnurl)
@@ -620,8 +613,9 @@ namespace Final_E_Commerce.Controllers
             if (imageid == null || productid == null) return RedirectToAction("error", "home");
             var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
             if (image == null) return RedirectToAction("error", "home");
-
-            var product = await _context.Products.Include(x => x.ProductImages).FirstOrDefaultAsync(x => x.Id == productid);
+            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var product = await _context?.Products?.Where(p => p.AppUserId == CurrentUser.Id).Include(x => x.ProductImages).FirstOrDefaultAsync(x => x.Id == productid);
+            if (product == null) return RedirectToAction("error", "home");
             var mainImage = product.ProductImages.FirstOrDefault(x => x.IsMain);
             mainImage.IsMain = false;
 
@@ -653,7 +647,7 @@ namespace Final_E_Commerce.Controllers
             Helper.Helper.DeleteImage(path);
 
             _context.ProductImages.Remove(image);
-            Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == image.ProductId);
+            Product product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
             product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 

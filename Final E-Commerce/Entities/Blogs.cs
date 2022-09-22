@@ -15,7 +15,8 @@ namespace Final_E_Commerce.Entities
         public string? Author { get; set; }
         public int ViewCount { get; set; }
         public int CommentCount { get; set; }
-
+        public Nullable<DateTime> Date { get; set; }
+        public bool IsDeleted { get; set; }
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
         public List<BlogSubjects>? BlogSubjects { get; set; }

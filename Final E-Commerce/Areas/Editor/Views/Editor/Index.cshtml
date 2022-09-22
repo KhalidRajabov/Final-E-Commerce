@@ -1,0 +1,22 @@
+﻿@model EditorVM
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Editor/Views/Shared/_EditorLayout.cshtml";
+}
+
+<div class="container">
+    <a class="btn btn-primary" asp-action="newblog" asp-controller="editor">Write A Blog</a>
+</div>
+<div class="container mt-2 d-flex flex-row wrap-nowrap">
+    @foreach (var blog in Model.Blogs)
+    {
+        <div class="card blog-car m-3" style="width: 18rem;">
+            <img src="~/images/blog/@blog.ImageUrl" class="card-img-top" alt="Blog image">
+            <div class="card-body">
+                <h5 class="card-title">@blog.Title</h5>
+                <p class="card-text">@(Html.Raw(blog.Content.Substring(0,94)))...</p>
+                <a asp-action="blogdetail" asp-controller="editor" asp-route-id="@blog.Id" class="btn btn-primary w-100">Open</a>
+            </div>
+        </div>
+    }
+</div>

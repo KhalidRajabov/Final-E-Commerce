@@ -182,13 +182,13 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (id == null) return RedirectToAction("error", "home");
-            Product product = await _context.Products
-                .Include(i => i.ProductImages)
-                .Include(c => c.Category)
-                .Include(b => b.Brand)
-                .Include(t => t.ProductTags)
-                .ThenInclude(p => p.Tags)
-                .FirstOrDefaultAsync(c => c.Id == id);
+            Product? product = await _context?.Products
+                ?.Include(i => i.ProductImages)
+                ?.Include(c => c.Category)
+                ?.Include(b => b.Brand)
+                ?.Include(t => t.ProductTags)
+                ?.ThenInclude(p => p.Tags)
+                ?.FirstOrDefaultAsync(c => c.Id == id);
             if (product == null) return RedirectToAction("error", "home");
             ProductUpdateVM productUpdateVM = new ProductUpdateVM();
             productUpdateVM.Product = product;
@@ -200,7 +200,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int? id, ProductUpdateVM product)
+        public async Task<IActionResult> Update(int? id, ProductUpdateVM? product)
         {
             var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
             ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
@@ -287,19 +287,6 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 }
             }
 
-            foreach (var item in dbProduct.ProductImages)
-            {
-                if (item.ImageUrl != null)
-                {
-                    path = Path.Combine(_env.WebRootPath, "images/products", item.ImageUrl);
-                }
-            }
-            if (path != null)
-            {
-                Helper.Helper.DeleteImage(path);
-            }
-            else return RedirectToAction("error", "home");
-
             if (product.TagId == null)
             {
                 foreach (var item1 in dbProduct.ProductTags)
@@ -381,7 +368,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 dbProduct.DiscountPercent = product.DiscountPercent;
                 dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
             }
-            if (dbProduct.DiscountPercent > 0)
+            if (product.DiscountPercent > 0 && product.DiscountPercent>dbProduct.DiscountPercent)
             {
                 List<Wishlist> wishlist = _context.Wishlists.Where(p => p.ProductId == dbProduct.Id).ToList();
                 foreach (var user in wishlist)
@@ -397,7 +384,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                         $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
                     var emailResult = helper.SendNews(appUser.Email, token, subject);
 
-                    string discountemail = Url.Action("ConfirmEmail", "Account", new
+                    string? discountemail = Url.Action("ConfirmEmail", "Account", new
                     {
                         token
                     }, Request.Scheme);
@@ -414,7 +401,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Detail(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Product dbProduct = await _context.Products.Include(c => c.Category)
+            Product? dbProduct = await _context?.Products?.Include(c => c.Category)
                 .Include(c => c.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .Include(pi => pi.ProductImages)
@@ -429,7 +416,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Product product = await _context.Products.FindAsync(id);
+            Product? product = await _context.Products.FindAsync(id);
             if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;

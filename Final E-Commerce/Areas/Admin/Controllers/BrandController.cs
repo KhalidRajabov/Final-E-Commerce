@@ -135,7 +135,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             brand.Brand=await _context.Brands.FindAsync(id); 
             
             if (brand.Brand == null) return RedirectToAction("error", "home");
-            ViewBag.BrandProducts = _context.Products.Where(p => p.BrandId == id).Count();
+            ViewBag.BrandProducts = _context?.Products?.Where(p => p.BrandId == id).Count();
 
             return View(brand);
 
