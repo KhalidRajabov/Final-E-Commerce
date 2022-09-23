@@ -12,5 +12,33 @@
     <div class="mt-3">
         @Html.Raw(Model.Blog.Content)
     </div>
-    <a class="btn btn-warning" asp-action="update" asp-controller="editor" asp-route-id="@Model.Blog.Id">Update</a>
+
+    <div class="mt-3">
+        Viewed: @Model.Blog.ViewCount
+    </div>
+
+
+    <div class="mt-3">
+        Tags: 
+        @foreach (var tag in Model.Blog.BlogSubjects)
+        {
+            <span>@tag.Subjects.Name </span>
+        }
+    </div>
+
+    <div class="mt-3">
+        Author: @Model.Blog.Author
+    </div>
+    <div class="mt-3">
+        Written at: @Model.Blog.Date
+    </div>
+
+    <div class="mt-3">
+        Updated: @Model.Blog.LastUpdated
+    </div>
+
+    <div class="mt-3">
+        Updated by: @Model.Blog.LastUpdatedBy
+    </div>
+    <a class="w-50 btn btn-warning align-self-center" asp-action="update" asp-controller="editor" asp-route-id="@Model.Blog.Id">Update</a>
 </div>

@@ -10,7 +10,7 @@ namespace Final_E_Commerce.Entities
         [NotMapped]
         public IFormFile? Photo { get; set; }
         [NotMapped]
-        public List<int>? SubjectId { get; set; }
+        public List<int>? SubjectsId { get; set; }
         public string? ImageUrl { get; set; }
         public string? Author { get; set; }
         public int ViewCount { get; set; }
@@ -21,7 +21,8 @@ namespace Final_E_Commerce.Entities
         public bool IsDeleted { get; set; }
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
-        public List<BlogSubjects>? BlogSubjects { get; set; }
+        public List<BlogSubject>? BlogSubjects { get; set; }
+        public List<BlogComment>? Comments { get; set; }
 
     }
 }

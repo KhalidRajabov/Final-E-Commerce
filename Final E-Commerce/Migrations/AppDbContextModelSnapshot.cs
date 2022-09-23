@@ -250,7 +250,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.BlogSubjects", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.BlogSubject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -261,10 +261,7 @@ namespace Final_E_Commerce.Migrations
                     b.Property<int>("BlogId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SubjectsId")
+                    b.Property<int>("SubjectsId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1300,7 +1297,7 @@ namespace Final_E_Commerce.Migrations
                         .HasForeignKey("Final_E_Commerce.Entities.BlogComment", "AppUserId");
 
                     b.HasOne("Final_E_Commerce.Entities.Blogs", "Blog")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1319,7 +1316,7 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.BlogSubjects", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.BlogSubject", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.Blogs", "Blog")
                         .WithMany("BlogSubjects")
@@ -1329,7 +1326,9 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasOne("Final_E_Commerce.Entities.Subjects", "Subjects")
                         .WithMany("BlogSubjects")
-                        .HasForeignKey("SubjectsId");
+                        .HasForeignKey("SubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Blog");
 
@@ -1550,6 +1549,8 @@ namespace Final_E_Commerce.Migrations
             modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>
                 {
                     b.Navigation("BlogSubjects");
+
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>

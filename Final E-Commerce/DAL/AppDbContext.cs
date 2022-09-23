@@ -27,8 +27,8 @@ namespace Final_E_Commerce.DAL
         public DbSet<UserProfile>? UserProfiles { get; set; }
         public DbSet<UserDetails>? UserDetails { get; set; }
         public DbSet<Blogs>? Blogs { get; set; }
-        public DbSet<BlogSubjects>? BlogSubjects  { get; set; }
-        public DbSet<Subjects> Subjects { get; set; }
+        public DbSet<BlogSubject>? BlogSubjects  { get; set; }
+        public DbSet<Subjects>? Subjects { get; set; }
         public DbSet<BlogComment>? BlogComments { get; set; }
         public DbSet<ProductComment>? ProductComments{ get; set; }
 

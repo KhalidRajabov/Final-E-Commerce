@@ -185,7 +185,7 @@
                         <div class="input-group w-100">
                             <ul class="search-wrapper" id="SearchBlog">
                                 <li class="d-flex px-3">
-                                    <input autocomplete="off" class="search-box form-control bg-light border-0 small w-100" id="search" type="search" placeholder="Enter Keywords...">
+                                    <input autocomplete="off" class="search-box form-control bg-light border-0 small w-100" id="searchblog" type="search" placeholder="Enter Keywords...">
                                 </li>
                             </ul>
                             <div class="input-group-append">
@@ -439,28 +439,7 @@
 
     <!-- Core plugin JavaScript-->
     <script src="~/editor/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script>
-        $(document).on("keyup", "#search", function () {
-            let inputValue = $(this).val();
-            if (inputValue.length == 0) {
-                $("#SearchBlog li").slice(1).remove();
-                $("#SearchBlog").html()
-                $.ajax({
-                    url: "https://localhost:44393/editor/searchblog/" + inputValue,
-                    method: "get",
-                    success: function (res) {
-                        $("#SearchBlog").append(res);
-                        //console.log("popular products successfully brought for onlcick on search input")
-                    },
-                    error: function (res) {
-                        console.log("error ", res.responseText)
-                    }
-                })
-            }
-
-        });
-
-    </script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Custom scripts for all pages-->
     
@@ -472,6 +451,26 @@
     @*<script src="~/editor/js/demo/chart-area-demo.js"></script>
     <script src="~/editor/js/demo/chart-pie-demo.js"></script>*@
     @RenderSection("JqueryValidationScript", false);
+    <script>
+        $(document).on("keyup", "#searchblog", function () {
+            let inputValue = $(this).val();
+            console.log(inputValue)
+                $("#SearchBlog li").slice(1).remove();
+                $("#SearchBlog").html()
+                $.ajax({
+                    url: "https://localhost:44393/Editor/Editor/SearchBlog/search=" + inputValue,
+                    method: "get",
+                    success: function (res) {
+                        $("#SearchBlog").append(res);
+                        //console.log("popular products successfully brought for onlcick on search input")
+                    },
+                    error: function (res) {
+                        console.log("error ", res.responseText, res)
+                    }
+                })
+        });
+
+    </script>
 </body>
 
 </html>

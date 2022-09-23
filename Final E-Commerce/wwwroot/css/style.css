@@ -2602,9 +2602,17 @@ label {
     transition: .3s;
 }
 /*.product-card:hover {
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    
     transition: .5s;
 }
 .product-card:not(:hover){
     transition: 0.3s;
 }*/
+.custom-blog:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    transition: .3s;
+    transform: scaleX(1.1) scaleY(1.1);
+}
+.custom-blog:not(hover){
+    transition:.3s;
+}

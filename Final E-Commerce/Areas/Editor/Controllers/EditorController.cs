@@ -75,11 +75,11 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             NewBlog.ImageUrl = blog.Photo.SaveImage(_env, "images/blog");
             if (blog.SubjectId!= null)
             {
-                List<BlogSubjects> blogSubjects = new List<BlogSubjects>();
+                List<BlogSubject> blogSubjects = new List<BlogSubject>();
                 foreach (int item in blog.SubjectId)
                 {
-                    BlogSubjects blogSubject = new BlogSubjects();
-                    blogSubject.SubjectId = item;
+                    BlogSubject blogSubject = new BlogSubject();
+                    blogSubject.SubjectsId = item;
                     blogSubject.BlogId = NewBlog.Id;
                     blogSubjects.Add(blogSubject);
                 }
@@ -130,8 +130,8 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
                     ModelState.AddModelError("Photo", "Image size can not be large");
                     return View();
                 }
-                string oldImg = blog.ImageUrl;
-                string path = Path.Combine(_env.WebRootPath, "images", oldImg);
+                string? oldImg = blog.ImageUrl;
+                string? path = Path.Combine(_env.WebRootPath, "images", oldImg);
                 Helper.Helper.DeleteImage(path);
                 blog.ImageUrl = editVM.Photo.SaveImage(_env, "images/blog");
             }
@@ -143,16 +143,16 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             {
                 foreach (var item1 in blog.BlogSubjects)
                 {
-                    item1.SubjectId = item1.SubjectId;
+                    item1.SubjectsId = item1.SubjectsId;
                 }
             }
             else
             {
-                List<BlogSubjects> blogSubjects = new List<BlogSubjects>();
+                List<BlogSubject> blogSubjects = new List<BlogSubject>();
                 foreach (int item in editVM.SubjectId)
                 {
-                    BlogSubjects blogSubject = new BlogSubjects();
-                    blogSubject.SubjectId = item;
+                    BlogSubject blogSubject = new BlogSubject();
+                    blogSubject.SubjectsId = item;
                     blogSubject.BlogId = blog.Id;
                     blogSubjects.Add(blogSubject);
                 }
@@ -163,14 +163,14 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
         }
         public async Task<IActionResult> SearchBlog(string search)
         {
-            List<Blogs> blogs = _context.Blogs
+            List<Blogs>? blogs =await _context?.Blogs?
                .Where(b =>
                b.Title.ToLower().Contains(search.ToLower()) ||
                b.Content.ToLower().Contains(search.ToLower()))
-               .Include(b => b.BlogSubjects)
+               ?.Include(b => b.BlogSubjects)
                .ThenInclude(b=>b.Subjects)
                .OrderBy(p => p.Date)
-               .Take(10).ToList();
+               .Take(10).ToListAsync();
             if (blogs == null)
             {
                 return RedirectToAction("error", "home");

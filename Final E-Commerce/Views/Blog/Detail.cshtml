@@ -1,0 +1,129 @@
+﻿@model BlogVM
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="post post-single">
+                    <div class="post-thumb">
+                        <img class="img-fluid w-100" src="~/images/blog/@Model.Blog.ImageUrl" alt="post-thumb">
+                    </div>
+                    <h2 class="post-title">@Model.Blog.Title</h2>
+                    <div class="post-meta">
+                        <ul>
+                            <li>
+                                <i class="ti-calendar"></i> @Model.Blog.Date
+                            </li>
+                            <li>
+                                <i class="ti-user"></i> POSTED BY @Model.Blog.Author
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-ribbon"></i>
+                                    @foreach (var tag in Model.Blog.BlogSubjects)
+                                    {
+                                        <span style="color:cornflowerblue; font-size:120%">@tag.Subjects.Name </span>
+                                    }
+                            </li>
+                            <li>
+                                <a href="#"><i class="ti-comments"></i> @Model.Blog.CommentCount COMMENTS</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="post-content post-excerpt mb-5">
+                        @Html.Raw(Model.Blog.Content)
+                    </div>
+                    <div class="post-social-share mb-4">
+                        <h4 class="post-sub-heading border-bottom pb-3 mb-3">Share this post</h4>
+                        <div class="social-media-icons">
+                            <ul class="list-inline social-icons">
+                                <li class="list-inline-item"><a href="#"><i class="ti-facebook"></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="ti-twitter-alt"></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="ti-vimeo-alt"></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="ti-google"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-comments">
+                        <h4 class="post-sub-heading border-bottom pb-3 mb-3">@Model.Blog.CommentCount Comments</h4>
+                        <ul class="media-list mb-5">
+                            @if (Model.Blog.Comments!=null)
+                            {
+                                @foreach (var comment in Model.Blog.Comments)
+                                {
+                                    <li class="media">
+                                        <a href="#">
+                                            @*<img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50">*@
+                                        </a>
+                                        <div class="media-body">
+                                            <div class="comment-info">
+                                                <div class="comment-author">
+                                                    <a href="#">@comment.Author</a>
+                                                </div>
+                                                <time>@comment.Date.ToString("dddd, dd MMMM yyyy")</time>
+                                                @*<a class="comment-button" href="#"><i class="ti-comments"></i>Reply</a>*@
+                                            </div>
+                                            <p>
+                                                @comment.CommentContent
+                                            </p>
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                  @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="post-comments-form">
+                            <h4 class="post-sub-heading mb-3">Leave You Comments</h4>
+                            <form method="post" action="#" id="form" role="form">
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <textarea asp-for="CommentContent" class="form-control" placeholder="Comment" ></textarea>
+                                        <span asp-validation-for="CommentContent"></span>
+                                    </div>
+                                    <!-- Send Button -->
+                                    <div class="form-group col-md-12">
+                                        <button type="submit" asp-action="PostComment" asp-controller="blog" asp-route-id="@Model.Blog.Id" class="btn btn-primary">
+                                            Post
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else{
+                        <div class="post-comments-form">
+                            <h4 class="post-sub-heading mb-3">Leave You Comments</h4>
+                            <form method="post" action="#" id="form" role="form">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">    
+                                        <input asp-for="Author" class=" form-control" placeholder="Name *">
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group col-md-12">
+                                        <textarea asp-for="CommentContent" class=" form-control"  placeholder="Comment"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-12">
+                                        <button type="submit" asp-action="PostComment" asp-controller="blog" asp-route-id="@Model.Blog.Id" class="btn btn-primary">
+                                            Post
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
