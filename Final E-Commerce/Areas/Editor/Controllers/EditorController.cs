@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace Final_E_Commerce.Areas.Editor.Controllers
 {
@@ -160,6 +161,20 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             }
             await _context.SaveChangesAsync();
             return RedirectToAction("index","editor");
+        }
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            Blogs? blog = await _context?.Blogs?.FirstOrDefaultAsync(b=>b.Id==id);
+            blog.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("index");
+        }
+        public async Task<IActionResult> RecoverBlog(int id)
+        {
+            Blogs? blog = await _context?.Blogs?.FirstOrDefaultAsync(b => b.Id == id);
+            blog.IsDeleted = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("index");
         }
         public async Task<IActionResult> SearchBlog(string search)
         {

@@ -40,5 +40,13 @@
     <div class="mt-3">
         Updated by: @Model.Blog.LastUpdatedBy
     </div>
-    <a class="w-50 btn btn-warning align-self-center" asp-action="update" asp-controller="editor" asp-route-id="@Model.Blog.Id">Update</a>
+
+    <div class="mt-3">
+        <a class="text-primary" asp-area="default" asp-action="detail" asp-controller="blog" asp-route-id="@Model.Blog.Id">Go to blog</a>
+    </div>
+    <div class="col-12 mt-3 d-flex flex-row justify-content-around">
+        <a class="w-25 btn btn-secondary" asp-action="blogdetail" asp-controller="editor" asp-route-id="@Model.Blog.Id">Go back</a>
+        <a class="w-25 btn btn-warning" asp-action="update" asp-controller="editor" asp-route-id="@Model.Blog.Id">Update</a>
+        <a class="w-25 btn btn-danger" asp-action="deleteblog" asp-controller="editor" asp-route-id="@Model.Blog.Id">Delete</a>
+    </div>
 </div>

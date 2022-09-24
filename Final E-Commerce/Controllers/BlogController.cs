@@ -42,6 +42,7 @@ namespace Final_E_Commerce.Controllers
             await _context.SaveChangesAsync();
             return View(blog);
         }
+
         [HttpPost]
         public async Task<IActionResult> PostComment(int id, BlogVM comment)
         {
