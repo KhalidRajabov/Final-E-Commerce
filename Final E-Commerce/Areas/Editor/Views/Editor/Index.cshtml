@@ -7,23 +7,23 @@
     <a class="btn btn-primary" asp-action="newblog" asp-controller="editor">Write A Blog</a>
 </div>
 <div class="container mt-2 ">
-    <div class="d-flex flex-row">
+    <div class="row d-flex flex-row flex-wrap">
     @foreach (var blog in Model.Blogs)
     {
-        <div class="card blog-car m-3" style="min-width: 18rem; max-height: 500px; position : relative; border: 2px solid @(blog.IsDeleted==true?"red":"green");">
+        <div class="card blog-card m-3" style="width: 18rem; max-height: 500px; position : relative; border: 2px solid @(blog.IsDeleted==true?"red":"green");">
             <!-- Example single danger button -->
-            <div class="btn-group" style="position: absolute; right: 5px">
+            <div class="btn-group" style="position: absolute; left: 5px">
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 </button>
                 <ul class="dropdown-menu bg-secondary">
-                    <li><a class="dropdown-item bg-dark text-primary" asp-action="blogdetail" asp-controller="editor" asp-route-id="@blog.Id">Detail</a></li>
-                    <li><a class="dropdown-item bg-dark text-warning" asp-action="update" asp-controller="editor" asp-route-id="@blog.Id">Update</a></li>
+                    <li ><a class="dropdown-item bg-dark fw-bold text-primary" asp-action="blogdetail" asp-controller="editor" asp-route-id="@blog.Id">Detail</a></li>
+                        <li><a class="dropdown-item bg-dark fw-bold text-warning" asp-action="update" asp-controller="editor" asp-route-id="@blog.Id">Update</a></li>
                     @if (blog.IsDeleted)
                     {
-                        <li><a class="dropdown-item bg-dark text-success" asp-action="recoverblog" asp-controller="editor" asp-route-id="@blog.Id">Recover</a></li>
+                            <li><a class="dropdown-item bg-dark fw-bold text-success" asp-action="recoverblog" asp-controller="editor" asp-route-id="@blog.Id">Recover</a></li>
                     }
                     else{
-                        <li><a class="dropdown-item bg-dark text-danger" asp-action="deleteblog" asp-controller="editor" asp-route-id="@blog.Id">Delete</a></li>
+                            <li><a class="dropdown-item bg-dark fw-bold text-danger" asp-action="deleteblog" asp-controller="editor" asp-route-id="@blog.Id">Delete</a></li>
                     }
                 </ul>
             </div>
