@@ -101,9 +101,12 @@
                     <a class="nav-link" asp-action="index" asp-controller="dashboard" asp-area="admin">Admin</a>
                 </li>
             }
-            <li class="nav-item">
-                <a class="nav-link" asp-action="index" asp-controller="main" asp-area="editor">Editor</a>
-            </li>
+            @if (ViewBag.RightCounter > 0)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="index" asp-controller="main" asp-area="editor">Editor</a>
+                </li>
+            }
         </ul>
     </div>
     <div class="order-3 navbar-right-elements">

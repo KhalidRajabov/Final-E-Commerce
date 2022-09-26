@@ -74,26 +74,20 @@
             <div class="row">
                 <div class="col-lg-6 mb-4 mb-lg-0">
                     <!-- product image slider -->
-                    
-
-                    <div id="carouselExampleFade"style="z-index: 1 !important" class="carousel slide carousel-fade" data-bs-ride="carousel">
-                        <div class="carousel-inner"style="z-index: 1 !important">
-                            @foreach (var item in Model.Product.ProductImages)
-                            {
-                                <div class="carousel-item active w-100">
-                                    <img style="z-index: 1 !important" width="100%" src="~/images/products/@item.ImageUrl" class="d-block w-100" alt="...">
-                                </div>
-                            }
+                    <section id="image-carousel" class="splide" aria-label="Beautiful Images">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                @foreach (var image in Model.Product.ProductImages)
+                                {
+                                    <li class="splide__slide">
+                                         <img src="~/images/products/@image.ImageUrl"/>
+                                    </li>
+                                }
+                            </ul>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
+                    </section>
+
+                    
 
                 </div>
                 <!-- produt details -->
@@ -539,8 +533,4 @@
                 <!-- //end of product -->
             </div>
         </div>
-
-
-
-
 </div>

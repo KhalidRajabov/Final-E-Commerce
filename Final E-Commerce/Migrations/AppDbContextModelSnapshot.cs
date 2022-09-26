@@ -191,9 +191,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId")
-                        .IsUnique()
-                        .HasFilter("[AppUserId] IS NOT NULL");
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("BlogId");
 
@@ -243,9 +241,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId")
-                        .IsUnique()
-                        .HasFilter("[AppUserId] IS NOT NULL");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Blogs");
                 });
@@ -1293,8 +1289,8 @@ namespace Final_E_Commerce.Migrations
             modelBuilder.Entity("Final_E_Commerce.Entities.BlogComment", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.AppUser", "User")
-                        .WithOne("BlogComment")
-                        .HasForeignKey("Final_E_Commerce.Entities.BlogComment", "AppUserId");
+                        .WithMany("BlogComment")
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("Final_E_Commerce.Entities.Blogs", "Blog")
                         .WithMany("Comments")
@@ -1310,8 +1306,8 @@ namespace Final_E_Commerce.Migrations
             modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
-                        .WithOne("Blogs")
-                        .HasForeignKey("Final_E_Commerce.Entities.Blogs", "AppUserId");
+                        .WithMany("Blogs")
+                        .HasForeignKey("AppUserId");
 
                     b.Navigation("AppUser");
                 });

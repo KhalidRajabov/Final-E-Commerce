@@ -5,6 +5,7 @@ using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -38,7 +39,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> SearchProduct(string search)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -47,7 +48,7 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    _context?.SaveChangesAsync();
                 }
             }
             List<Product> products = _context.Products
@@ -64,14 +65,18 @@ namespace Final_E_Commerce.Controllers
                 p.OperationSystem.ToLower().Contains(search.ToLower()) ||
                 p.Memory.ToLower().Contains(search.ToLower()))
                 .Include(p => p.Category).Include(p => p.ProductImages)
-                .OrderBy(p => p.Id)
+                .OrderByDescending(p => p.Views)
                 .Take(10).ToList();
             if (products == null)
             {
                 return RedirectToAction("error", "home");
             }
+            List<Blogs> blogs = _context?.Blogs?
+                .Where(b=>b.Title.ToLower().Contains(search.ToLower())||
+                b.Content.Contains(search.ToLower())).ToList();
             DetailVM detailVM = new DetailVM();
-            detailVM.ListProducts = products;
+            detailVM.SearchProducts = products;
+            detailVM.Blogs=blogs;
 
             return PartialView("_Search", detailVM);
         }
@@ -94,7 +99,7 @@ namespace Final_E_Commerce.Controllers
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p => p.Views).Take(3).Include(p=>p.ProductImages).ToList();
             DetailVM detailVM = new DetailVM();
-            detailVM.ListProducts= PopularProducts;
+            detailVM.SearchProducts = PopularProducts;
             return PartialView("_Popular", detailVM);       
         }
         public async Task<IActionResult> GetProductForModal(int id)

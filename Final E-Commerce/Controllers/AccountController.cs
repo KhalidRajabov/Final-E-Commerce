@@ -2,10 +2,8 @@
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Final_E_Commerce.Controllers

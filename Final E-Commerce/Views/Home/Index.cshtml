@@ -79,14 +79,14 @@
       </div>
       <!-- categories item -->
       <div class="col-lg-4 col-md-6 mb-50 " >
-                <div class="card p-0 " style="min-height:400px">
-          <div class="border-bottom text-center hover-zoom-img">
+                <div class="card p-0 " >
+                    <div class="border-bottom text-center hover-zoom-img" style="height:250px">
             <a asp-action="detail" asp-controller="home" asp-route-id="@Model.MostPopularProduct.Id">
                 @foreach (var item in Model.MostPopularProduct.ProductImages)
                 {
                     if (item.IsMain)
                     {
-                       <img width="250px" src="~/images/products/@item.ImageUrl" class="rounded-top img-fluid" alt="product-img"> 
+                       <img src="~/images/products/@item.ImageUrl" class="rounded-top img-fluid" alt="product-img"> 
                     }
                 }
                 </a>
@@ -116,8 +116,8 @@
       <!-- categories item -->
       <div class="col-lg-4 col-md-6 mb-50">
                 <div class="card p-0 " style="min-height:400px">
-          <div class="border-bottom text-center hover-zoom-img">
-                        <a href="shop.html"><img width="250px" src="~/images/categories/product-big-2.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
+          <div class="border-bottom text-center hover-zoom-img" style="height:250px">
+                        <a href="shop.html"><img src="~/images/categories/product-big-2.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
           <ul class="d-flex list-unstyled pl-0 categories-list">
             <li class="m-0 hover-zoom-img">
@@ -139,8 +139,8 @@
       <!-- categories item -->
       <div class="col-lg-4 col-md-6 mb-50">
                 <div class="card p-0 " style="min-height:400px">
-          <div class="border-bottom text-center hover-zoom-img">
-                        <a href="shop.html"><img width="250px" src="~/images/categories/product-big-3.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
+                    <div class="border-bottom text-center hover-zoom-img" style="height:250px">
+                        <a href="shop.html"><img src="~/images/categories/product-big-3.jpg" class="rounded-top img-fluid w-100" alt="product-img"></a>
           </div>
           <ul class="d-flex list-unstyled pl-0 categories-list">
             <li class="m-0 hover-zoom-img">

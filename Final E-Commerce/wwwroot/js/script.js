@@ -598,6 +598,8 @@
     $('.value').text('$' + slideEvt.value[0] + ' - ' + '$' + slideEvt.value[1]);
   });
 
+    
+
   // tooltip
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();

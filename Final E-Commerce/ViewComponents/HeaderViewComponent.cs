@@ -37,13 +37,19 @@ namespace Final_E_Commerce.ViewComponents
                 ViewBag.User = user.UserName;
                 ViewBag.UserId = user.Id;
                 var roles = (await _userManager.GetRolesAsync(user));
+                int RightCounter = 0;
                 foreach (var item in roles)
                 {
                     if (item.ToLower().Contains("admin"))
                     {
                         ViewBag.UserRole = "admin";
                     }
+                    if (item.ToLower().Contains("admin") || item.ToLower().Contains("editor"))
+                    {
+                        RightCounter++;
+                    }
                 }
+                ViewBag.RightCounter = RightCounter;
 
             }
             ViewBag.BasketCount = 0;
@@ -85,6 +91,7 @@ namespace Final_E_Commerce.ViewComponents
             }
             hdVM.BasketProducts = basketVM;
             hdVM.Bio = await _context.Bios.FirstOrDefaultAsync();
+            
             return View(await Task.FromResult(hdVM));
         }
     }

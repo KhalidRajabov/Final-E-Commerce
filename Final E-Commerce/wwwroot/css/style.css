@@ -14,7 +14,10 @@ VERSION:	Versoin Number
   font-weight: normal;
   font-style: normal;
 }
-
+.splide__slide img {
+    width: 100%;
+    height: auto;
+}
 body {
   line-height: 26px;
   font-family: sans-serif;
