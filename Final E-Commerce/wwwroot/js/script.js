@@ -598,7 +598,13 @@
     $('.value').text('$' + slideEvt.value[0] + ' - ' + '$' + slideEvt.value[1]);
   });
 
-    
+    //owl splide
+    var splide = new Splide('.splide', {
+        type: 'fade',
+        rewind: true,
+    });
+
+    splide.mount();
 
   // tooltip
   $(function () {

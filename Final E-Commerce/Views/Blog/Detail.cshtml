@@ -56,7 +56,7 @@
                         <ul class="media-list">
                             @if (Model.Blog.Comments!=null)
                             {
-                                @foreach (var comment in Model.Blog.Comments)
+                                @foreach (var comment in Model.Comments)
                                 {
                                     <li style="border: 2px solid rgb(150,151,154); border-radius: 10px; padding: 10px" class="media mt-3 comment-box">
                                         <a href="#">
@@ -65,7 +65,13 @@
                                         <div class="media-body">
                                             <div class="comment-info">
                                                 <div class="comment-author d-flex flex-row justify-content-between">
-                                                    <a href="#">@comment.Author</a>
+                                                    @if (comment.AppUserId!=null)
+                                                    {
+                                                        <a href="#">@comment.Author</a>
+                                                    }
+                                                    else{
+                                                        <a href="#">@comment.Author <span class="text-danger">(Not a member)</span></a>
+                                                    }
                                                     @if (ViewBag.RightCounter>0||(User.Identity.IsAuthenticated && comment.AppUserId == ViewBag.AppUserId))
                                                     {
                                                         <a class="text-danger mr-3" asp-action="deletecomment" asp-controller="blog" asp-route-id="@comment.Id" asp-route-ReturnUrl="@Context.Request.Path">Delete</a>

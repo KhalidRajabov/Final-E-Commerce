@@ -47,6 +47,12 @@
     <div class="col-12 mt-3 d-flex flex-row justify-content-around">
         <a class="w-25 btn btn-secondary" asp-action="blogdetail" asp-controller="editor" asp-route-id="@Model.Blog.Id">Go back</a>
         <a class="w-25 btn btn-warning" asp-action="update" asp-controller="editor" asp-route-id="@Model.Blog.Id">Update</a>
-        <a class="w-25 btn btn-danger" asp-action="deleteblog" asp-controller="editor" asp-route-id="@Model.Blog.Id">Delete</a>
+        @if (Model.Blog.IsDeleted)
+        {
+            <a class="w-25 btn btn-success" asp-action="recoverblog" asp-controller="editor" asp-route-id="@Model.Blog.Id">Recover</a>
+        }
+        else{
+            <a class="w-25 btn btn-danger" asp-action="deleteblog" asp-controller="editor" asp-route-id="@Model.Blog.Id">Delete</a>
+        }
     </div>
 </div>

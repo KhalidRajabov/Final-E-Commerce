@@ -36,7 +36,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Detail(int? id)
         {
-            Blogs dbBlog = await _context?.Blogs?.Include(b=>b.Comments).Include(b => b.BlogSubjects).ThenInclude(bs => bs.Subjects).FirstOrDefaultAsync(b => b.Id == id);
+            Blogs dbBlog = await _context?.Blogs?.Include(b => b.BlogSubjects).ThenInclude(bs => bs.Subjects).FirstOrDefaultAsync(b => b.Id == id);
             if (dbBlog.IsDeleted||dbBlog==null)
             {
                 return RedirectToAction("error", "home");
@@ -58,9 +58,11 @@ namespace Final_E_Commerce.Controllers
             }
             dbBlog.ViewCount++;
             dbBlog.CommentCount = _context.BlogComments.Where(b => b.BlogId == dbBlog.Id).ToList().Count;
+            List<BlogComment>? Comments = _context?.BlogComments?.Where(c=>c.BlogId==dbBlog.Id).OrderByDescending(b => b.BlogId).ToList();
             BlogVM? blog = new BlogVM
             {
-                Blog =dbBlog
+                Blog =dbBlog,
+                Comments = Comments
             };
             await _context.SaveChangesAsync();
             return View(blog);
