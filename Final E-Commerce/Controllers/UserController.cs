@@ -563,7 +563,19 @@ namespace Final_E_Commerce.Controllers
                     }, Request.Scheme);
                 }
             }
-            dbProduct.Status = ProductConfirmationStatus.Pending;
+            var roles = await _usermanager.GetRolesAsync(CurrentUser);
+            foreach (var item in roles)
+            {
+                if (item.ToLower().Contains("admin"))
+                {
+                    dbProduct.Status = ProductConfirmationStatus.Approved;
+                }
+                else
+                {
+                    dbProduct.Status = ProductConfirmationStatus.Pending;
+                }
+            }
+            
             await _context.SaveChangesAsync();
 
             return RedirectToAction("products","user");

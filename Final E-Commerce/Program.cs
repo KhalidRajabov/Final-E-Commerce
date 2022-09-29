@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Final_E_Commerce.DAL;
-using Final_E_Commerce.Mapper;
+
 using Final_E_Commerce.Entities;
 using Microsoft.AspNetCore.Identity;
 using Final_E_Commerce.Helper;
@@ -18,11 +18,6 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
     options.JsonSerializerOptions.IgnoreNullValues = true;
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAutoMapper(opt =>
-{
-    opt.AddProfile(new MapperProfile());
-});
-
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

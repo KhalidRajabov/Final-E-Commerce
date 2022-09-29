@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Final_E_Commerce.DAL;
-using Final_E_Commerce.DTO.Bio_DTO;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApi.DTO.CategoryDTO;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using WebApi.DTO.Product_DTOs;
 using Microsoft.AspNetCore.Identity;
 
 namespace Final_E_Commerce.Controllers
@@ -15,12 +12,10 @@ namespace Final_E_Commerce.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext? _context;
-        private readonly IMapper? _mapper;
         private readonly UserManager<AppUser>? _usermanager;
-        public HomeController(AppDbContext? context, IMapper? mapper, UserManager<AppUser>? usermanager)
+        public HomeController(AppDbContext? context, UserManager<AppUser>? usermanager)
         {
             _context = context;
-            _mapper = mapper;
             _usermanager = usermanager;
         }
         public async Task<IActionResult> Index()

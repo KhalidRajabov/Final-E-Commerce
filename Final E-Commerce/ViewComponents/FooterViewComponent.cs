@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Final_E_Commerce.DAL;
-using Final_E_Commerce.DTO.Bio_DTO;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +26,7 @@ namespace Final_E_Commerce.ViewComponents
             
             footerVM.Bio = await _context.Bios.FirstOrDefaultAsync();
             footerVM.Categories = await _context.Categories.Where(c=>c.ParentId==null).Take(4).ToListAsync();
-            return View(await Task.FromResult(footerVM));
+            return View(await Task.FromResult(footerVM));   
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Final_E_Commerce.DAL;
-using Final_E_Commerce.DTO.Bio_DTO;
+
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -13,12 +13,10 @@ namespace Final_E_Commerce.ViewComponents
     public class HeaderViewComponent:ViewComponent
     {
         private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
-        public HeaderViewComponent(AppDbContext context, IMapper mapper, UserManager<AppUser> userManager)
+        public HeaderViewComponent(AppDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
-            _mapper = mapper;
             _userManager = userManager;
         }
         public async Task<IViewComponentResult> InvokeAsync()

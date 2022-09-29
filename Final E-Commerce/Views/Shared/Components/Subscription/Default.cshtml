@@ -1,0 +1,22 @@
+﻿@model SubscriptionVM
+@{
+    Layout = null;
+}
+<!-- newsletter -->
+@if (!(User.Identity.IsAuthenticated)||(User.Identity.IsAuthenticated&&Model.User.Subscribed!=true))
+{
+    <section class="section bg-gray">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-title">@Model.Bio.NewsLetterHeader</h2>
+                    <p class="mb-4">@Model.Bio.NewsLetterText</p>
+                </div>
+                <div class="col-lg-6 col-md-8 col-sm-9 col-10 mx-auto">
+                        <input type="email"  class="form-control rounded-0 border-0 mr-3 mb-4 mb-sm-0" id="mail" placeholder="Enter your email">
+                        <a id="getsubbed" class="btn btn-primary">Subscribe</a>
+                </div>
+            </div>
+        </div>
+    </section>
+}

@@ -24,19 +24,17 @@ namespace Final_E_Commerce.Controllers
             _usermanager = usermanager;
             _roleManager = roleManager;
         }
-
-
         public IActionResult Index()
         {
-            BlogDetailVM blog = new BlogDetailVM
+            BlogDetailVM? blog = new BlogDetailVM
             {
-                Blogs=_context.Blogs.Where(b=>!b.IsDeleted).OrderByDescending(b=>b.Id).Include(b=>b.BlogSubjects).ThenInclude(bs=>bs.Subjects).ToList(),
+                Blogs=_context?.Blogs?.Where(b=>!b.IsDeleted).OrderByDescending(b=>b.Id).Include(b=>b.BlogSubjects).ThenInclude(bs=>bs.Subjects).ToList(),
             };
             return View(blog);
         }
         public async Task<IActionResult> Detail(int? id)
         {
-            Blogs dbBlog = await _context?.Blogs?.Include(b => b.BlogSubjects).ThenInclude(bs => bs.Subjects).FirstOrDefaultAsync(b => b.Id == id);
+            Blogs? dbBlog = await _context?.Blogs?.Include(b => b.BlogSubjects).ThenInclude(bs => bs.Subjects).FirstOrDefaultAsync(b => b.Id == id);
             if (dbBlog.IsDeleted||dbBlog==null)
             {
                 return RedirectToAction("error", "home");
@@ -58,16 +56,29 @@ namespace Final_E_Commerce.Controllers
             }
             dbBlog.ViewCount++;
             dbBlog.CommentCount = _context.BlogComments.Where(b => b.BlogId == dbBlog.Id).ToList().Count;
-            List<BlogComment>? Comments = _context?.BlogComments?.Where(c=>c.BlogId==dbBlog.Id).OrderByDescending(b => b.BlogId).ToList();
+            List<BlogComment>? Comments = _context?.BlogComments?
+                .Where(c=>c.BlogId==dbBlog.Id)
+                .OrderByDescending(b => b.Id)
+                .Take(10)
+                .ToList();
             BlogVM? blog = new BlogVM
             {
-                Blog =dbBlog,
+                Blog = dbBlog,
                 Comments = Comments
             };
             await _context.SaveChangesAsync();
             return View(blog);
         }
-
+        public async Task<IActionResult> LoadComments(int skip, int? BlogId)
+        {
+            List<BlogComment>? comments = _context?.BlogComments?.Where(bc=>bc.BlogId==BlogId)
+                .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToList();
+            CommentsVM commentsVM = new CommentsVM
+            {
+                BlogComments = comments
+            };
+            return PartialView("_Comments", commentsVM);
+        }
         [HttpPost]
         public async Task<IActionResult> PostComment(int id, BlogVM comment, string? returnurl)
         {
@@ -100,7 +111,7 @@ namespace Final_E_Commerce.Controllers
             return RedirectToAction("index");
         }
         [Authorize]
-        public async Task<IActionResult> DeleteComment(int id, string? returnurl)
+        public async Task<IActionResult> DeleteComment(int id)
         {
             AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
             BlogComment? comment = await _context?.BlogComments?.FirstOrDefaultAsync(bc => bc.Id == id);
@@ -122,11 +133,13 @@ namespace Final_E_Commerce.Controllers
                     }
                 }
             }
-            if (returnurl != null)
+            
+            var obj = new
             {
-                return Redirect(returnurl);
-            }
-            return RedirectToAction("index");
+                count = _context.BlogComments.Where(b => b.BlogId == comment.BlogId).ToList().Count
+            };
+
+            return Ok(obj);
         }
     }
 }

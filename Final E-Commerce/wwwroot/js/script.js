@@ -1,5 +1,7 @@
 (function ($) {
-  //'use strict';
+    //'use strict';
+
+
 
 
 
@@ -15,14 +17,14 @@
             let dataId = this.getAttribute("data-id")
             //alert("clicked")
             let quantity = $("#quantity").val()
-            axios.post("/basket/additem?id=" + dataId+"&quantity="+quantity)
+            axios.post("/basket/additem?id=" + dataId + "&quantity=" + quantity)
                 .then(function (response) {
                     // handle success
                     //console.log(response.data.count)
                     if (response.data.online) {
-                        if (response.data.productcount==1) {
-                        bTotal.innerHTML = response.data.count
-                        tPrice.innerHTML = ` $${response.data.price}`
+                        if (response.data.productcount == 1) {
+                            bTotal.innerHTML = response.data.count
+                            tPrice.innerHTML = ` $${response.data.price}`
                             let cartitem = `<li id="cart-item${dataId}"  class="d-flex border-bottom">
                                             <img width="70" src="https://localhost:44393/images/products/${response.data.image}" alt="product-img">
                                             <div class="mx-3">
@@ -76,7 +78,7 @@
 
                     // handle success
                     bTotal.innerText = response.data.count
-                    tPrice.innerText = "$"+response.data.price
+                    tPrice.innerText = "$" + response.data.price
                     span.innerText = response.data.main
                     tabletotalprice.innerText = '$' + response.data.itemTotal
                     $(`#oneproductCount${dataId}`).html(`${response.data.productcount}`)
@@ -115,7 +117,7 @@
                 .then(function (response) {
                     //console.log(response.data.count)
 
-                    if (response.data.productcount ==0) {
+                    if (response.data.productcount == 0) {
                         //console.log("data zero")
                         bTotal.innerText = response.data.main
                         tPrice.innerText = response.data.price
@@ -125,19 +127,19 @@
                             table.remove();
                             checkoutBtn.remove();
                             cntnr.append(emptywarning)
-                           // cntnr.html(`<div class="container d-flex flex-row justify-content-center">< a class="text-light btn btn-danger" asp-controller="home" asp-action="index" > Your cart is empty</a ></div >`);
+                            // cntnr.html(`<div class="container d-flex flex-row justify-content-center">< a class="text-light btn btn-danger" asp-controller="home" asp-action="index" > Your cart is empty</a ></div >`);
                         }
                     }
                     else {
                         bTotal.innerText = response.data.main
-                        tPrice.innerText = "$"+response.data.price 
+                        tPrice.innerText = "$" + response.data.price
                         span.innerText = response.data.count
                         tabletotalprice.innerText = response.data.itemTotal;
                         //console.log("count " + response.data.count);
                         $(`#oneproductCount${dataId}`).html(`${response.data.count} X`)
                         //console.log("productcount " + response.data.productcount);
                         //console.log(itemcount)
-                        
+
                     }
                     //console.log(response);
                 })
@@ -160,7 +162,7 @@
     delBtn.forEach(add =>
 
         add.addEventListener("click", function () {
-            
+
             let dataId = this.getAttribute(`data-id`)
             let tr = this.parentElement.parentElement.parentElement;
             let table = tr.parentElement.parentElement;
@@ -176,7 +178,7 @@
             emptywarning.append(emptywarninglink)
             //console.log(dataId)
             Swal.fire({
-           
+
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
@@ -200,7 +202,7 @@
                                 checkoutBtn.remove();
                                 cntnr.append(emptywarning)
                                 //window.location.reload();
-                                
+
                             }
                         })
                         .catch(function (error) {
@@ -217,9 +219,61 @@
                     })
                 }
             })
-           
+
         })
     )
+
+
+    //loadMoreComments
+    let skip = 10;
+    $(document).on('click', '#loadmore', function () {
+        let blogId = this.getAttribute("data-id")
+        
+    let commentSection = $("#comment-area")
+        let commentCount = this.getAttribute("com-count")
+        console.log(commentCount)
+        $.ajax({
+            url: "/blog/loadcomments?skip=" + skip + "&BlogId="+blogId,
+            method: "get",
+            success: function (res) {
+                commentSection.append(res)
+                skip += 2;
+                console.log(skip)
+                if (skip >= commentCount) {
+                    $(`#loadmore`).remove();
+                }
+            },
+            error: function (err) {
+                console.log("error ",err)
+            }
+        })
+
+    })
+
+
+
+    //deleteComment
+    let delComment = document.querySelectorAll(".deleteComment")
+    let mainComments = $("#comCount")
+    
+    delComment.forEach(del =>
+
+        del.addEventListener("click", function () {
+            let dataId = this.getAttribute("data-id")
+            axios.post("/blog/DeleteComment?id=" + dataId)
+                .then(function (response) {
+                    console.log(response)
+                    del.parentElement.parentElement.parentElement.parentElement.remove()
+                    mainComments.html(response.data.count)
+                })
+                .catch(function (error) {
+                    // handle error
+                    //console.log("error "+error);
+                })
+        })
+    )
+
+
 
 
     //delete from basket cart
@@ -293,7 +347,7 @@
             axios.post("/wishlist/remove?id=" + dataId)
                 .then(function (response) {
                     // handle success
-                        wishlistItemCard.remove();
+                    wishlistItemCard.remove();
                     //console.log(response);
                 })
                 .catch(function (error) {
@@ -312,22 +366,22 @@
         add.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
             let icon = document.createElement("i")
-                axios.post("/wishlist/add?id=" + dataId)
-                    .then(function (response) {
-                        add.innerHTML = "";
+            axios.post("/wishlist/add?id=" + dataId)
+                .then(function (response) {
+                    add.innerHTML = "";
 
-                        icon.classList.add("fa-heart");
-                        icon.classList.add("fa-solid");
-                        icon.classList.add("text-danger");
-                        //console.log(icon)
-                        add.append(icon);
+                    icon.classList.add("fa-heart");
+                    icon.classList.add("fa-solid");
+                    icon.classList.add("text-danger");
+                    //console.log(icon)
+                    add.append(icon);
 
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log("error " + error);
-                    })
-            }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log("error " + error);
+                })
+        }
         )
     )
 
@@ -345,17 +399,17 @@
             let productPrice = $("#modal-product-price")
             let productDesc = $("#modal-product-desc")
 
-           // console.log(dataId, modalAdd, productName, productPrice, productDesc)
+            // console.log(dataId, modalAdd, productName, productPrice, productDesc)
             //console.log(dataId)
             axios.post("/search/GetProductForModal?id=" + dataId)
                 .then(function (response) {
                     modalAdd.attr(`href`, `home/detail/${dataId}`);
                     productName.text(response.data.name)
-                    productPrice.text(`$`+response.data.price) 
+                    productPrice.text(`$` + response.data.price)
                     productDesc.text(response.data.description)
                     modalImage.attr(`src`, `https://localhost:44393/images/products/${response.data.image}`)
                     modalImage.attr(`width`, `100%`)
-                    
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -364,6 +418,45 @@
     )
 
 
+
+
+    //subscribe
+    const regexExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
+
+    let par = document.getElementById("getsubbed")
+    
+    $("#getsubbed").click(function () {
+        let email = $("#mail").val()
+        if (regexExp.test(email)) {
+            axios.post("/Subscription/Subscribe?email=" + email)
+                .then(function (response) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: email + ' subscribed. Thanks for subscribing',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                    console.log(response)
+                    par.parentElement.parentElement.parentElement.parentElement.remove()
+                })
+                .catch(function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.error,
+                    })
+                })
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Try spelling correct email form',
+            })
+        }
+        
+    });
 
 
 
@@ -598,13 +691,7 @@
     $('.value').text('$' + slideEvt.value[0] + ' - ' + '$' + slideEvt.value[1]);
   });
 
-    //owl splide
-    var splide = new Splide('.splide', {
-        type: 'fade',
-        rewind: true,
-    });
-
-    splide.mount();
+    
 
   // tooltip
   $(function () {

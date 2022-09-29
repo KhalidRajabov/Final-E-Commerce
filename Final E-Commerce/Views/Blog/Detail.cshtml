@@ -52,8 +52,8 @@
                     </div>
 
                     <div class="post-comments">
-                        <h4 class="post-sub-heading border-bottom pb-3 mb-3">@Model.Blog.CommentCount Comments</h4>
-                        <ul class="media-list">
+                        <h4 class="post-sub-heading border-bottom pb-3 mb-3"><span id="comCount">@Model.Blog.CommentCount</span> Comments</h4>
+                        <ul class="media-list" id="comment-area">
                             @if (Model.Blog.Comments!=null)
                             {
                                 @foreach (var comment in Model.Comments)
@@ -74,7 +74,7 @@
                                                     }
                                                     @if (ViewBag.RightCounter>0||(User.Identity.IsAuthenticated && comment.AppUserId == ViewBag.AppUserId))
                                                     {
-                                                        <a class="text-danger mr-3" asp-action="deletecomment" asp-controller="blog" asp-route-id="@comment.Id" asp-route-ReturnUrl="@Context.Request.Path">Delete</a>
+                                                        <a class="text-danger mr-3 deleteComment" style="cursor: pointer" data-id="@comment.Id">Delete</a>
                                                     }
                                                 </div>
                                                 <time>@comment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
@@ -89,6 +89,12 @@
                                 }
                             }
                         </ul>
+                                @if (Model.Blog.CommentCount>10)
+                        {
+                            <div class="row d-flex justify-content-center mt-5 mb-5">
+                                <button class="btn btn-danger w-25" id="loadmore" com-count="@Model.Blog.CommentCount" data-id="@Model.Blog.Id">Load More Comments</button>
+                            </div>
+                        }
                     </div>
                   @if (User.Identity.IsAuthenticated)
                     {
