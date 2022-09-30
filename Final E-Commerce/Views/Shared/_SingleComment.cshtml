@@ -1,0 +1,29 @@
+﻿@model CommentsVM
+<li style="border: 2px solid rgb(150,151,154); border-radius: 10px; padding: 10px" class="media mt-3 comment-box">
+    <a href="#">
+        <img class="img-fluid" src="~/images/profilepictures/@Model.Comment.User.ProfilePicture" alt="" width="50" height="50">
+    </a>
+    <div class="media-body">
+        <div class="comment-info">
+            <div class="comment-author d-flex flex-row justify-content-between">
+                @if (Model.Comment.AppUserId != null)
+                {
+                    <a href="#">@Model.Comment.Author</a>
+                }
+                else
+                {
+                    <a href="#">@Model.Comment.Author <span class="text-danger">(Not a member)</span></a>
+                }
+                @if (ViewBag.RightCounter > 0 || (User.Identity.IsAuthenticated && Model.Comment.AppUserId == ViewBag.AppUserId))
+                {
+                    <a class="text-danger mr-3" asp-action="deletecomment" asp-controller="blog" asp-route-id="@Model.Comment.Id" asp-route-ReturnUrl="@Context.Request.Path">Delete</a>
+                }
+            </div>
+            <time>@Model.Comment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
+            @*<a class="comment-button" href="#"><i class="ti-comments"></i>Reply</a>*@
+        </div>
+        <h3 class="mt-3">
+            @Model.Comment.CommentContent <br>
+        </h3>
+    </div>
+</li>

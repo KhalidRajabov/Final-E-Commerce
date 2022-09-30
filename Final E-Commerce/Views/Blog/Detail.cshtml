@@ -12,7 +12,7 @@
                     <div class="post-thumb">
                         <img class="img-fluid w-100" src="~/images/blog/@Model.Blog.ImageUrl" alt="post-thumb">
                     </div>
-                    <h2 class="post-title">@Model.Blog.Title</h2>
+                    <h2 class="post-title" id="post-title" data-id="@Model.Blog.Id">@Model.Blog.Title</h2>
                     <div class="post-meta">
                         <ul>
                             <li>
@@ -60,14 +60,20 @@
                                 {
                                     <li style="border: 2px solid rgb(150,151,154); border-radius: 10px; padding: 10px" class="media mt-3 comment-box">
                                         <a href="#">
-                                            @*<img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50">*@
+                                            @if (comment.AppUserId!=null)
+                                            {
+                                                <img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50">
+                                            }
+                                            else{
+                                                <img class="img-fluid" src="~/images/profilepictures/nophoto.jpg" alt="" width="50" height="50">
+                                            }
                                         </a>
                                         <div class="media-body">
                                             <div class="comment-info">
                                                 <div class="comment-author d-flex flex-row justify-content-between">
                                                     @if (comment.AppUserId!=null)
                                                     {
-                                                        <a href="#">@comment.Author</a>
+                                                        <a href="#">@comment.User.Fullname</a>
                                                     }
                                                     else{
                                                         <a href="#">@comment.Author <span class="text-danger">(Not a member)</span></a>
@@ -100,45 +106,41 @@
                     {
                         <div class="post-comments-form" style="margin-top: 50px">
                             <h4 class="post-sub-heading mb-3">Leave You Comments</h4>
-                            <form method="post" action="#" id="form" role="form">
+                            
                                 <div class="row">
                                     <div class="form-group col-md-12">
-                                        <textarea asp-for="CommentContent" class="form-control" placeholder="Comment" ></textarea>
-                                        <span class="text-danger" asp-validation-for="CommentContent"></span>
+                                        <textarea id="comment-input" class="form-control" placeholder="Comment" ></textarea>
+                                        <span class="text-danger" id="comment-warning"></span>
                                     </div>
                                     <!-- Send Button -->
                                     <div class="form-group col-md-12">
-                                        <button type="submit" asp-action="PostComment" asp-controller="blog" asp-route-id="@Model.Blog.Id" asp-route-ReturnUrl="@Context.Request.Path" class="btn btn-primary">
+                                    <a class="btn btn-primary text-light" id="post-comment">
                                             Post
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
-                            </form>
+                            
                         </div>
                     }
                     else{
                         <div class="post-comments-form" style="margin-top: 50px">
                             <h4 class="post-sub-heading mb-3">Leave You Comments</h4>
-                            <form method="post" action="#" id="form" role="form">
+                            
                                 <div class="row">
                                     <div class="col-md-6 form-group">    
-                                        <input asp-for="Author" class=" form-control" placeholder="Name *">
-                                        <span class="text-danger" asp-validation-for="Author"></span>
+                                        <input id="comment-name" class=" form-control" placeholder="Name *">
                                     </div>
-                                    
-                                    
                                     <div class="form-group col-md-12">
-                                        <textarea asp-for="CommentContent" class=" form-control"  placeholder="Comment"></textarea>
-                                        <span class="text-danger" asp-validation-for="CommentContent"></span>
+                                    <textarea id="comment-input" class=" form-control" placeholder="Comment"></textarea>
                                     </div>
                                     
                                     <div class="form-group col-md-12">
-                                        <button type="submit" asp-action="PostComment" asp-controller="blog" asp-route-id="@Model.Blog.Id" asp-route-ReturnUrl="@Context.Request.Path" class="btn btn-primary">
+                                    <a class="btn btn-primary text-light" id="post-comment" data-id="@Model.Blog.Id">
                                             Post
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
-                            </form>
+                            
                         </div>
                     }
                 </div>
@@ -146,7 +148,6 @@
         </div>
     </div>
 </section>
-
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />

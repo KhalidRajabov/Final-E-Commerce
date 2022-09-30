@@ -460,6 +460,31 @@
 
 
 
+    //addcomment
+    
+
+    let postBtn = $("#post-comment")
+    let blog = $("#post-title")
+    postBtn.click(function () {
+        let comment = $("#comment-input").val()
+        let blogId = blog.attr("data-id")
+        console.log(blogId)
+        if (comment.length > 3) {
+            axios.post("/blog/PostComment?id="+blogId+"&comment=" + comment)
+                .then(function (response) {
+                    $("#comment-area").prepend(response.data)
+                    console.log(response)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        }
+        else {
+            $("#comment-warning").text("Length must be longer than 3")
+        }
+
+    });
+
 
 
 

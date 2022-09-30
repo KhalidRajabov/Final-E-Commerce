@@ -39,6 +39,7 @@ namespace Final_E_Commerce.Controllers
             {
                 return RedirectToAction("error", "home");
             }
+            
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -57,6 +58,7 @@ namespace Final_E_Commerce.Controllers
             dbBlog.ViewCount++;
             dbBlog.CommentCount = _context.BlogComments.Where(b => b.BlogId == dbBlog.Id).ToList().Count;
             List<BlogComment>? Comments = _context?.BlogComments?
+                .Include(b=>b.User)
                 .Where(c=>c.BlogId==dbBlog.Id)
                 .OrderByDescending(b => b.Id)
                 .Take(10)
@@ -64,14 +66,15 @@ namespace Final_E_Commerce.Controllers
             BlogVM? blog = new BlogVM
             {
                 Blog = dbBlog,
-                Comments = Comments
+                Comments = Comments,
             };
             await _context.SaveChangesAsync();
             return View(blog);
         }
         public async Task<IActionResult> LoadComments(int skip, int? BlogId)
         {
-            List<BlogComment>? comments = _context?.BlogComments?.Where(bc=>bc.BlogId==BlogId)
+
+            List<BlogComment>? comments = _context?.BlogComments?.Include(b=>b.User).Where(bc=>bc.BlogId==BlogId)
                 .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToList();
             CommentsVM commentsVM = new CommentsVM
             {
@@ -80,7 +83,7 @@ namespace Final_E_Commerce.Controllers
             return PartialView("_Comments", commentsVM);
         }
         [HttpPost]
-        public async Task<IActionResult> PostComment(int id, BlogVM comment, string? returnurl)
+        public async Task<IActionResult> PostComment(int id, string comment, string? author)
         {
             if (!ModelState.IsValid)
             {
@@ -91,24 +94,21 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                NewComment.Author = user.Fullname;
-                NewComment.CommentContent = comment.CommentContent;
+                NewComment.CommentContent = comment;
                 NewComment.AppUserId = user.Id;
             }
             else
             {
-                NewComment.Author = comment.Author;
-                NewComment.CommentContent = comment.CommentContent;
+                NewComment.Author = author;
+                NewComment.CommentContent = comment;
             }
             NewComment.BlogId = blog.Id;
             NewComment.Date = DateTime.Now;
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
-            if (returnurl != null)
-            {
-                return Redirect(returnurl);
-            }
-            return RedirectToAction("index");
+            CommentsVM commentVM = new CommentsVM();
+            commentVM.Comment = NewComment;
+            return PartialView("_SingleComment",commentVM );
         }
         [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
@@ -127,7 +127,6 @@ namespace Final_E_Commerce.Controllers
                 {
                     if (item.ToLower().Contains("admin") || item.ToLower().Contains("editor") || item.ToLower().Contains("moderator"))
                     {
-                    
                         _context?.Remove(comment);
                         await _context.SaveChangesAsync();
                     }
