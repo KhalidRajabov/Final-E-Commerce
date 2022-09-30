@@ -464,20 +464,34 @@
     
 
     let postBtn = $("#post-comment")
-    let blog = $("#post-title")
+    
     postBtn.click(function () {
         let comment = $("#comment-input").val()
-        let blogId = blog.attr("data-id")
-        console.log(blogId)
+        let blogId = this.getAttribute("data-id")
+        let author = $("#comment-name").val()
+        console.log(blogId, "author: ", author)
+        
         if (comment.length > 3) {
-            axios.post("/blog/PostComment?id="+blogId+"&comment=" + comment)
-                .then(function (response) {
-                    $("#comment-area").prepend(response.data)
-                    console.log(response)
-                })
-                .catch(function (error) {
-                    console.log(error)
-                })
+            if (author != undefined || author != null) {
+                axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment + "&author=" + author)
+                    .then(function (response) {
+                        $("#comment-area").prepend(response.data)
+                        console.log(response)
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            }
+            else {
+                axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment)
+                    .then(function (response) {
+                        $("#comment-area").prepend(response.data)
+                        console.log(response)
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            }
         }
         else {
             $("#comment-warning").text("Length must be longer than 3")

@@ -94,14 +94,13 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                NewComment.CommentContent = comment;
                 NewComment.AppUserId = user.Id;
             }
             else
             {
                 NewComment.Author = author;
-                NewComment.CommentContent = comment;
             }
+            NewComment.CommentContent = comment;
             NewComment.BlogId = blog.Id;
             NewComment.Date = DateTime.Now;
             await _context.AddAsync(NewComment);

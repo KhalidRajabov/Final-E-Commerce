@@ -1,7 +1,13 @@
 ﻿@model CommentsVM
 <li style="border: 2px solid rgb(150,151,154); border-radius: 10px; padding: 10px" class="media mt-3 comment-box">
     <a href="#">
-        <img class="img-fluid" src="~/images/profilepictures/@Model.Comment.User.ProfilePicture" alt="" width="50" height="50">
+        @if (Model.Comment.AppUserId!=null)
+        {
+            <img class="img-fluid" src="~/images/profilepictures/@Model.Comment.User.ProfilePicture" alt="" width="50" height="50">
+        }
+        else{
+            <img class="img-fluid" src="~/images/profilepictures/nophoto.jpg" alt="" width="50" height="50">
+        }
     </a>
     <div class="media-body">
         <div class="comment-info">
