@@ -14,7 +14,7 @@ namespace Final_E_Commerce.Entities
         public string? ImageUrl { get; set; }
         public string? Author { get; set; }
         public int ViewCount { get; set; }
-        public int CommentCount { get; set; }
+        public int? CommentCount { get; set; }
         public Nullable<DateTime> Date { get; set; }
         public Nullable<DateTime> LastUpdated { get; set; }
         public string? LastUpdatedBy { get; set; }

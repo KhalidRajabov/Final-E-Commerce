@@ -33,17 +33,17 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> Index()
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            UserVM userVM = new UserVM();
+            UserVM? userVM = new UserVM();
             
             userVM.User = user;
-            userVM.UserProfile = await _context.UserProfiles.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            userVM.UserProfile = await _context?.UserProfiles?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             return View(userVM);
         }
         public async Task<IActionResult> UserDetail()
         {
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetailsVM? userVM = new UserDetailsVM();
-            UserDetails? detail = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            UserDetails? detail = await _context?.UserDetails?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             userVM.Firstname = detail.Firstname;
             userVM.Lastname = detail.Lastname;
             userVM.City = detail.City;
@@ -59,7 +59,7 @@ namespace Final_E_Commerce.Controllers
         {
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetailsVM? userVM = new UserDetailsVM();
-            UserDetails? detail = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            UserDetails? detail = await _context?.UserDetails?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             userVM.Firstname = detail.Firstname;
             userVM.Lastname = detail.Lastname;
             userVM.City = detail.City;
@@ -75,7 +75,7 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> UpdateProfileDetail(UserDetailsVM detail)
         {
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            UserDetails? userDetails = await _context.UserDetails.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
+            UserDetails? userDetails = await _context?.UserDetails?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             userDetails.Firstname = detail.Firstname;
             userDetails.Lastname = detail.Lastname;
             userDetails.City = detail.City;
@@ -90,7 +90,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Orders()
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -99,11 +99,11 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            List<Order> order = _context.Orders.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
+            List<Order>? order = _context?.Orders?.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
             OrderVM orderVM = new OrderVM();
             orderVM.Orders = order;
             return View(orderVM);
@@ -111,7 +111,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -120,13 +120,13 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                 await _context.SaveChangesAsync();
                 }
             }
-            Order order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
-            List<OrderItem> orderItems = await _context.OrderItems.Where(o => o.OrderId == order.Id).ToListAsync();
-            AppUser user = await _usermanager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
-            OrderItemVM orderItemVM = new OrderItemVM();
+            Order? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            List<OrderItem> orderItems = await _context?.OrderItems?.Where(o => o.OrderId == order.Id).ToListAsync();
+            AppUser? user = await _usermanager?.Users?.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
+            OrderItemVM? orderItemVM = new OrderItemVM();
             orderItemVM.User = user;
             orderItemVM.Order = order;
             orderItemVM.OrderItems = orderItems;
@@ -135,7 +135,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Products()
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -144,7 +144,7 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -157,23 +157,23 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> CreateProduct()
         {
-            var mainCategories = await _context.Categories.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
+            var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
             var altCategories = await _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
-            ViewBag.Brands = new SelectList(_context.Brands.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Brands = new SelectList(_context?.Brands?.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductCreateVM vm)
+        public async Task<IActionResult> CreateProduct(ProductCreateVM? vm)
         {
-            var mainCategories = await _context.Categories.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
-            var altCategories = await _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
+            var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
+            var altCategories = await _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
-            ViewBag.Brands = new SelectList(_context.Brands.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Brands = new SelectList(_context?.Brands?.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             if (!ModelState.IsValid)
             {
@@ -229,7 +229,7 @@ namespace Final_E_Commerce.Controllers
                 Views = 0
             };
 
-            if (vm.SubCategory == null)
+            if (vm?.SubCategory == null)
             {
                 product.CategoryId = vm.CategoryId;
             }
@@ -269,11 +269,11 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> ProductDetail(int id)
         {
-            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product p = await _context.Products
-                .Where(p => p.AppUserId == CurrentUser.Id)
-                .Include(i => i.ProductImages)
-                .Include(c => c.Category)
+            AppUser? CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            Product? p = await _context?.Products?
+                .Where(p => p.AppUserId == CurrentUser.Id)?
+                .Include(i => i.ProductImages)?
+                .Include(c => c.Category)?
                 .Include(t => t.ProductTags)
                 .ThenInclude(p => p.Tags)
                 .Include(b => b.Brand)
@@ -286,7 +286,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            Product product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
+            Product? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();
@@ -294,7 +294,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> EditProduct(int id)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -303,21 +303,21 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
-            var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
-            ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            var altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
+            ViewBag.Brands = new SelectList(_context?.Brands?.ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (id == null) return RedirectToAction("error", "home");
-            AppUser CurrentUser =await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product p = await _context.Products
+            AppUser? CurrentUser =await _usermanager.FindByNameAsync(User.Identity.Name);
+            Product? p = await _context?.Products?
                 .Where(p=>p.AppUserId==CurrentUser.Id)
-                .Include(i => i.ProductImages)
-                .Include(c => c.Category)
-                .Include(t => t.ProductTags)
+                .Include(i => i.ProductImages)?
+                .Include(c => c.Category)?
+                .Include(t => t.ProductTags)?
                 .ThenInclude(p => p.Tags)
                 .Include(b => b.Brand)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -351,22 +351,22 @@ namespace Final_E_Commerce.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct(int id, ProductUpdateVM product)
+        public async Task<IActionResult> EditProduct(int id, ProductUpdateVM? product)
         {
-            var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
-            ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            var altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
+            ViewBag.Brands = new SelectList(_context?.Brands?.ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (!ModelState.IsValid)
             {
                 return View();
             }
-            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product dbProduct = await _context.Products
-                .Where(p => p.AppUserId == CurrentUser.Id && p.IsDeleted != true)
-                .Include(p => p.ProductImages)
-                .Include(p => p.ProductTags)
+            AppUser? CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            Product? dbProduct = await _context?.Products?
+                .Where(p => p.AppUserId == CurrentUser.Id && p.IsDeleted != true)?
+                .Include(p => p.ProductImages)?
+                .Include(p => p.ProductTags)?
                 .ThenInclude(t => t.Tags)
                 .Include(b => b.Brand)
                 .Include(c => c.Category)
@@ -465,7 +465,7 @@ namespace Final_E_Commerce.Controllers
             {
                 dbProduct.InStock = false;
             }
-            List<Category> categories = _context.Categories.Where(p => p.IsDeleted != true).Where(c => c.ImageUrl != null).ToList();
+            List<Category>? categories = _context?.Categories?.Where(p => p.IsDeleted != true).Where(c => c.ImageUrl != null).ToList();
             for (int i = 0; i < categories.Count; i++)
             {
                 if (product.Category == categories[0])
@@ -512,7 +512,7 @@ namespace Final_E_Commerce.Controllers
                 dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
             }
             dbProduct.BrandId = product.BrandId;
-            if (product.SubCategory==null)
+            if (product?.SubCategory==null)
             {
                 dbProduct.CategoryId = product.CategoryId;
             }
@@ -524,7 +524,7 @@ namespace Final_E_Commerce.Controllers
             dbProduct.LastUpdatedAt = DateTime.Now;
             if (dbProduct.DiscountPercent > 30)
             {
-                List<Subscriber> subscribers = await _context.Subscribers.ToListAsync();
+                List<Subscriber>? subscribers = await _context?.Subscribers?.ToListAsync();
                 var token = "";
                 string subject = "Endirim var!";
                 EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
@@ -536,14 +536,14 @@ namespace Final_E_Commerce.Controllers
                     var emailResult = helper.SendNews(receiver.Email, token, subject);
                     continue;
                 }
-                string discountemail = Url.Action("ConfirmEmail", "Account", new
+                string? discountemail = Url.Action("ConfirmEmail", "Account", new
                 {
                     token
                 }, Request.Scheme);
             }
             if (product.DiscountPercent>0 && product.DiscountPercent>dbProduct.DiscountPercent)
             {
-                List<Wishlist> wishlist = _context.Wishlists.Where(p => p.ProductId == dbProduct.Id).ToList();
+                List<Wishlist>? wishlist = _context?.Wishlists?.Where(p => p.ProductId == dbProduct.Id).ToList();
                 foreach (var user in wishlist)
                 {
                     AppUser appUser = await _usermanager.FindByIdAsync(user.AppUserId);
@@ -582,7 +582,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> EditPictures(int id)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -591,15 +591,15 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    _context?.SaveChangesAsync();
                 }
             }
             AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product p = await _context.Products
-                .Where(p => p.AppUserId == CurrentUser.Id)
-                .Include(i => i.ProductImages)
-                .Include(c => c.Category)
-                .Include(t => t.ProductTags)
+            Product? p = await _context?.Products?
+                .Where(p => p.AppUserId == CurrentUser.Id)?
+                .Include(i => i.ProductImages)?
+                .Include(c => c.Category)?
+                .Include(t => t.ProductTags)?
                 .ThenInclude(p => p.Tags)
                 .Include(b => b.Brand)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -608,9 +608,9 @@ namespace Final_E_Commerce.Controllers
             vm.Product = p;
             return View(vm);
         }
-        public async Task<IActionResult> MainImage(int? imageid, int? productid, string Returnurl)
+        public async Task<IActionResult> MainImage(int? imageid, int? productid, string? Returnurl)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -619,27 +619,30 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
             if (imageid == null || productid == null) return RedirectToAction("error", "home");
-            var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
+            var image = await _context?.ProductImages?.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
             if (image == null) return RedirectToAction("error", "home");
             AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
             var product = await _context?.Products?.Where(p => p.AppUserId == CurrentUser.Id).Include(x => x.ProductImages).FirstOrDefaultAsync(x => x.Id == productid);
             if (product == null) return RedirectToAction("error", "home");
-            var mainImage = product.ProductImages.FirstOrDefault(x => x.IsMain);
+            var mainImage = product.ProductImages?.FirstOrDefault(x => x.IsMain);
             mainImage.IsMain = false;
 
             image.IsMain = true;
             product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
-
-            return Redirect(Returnurl);
+            if (Returnurl!=null)
+            {
+                return Redirect(Returnurl);
+            }
+            return RedirectToAction("index");
         }
         public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -648,18 +651,18 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
             if (imageid == null || productid == null) return RedirectToAction("error", "home");
-            var image = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
+            var image = await _context?.ProductImages?.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
             if (image == null) return RedirectToAction("error", "home");
 
-            string path = Path.Combine(_env.WebRootPath, @"images\products", image.ImageUrl);
+            string? path = Path.Combine(_env.WebRootPath, @"images\products", image.ImageUrl);
             Helper.Helper.DeleteImage(path);
 
             _context.ProductImages.Remove(image);
-            Product product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
+            Product? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
             product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
@@ -667,7 +670,7 @@ namespace Final_E_Commerce.Controllers
         }
         public IActionResult GetSubCategory(int cid)
         {
-            var SubCategory_List = _context.Categories.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).ToList();
+            var SubCategory_List = _context?.Categories?.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).ToList();
             var subs = SubCategory_List.Select(c => new { Id = c.Id, Name = c.Name }).ToList();
             return Json(SubCategory_List);
         }

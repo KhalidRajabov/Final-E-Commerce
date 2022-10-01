@@ -558,16 +558,7 @@
 
 
 
-    //owl splide
-    
-        var splide = new Splide('.splide', {
-            type: 'fade',
-            rewind: true,
-        });
-
-        splide.mount();
-    
-
+  
 
 
   
@@ -773,6 +764,15 @@
       mainWrapper.removeClass('main-wrapper-section');
     }
   });
+    //owl splide
+
+    var splide = new Splide('.splide', {
+        type: 'fade',
+        rewind: true,
+    });
+
+    splide.mount();
+
 
 
 })(jQuery);

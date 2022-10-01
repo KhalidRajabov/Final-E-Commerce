@@ -22,7 +22,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -31,7 +31,7 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    _context?.SaveChangesAsync();
                 }
             }
             return View();
@@ -71,7 +71,7 @@ namespace Final_E_Commerce.Controllers
             {
                 return RedirectToAction("error", "home");
             }
-            List<Blogs> blogs = _context?.Blogs?
+            List<Blogs>? blogs = _context?.Blogs?
                 .Where(b=>b.Title.ToLower().Contains(search.ToLower())||
                 b.Content.Contains(search.ToLower())).ToList();
             DetailVM detailVM = new DetailVM();
@@ -83,7 +83,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> PopularProducts()
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -92,19 +92,19 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    _context?.SaveChangesAsync();
                 }
             }
             List<Product> PopularProducts = _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
-                .OrderByDescending(p => p.Views).Take(3).Include(p=>p.ProductImages).ToList();
+                .OrderByDescending(p => p.Views).Take(6).Include(p=>p.ProductImages).ToList();
             DetailVM detailVM = new DetailVM();
             detailVM.SearchProducts = PopularProducts;
             return PartialView("_Popular", detailVM);       
         }
         public async Task<IActionResult> GetProductForModal(int id)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -113,14 +113,14 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    _context?.SaveChangesAsync();
                 }
             }
-            Product product = await _context.Products
+            Product? product = await _context?.Products?
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .Include(p=>p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
-            DetailVM detailVM = new DetailVM();
-            string image = "";
+            DetailVM? detailVM = new DetailVM();
+            string? image = "";
             foreach (var item in product.ProductImages)
             {
                 if (item.IsMain)

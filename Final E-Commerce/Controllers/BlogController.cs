@@ -30,7 +30,7 @@ namespace Final_E_Commerce.Controllers
         {
             BlogDetailVM? blog = new BlogDetailVM
             {
-                Blogs=_context?.Blogs?.Where(b=>!b.IsDeleted).OrderByDescending(b=>b.Id).Include(b=>b.BlogSubjects).ThenInclude(bs=>bs.Subjects).ToList(),
+                Blogs=_context?.Blogs?.Where(b=>!b.IsDeleted)?.OrderByDescending(b=>b.Id)?.Include(b=>b.BlogSubjects).ThenInclude(bs=>bs.Subjects).ToList(),
             };
             return View(blog);
         }
@@ -61,7 +61,7 @@ namespace Final_E_Commerce.Controllers
                 ViewBag.RightCounter = RightCounter;
             }
             dbBlog.ViewCount++;
-            dbBlog.CommentCount = _context.BlogComments.Where(b => b.BlogId == dbBlog.Id).ToList().Count;
+            dbBlog.CommentCount = _context?.BlogComments?.Where(b => b.BlogId == dbBlog.Id).ToList().Count;
             List<BlogComment>? Comments = _context?.BlogComments?
                 .Include(b=>b.User)
                 .Where(c=>c.BlogId==dbBlog.Id)
