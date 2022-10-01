@@ -257,7 +257,7 @@
     let mainComments = $("#comCount")
     
     delComment.forEach(del =>
-
+        
         del.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
             axios.post("/blog/DeleteComment?id=" + dataId)
@@ -463,19 +463,29 @@
     //addcomment
     
 
-    let postBtn = $("#post-comment")
     
+    let postBtn = $("#post-comment")
+
     postBtn.click(function () {
+        let num = document.getElementById("comCount")
+        let commentnumber = $("#comCount").text()
+        console.log(num.innerText)
         let comment = $("#comment-input").val()
         let blogId = this.getAttribute("data-id")
         let author = $("#comment-name").val()
-        console.log(blogId, "author: ", author)
+        let cmntarea = $("#comment-area")
+        
+    
         
         if (comment.length > 3) {
             if (author != undefined || author != null) {
                 axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment + "&author=" + author)
                     .then(function (response) {
                         $("#comment-area").prepend(response.data)
+                        let numb = document.getElementById("comment-area").childElementCount;
+                        console.log("lol: " + numb)
+
+                        $("#comCount").text(numb)
                         console.log(response)
                     })
                     .catch(function (error) {
@@ -486,6 +496,11 @@
                 axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment)
                     .then(function (response) {
                         $("#comment-area").prepend(response.data)
+                        let numb = document.getElementById("comment-area").childElementCount;
+                        console.log("lol: " + numb)
+                        
+                        
+                        $("#comCount").text(numb)
                         console.log(response)
                     })
                     .catch(function (error) {
@@ -543,7 +558,15 @@
 
 
 
+    //owl splide
+    
+        var splide = new Splide('.splide', {
+            type: 'fade',
+            rewind: true,
+        });
 
+        splide.mount();
+    
 
 
 

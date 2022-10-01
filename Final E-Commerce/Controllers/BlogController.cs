@@ -24,6 +24,8 @@ namespace Final_E_Commerce.Controllers
             _usermanager = usermanager;
             _roleManager = roleManager;
         }
+
+
         public IActionResult Index()
         {
             BlogDetailVM? blog = new BlogDetailVM
@@ -32,6 +34,9 @@ namespace Final_E_Commerce.Controllers
             };
             return View(blog);
         }
+
+
+
         public async Task<IActionResult> Detail(int? id)
         {
             Blogs? dbBlog = await _context?.Blogs?.Include(b => b.BlogSubjects).ThenInclude(bs => bs.Subjects).FirstOrDefaultAsync(b => b.Id == id);
@@ -71,17 +76,48 @@ namespace Final_E_Commerce.Controllers
             await _context.SaveChangesAsync();
             return View(blog);
         }
+
+
+
         public async Task<IActionResult> LoadComments(int skip, int? BlogId)
         {
 
-            List<BlogComment>? comments = _context?.BlogComments?.Include(b=>b.User).Where(bc=>bc.BlogId==BlogId)
+            List<BlogComment>? comments = _context?.BlogComments?
+                .Include(b=>b.User)
+                .Where(bc=>bc.BlogId==BlogId)
                 .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToList();
-            CommentsVM commentsVM = new CommentsVM
+            CommentsVM commentsVM = new CommentsVM  
             {
                 BlogComments = comments
             };
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+                ViewBag.AppUserId = user.Id;
+                int RightCounter = 0;
+                var roles = await _usermanager.GetRolesAsync(user);
+                //if requester is an admin or editor, he will be able to delete comment
+                foreach (var item in roles)
+                {
+                    if (item.ToLower().Contains("admin") || item.ToLower().Contains("editor") || item.ToLower().Contains("moderator"))
+                    {
+                        RightCounter++;
+                    }
+                }
+
+                //if requester is not an admin but a user and finds any of his comment among those,
+                //he will be able to delete his own comment
+                commentsVM.UserId = user.Id;
+
+
+                commentsVM.RightCounter= RightCounter;
+            }
             return PartialView("_Comments", commentsVM);
         }
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> PostComment(int id, string comment, string? author)
         {
@@ -91,10 +127,12 @@ namespace Final_E_Commerce.Controllers
             }
             Blogs? blog =await _context?.Blogs?.FirstOrDefaultAsync(b => b.Id == id);
             BlogComment NewComment = new BlogComment();
+            CommentsVM commentVM = new CommentsVM();
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 NewComment.AppUserId = user.Id;
+                commentVM.UserId = user.Id;
             }
             else
             {
@@ -105,10 +143,12 @@ namespace Final_E_Commerce.Controllers
             NewComment.Date = DateTime.Now;
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
-            CommentsVM commentVM = new CommentsVM();
             commentVM.Comment = NewComment;
             return PartialView("_SingleComment",commentVM );
         }
+
+
+
         [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {

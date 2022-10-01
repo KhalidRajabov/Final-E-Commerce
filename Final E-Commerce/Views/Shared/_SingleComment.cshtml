@@ -11,18 +11,18 @@
     </a>
     <div class="media-body">
         <div class="comment-info">
-            <div class="comment-author d-flex flex-row justify-content-between">
+            <div id="cmnt-author" class="comment-author d-flex flex-row justify-content-between">
                 @if (Model.Comment.AppUserId != null)
                 {
-                    <a href="#">@Model.Comment.Author</a>
+                    <a href="#">@Model.Comment.User.Fullname</a>
                 }
                 else
                 {
                     <a href="#">@Model.Comment.Author <span class="text-danger">(Not a member)</span></a>
                 }
-                @if (ViewBag.RightCounter > 0 || (User.Identity.IsAuthenticated && Model.Comment.AppUserId == ViewBag.AppUserId))
+                @if (User.Identity.IsAuthenticated && Model.UserId == Model.Comment.AppUserId)
                 {
-                    <a class="text-danger mr-3" asp-action="deletecomment" asp-controller="blog" asp-route-id="@Model.Comment.Id" asp-route-ReturnUrl="@Context.Request.Path">Delete</a>
+                    <a class="text-danger mr-3 deleteComment" style="cursor: pointer" data-id="@Model.Comment.Id">Delete</a>
                 }
             </div>
             <time>@Model.Comment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
