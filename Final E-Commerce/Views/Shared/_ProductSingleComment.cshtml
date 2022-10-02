@@ -1,0 +1,35 @@
+﻿@model CommentsVM
+<li style="border: 2px solid rgb(150,151,154); border-radius: 10px; padding: 10px" class="media mt-3 comment-box">
+    <a href="#">
+        @if (Model.ProductComment.AppUserId!=null)
+        {
+            <img class="img-fluid" src="~/images/profilepictures/@Model.ProductComment.User.ProfilePicture" alt="" width="50" height="50">
+        }
+        else{
+            <img class="img-fluid" src="~/images/profilepictures/nophoto.jpg" alt="" width="50" height="50">
+        }
+    </a>
+    <div class="media-body">
+        <div class="comment-info">
+            <div id="pro-cmnt-author" class="comment-author d-flex flex-row justify-content-between">
+                @if (Model.ProductComment.AppUserId != null)
+                {
+                    <a href="#">@Model.ProductComment.User.Fullname</a>
+                }
+                else
+                {
+                    <a href="#">@Model.ProductComment.Author <span class="text-danger">(Not a member)</span></a>
+                }
+                @if (User.Identity.IsAuthenticated && Model.UserId == Model.ProductComment.AppUserId)
+                {
+                    <a class="text-danger mr-3 pro-deleteComment" style="cursor: pointer" data-id="@Model.ProductComment.Id">Delete</a>
+                }
+            </div>
+            <time>@Model.ProductComment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
+            @*<a class="comment-button" href="#"><i class="ti-comments"></i>Reply</a>*@
+        </div>
+        <h3 class="mt-3">
+            @Model.ProductComment.Content<br>
+        </h3>
+    </div>
+</li>

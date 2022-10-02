@@ -34,7 +34,7 @@ namespace Final_E_Commerce.Entities
         public bool Bestseller { get; set; }
         public bool NewArrival { get; set; }
         public bool InStock { get; set; }
-
+        public int CommentCount { get; set; }
 
 
 

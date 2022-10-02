@@ -28,6 +28,12 @@ namespace Final_E_Commerce.Controllers
 
         public IActionResult Index()
         {
+            List<Blogs>? blogs = _context?.Blogs?.Where(b => !b.IsDeleted).ToList();
+            foreach (var item in blogs)
+            {
+                item.CommentCount = _context?.BlogComments?.Where(bc => bc.BlogId == item.Id && !bc.IsDeleted).ToList().Count;
+                _context.SaveChanges();
+            }
             BlogDetailVM? blog = new BlogDetailVM
             {
                 Blogs=_context?.Blogs?.Where(b=>!b.IsDeleted)?.OrderByDescending(b=>b.Id)?.Include(b=>b.BlogSubjects).ThenInclude(bs=>bs.Subjects).ToList(),
@@ -121,10 +127,6 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> PostComment(int id, string comment, string? author)
         {
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError("", "Fill required forms");
-            }
             Blogs? blog =await _context?.Blogs?.FirstOrDefaultAsync(b => b.Id == id);
             BlogComment NewComment = new BlogComment();
             CommentsVM commentVM = new CommentsVM();

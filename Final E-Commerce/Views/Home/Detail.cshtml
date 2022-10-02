@@ -392,8 +392,8 @@
 
     <section class="container col-12">
         <div class="post-comments">
-            <h4 class="post-sub-heading border-bottom pb-3 mb-3">    <span id="comCount">@Model.Comments.Count</span>    Comments</h4>
-            <ul class="media-list" id="comment-area">
+            <h4 class="post-sub-heading border-bottom pb-3 mb-3">    <span id="pro-comCount">@Model.Product.CommentCount</span>    Comments</h4>
+            <ul class="media-list" id="pro-comment-area">
                 @if (Model.Comments != null)
                 {
                     @foreach (var comment in Model.Comments)
@@ -422,7 +422,7 @@
                                         }
                                         @if (ViewBag.RightCounter > 0 || (User.Identity.IsAuthenticated && comment.AppUserId == ViewBag.AppUserId))
                                         {
-                                            <a class="text-danger mr-3 deleteComment" style="cursor: pointer" data-id="@comment.Id">Delete</a>
+                                            <a class="text-danger mr-3 pro-deleteComment" style="cursor: pointer" data-id="@comment.Id">Delete</a>
                                         }
                                     </div>
                                     <time>@comment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
@@ -437,10 +437,10 @@
                     }
                 }
             </ul>
-            @if (Model.Comments.Count > 10)
+            @if (Model.Product.CommentCount> 10)
             {
                 <div class="row d-flex justify-content-center mt-5 mb-5">
-                    <button class="btn btn-danger w-25" id="loadmore" com-count="@Model.Comments.Count" data-id="@Model.Product.Id">Load More Comments</button>
+                    <button class="btn btn-danger w-25" id="pro-loadmore" com-count="@Model.Product.CommentCount" data-id="@Model.Product.Id">Load More Comments</button>
                 </div>
             }
         </div>
@@ -455,16 +455,16 @@
             </div>
 
             <div class="post-comments-form" style="margin-top: 50px">
-                <h4 class="post-sub-heading mb-3" id="comment-title">Leave You Comment</h4>
+                <h4 class="post-sub-heading mb-3" id="pro-comment-title">Leave You Comment</h4>
 
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <textarea id="comment-input" class="form-control" placeholder="Comment"></textarea>
-                        <span class="text-danger" id="comment-warning"></span>
+                        <textarea id="pro-comment-input" class="form-control" placeholder="Comment"></textarea>
+                        <span class="text-danger" id="pro-comment-warning"></span>
                     </div>
                     <!-- Send Button -->
                     <div class="form-group col-md-12">
-                        <a class="btn btn-primary text-light" id="post-comment" data-id="@Model.Product.Id">
+                        <a class="btn btn-primary text-light" id="pro-post-comment" data-id="@Model.Product.Id">
                             Post
                         </a>
                     </div>
@@ -475,18 +475,19 @@
         else
         {
             <div class="post-comments-form" style="margin-top: 50px">
-                <h4 class="post-sub-heading mb-3" id="comment-title">Leave You Comments</h4>
+                <h4 class="post-sub-heading mb-3" id="pro-comment-title">Leave You Comments</h4>
 
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <input id="comment-name" class=" form-control" placeholder="Name *">
+                        <input id="pro-comment-name" class=" form-control" placeholder="Name *">
+                        <span class="text-danger" id="pro-name-warning"></span>
                     </div>
                     <div class="form-group col-md-12">
-                        <textarea id="comment-input" class=" form-control" placeholder="Comment"></textarea>
+                        <textarea id="pro-comment-input" class=" form-control" placeholder="Comment"></textarea>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <a class="btn btn-primary text-light" id="post-comment" data-id="@Model.Product.Id">
+                        <a class="btn btn-primary text-light" id="pro-post-comment" data-id="@Model.Product.Id">
                             Post
                         </a>
                     </div>

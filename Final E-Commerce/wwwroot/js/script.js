@@ -515,6 +515,119 @@
 
 
 
+    //product page
+
+    //post comment
+
+    let propostBtn = $("#pro-post-comment")
+
+    propostBtn.click(function () {
+        let pronum = document.getElementById("pro-comCount")
+        let procommentnumber = $("#pro-comCount").text()
+        
+        let procomment = $("#pro-comment-input").val()
+        let problogId = this.getAttribute("data-id")
+        let proauthor = $("#pro-comment-name").val()
+        let procmntarea = $("#pro-comment-area")
+
+
+        
+        if (procomment.length > 3) {
+            if (proauthor != undefined || proauthor != null ) {
+                if (proauthor.length > 3) {
+                    axios.post("/home/PostComment?ProductId=" + problogId + "&comment=" + procomment + "&author=" + proauthor)
+                        .then(function (response) {
+                            $("#pro-comment-area").prepend(response.data)
+                            let numb = document.getElementById("pro-comment-area").childElementCount;
+                            console.log("lol: " + numb)
+
+                            $("#pro-comCount").text(numb)
+                            console.log(response)
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                }
+                else {
+                    $("#pro-name-warning").text("Name must be 3 or longer than")
+                }
+            }
+            else {
+                axios.post("/home/PostComment?ProductId=" + problogId + "&comment=" + procomment)
+                    .then(function (response) {
+                        $("#pro-comment-area").prepend(response.data)
+                        let numb = document.getElementById("pro-comment-area").childElementCount;
+                        console.log("lol: " + numb)
+
+
+                        $("#pro-comCount").text(numb)
+                        console.log(response)
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            }
+        }
+        else {
+            $("#pro-comment-warning").text("Length must be longer than 3")
+        }
+
+    });
+
+    //loadMoreComments
+    let proSkip = 10;
+    $(document).on('click', '#pro-loadmore', function () {
+        let blogId = this.getAttribute("data-id")
+
+        let commentSection = $("#pro-comment-area")
+        let commentCount = this.getAttribute("com-count")
+        console.log(commentCount)
+        $.ajax({
+            url: "/home/loadcomments?skip=" + proSkip + "&BlogId=" + blogId,
+            method: "get",
+            success: function (res) {
+                commentSection.append(res)
+                proSkip += 2;
+                console.log(proSkip)
+                if (proSkip >= commentCount) {
+                    $(`#pro-loadmore`).remove();
+                }
+            },
+            error: function (err) {
+                console.log("error ", err)
+            }
+        })
+
+    })
+
+
+
+    //deleteComment
+    let prodelComment = document.querySelectorAll(".pro-deleteComment")
+    let promainComments = $("#pro-comCount")
+
+    prodelComment.forEach(del =>
+
+        del.addEventListener("click", function () {
+            let dataId = this.getAttribute("data-id")
+            axios.post("/home/DeleteComment?id=" + dataId)
+                .then(function (response) {
+                    console.log(response)
+                    del.parentElement.parentElement.parentElement.parentElement.remove()
+                    promainComments.html(response.data.count)
+                })
+                .catch(function (error) {
+                    console.log("error " + error);
+                })
+        })
+    )
+
+
+
+
+
+
+
 
   //search
 

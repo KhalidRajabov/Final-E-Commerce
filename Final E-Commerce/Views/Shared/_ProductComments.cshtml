@@ -1,6 +1,6 @@
 ﻿@model CommentsVM
 
-@foreach (var comment in Model.BlogComments)
+@foreach (var comment in Model.ProductComments)
 {
     <li style="border: 2px solid rgb(150,151,154); border-radius: 10px; padding: 10px" class="media mt-3 comment-box">
         <a href="#">
@@ -33,7 +33,7 @@
                 @*<a class="comment-button" href="#"><i class="ti-comments"></i>Reply</a>*@
             </div>
             <h3 class="mt-3">
-                @comment.CommentContent <br>
+                @comment.Content <br>
             </h3>
         </div>
     </li>
