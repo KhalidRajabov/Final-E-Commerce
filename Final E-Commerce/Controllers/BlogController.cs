@@ -61,10 +61,10 @@ namespace Final_E_Commerce.Controllers
                 ViewBag.RightCounter = RightCounter;
             }
             dbBlog.ViewCount++;
-            dbBlog.CommentCount = _context?.BlogComments?.Where(b => b.BlogId == dbBlog.Id).ToList().Count;
+            dbBlog.CommentCount = _context?.BlogComments?.Where(b => b.BlogId == dbBlog.Id&&!b.IsDeleted).ToList().Count;
             List<BlogComment>? Comments = _context?.BlogComments?
                 .Include(b=>b.User)
-                .Where(c=>c.BlogId==dbBlog.Id)
+                .Where(c=>c.BlogId==dbBlog.Id&&!c.IsDeleted)
                 .OrderByDescending(b => b.Id)
                 .Take(10)
                 .ToList();
@@ -84,7 +84,7 @@ namespace Final_E_Commerce.Controllers
 
             List<BlogComment>? comments = _context?.BlogComments?
                 .Include(b=>b.User)
-                .Where(bc=>bc.BlogId==BlogId)
+                .Where(bc=>bc.BlogId==BlogId&&!bc.IsDeleted)
                 .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToList();
             CommentsVM commentsVM = new CommentsVM  
             {
@@ -156,7 +156,7 @@ namespace Final_E_Commerce.Controllers
             BlogComment? comment = await _context?.BlogComments?.FirstOrDefaultAsync(bc => bc.Id == id);
             if (comment.AppUserId == user.Id)
             {
-                _context?.Remove(comment);
+                comment.IsDeleted=true;
                 await _context.SaveChangesAsync();
             }
             else
@@ -166,7 +166,7 @@ namespace Final_E_Commerce.Controllers
                 {
                     if (item.ToLower().Contains("admin") || item.ToLower().Contains("editor") || item.ToLower().Contains("moderator"))
                     {
-                        _context?.Remove(comment);
+                        comment.IsDeleted = true;
                         await _context.SaveChangesAsync();
                     }
                 }
@@ -174,7 +174,7 @@ namespace Final_E_Commerce.Controllers
             
             var obj = new
             {
-                count = _context.BlogComments.Where(b => b.BlogId == comment.BlogId).ToList().Count
+                count = _context.BlogComments.Where(b => b.BlogId == comment.BlogId&&!b.IsDeleted).ToList().Count
             };
 
             return Ok(obj);

@@ -9,6 +9,7 @@ namespace Final_E_Commerce.ViewModels
         public List<Product>? RelatedProducts { get; set; }
         public List<Product>? SearchProducts { get; set; }
         public List<Blogs>? Blogs { get; set; }
+        public List<ProductComment>? Comments { get; set; }
         public int UsersWantIt { get; set; }
 
     }

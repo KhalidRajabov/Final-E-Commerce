@@ -94,7 +94,7 @@ namespace Final_E_Commerce.Controllers
             
             detailVM.UsersWantIt = UsersWantThis.Count;
             
-            //detailVM.RelatedProducts= _context?.Products?.Where(c => c.CategoryId == product.CategoryId).ToList();
+            detailVM.Comments= _context?.ProductComments?.Where(p=>p.ProductId==id&&!p.IsDeleted).ToList();
 
             return View(detailVM);
         }

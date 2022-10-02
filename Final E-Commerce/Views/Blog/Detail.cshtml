@@ -104,8 +104,16 @@
                     </div>
                   @if (User.Identity.IsAuthenticated)
                     {
+                        <div style="display:flex;flex-direction:row !important"> 
+                            <span onclick="changeColor(0)" id="spn1" class=" fa fa-star fa-2x"> </span>
+                            <span onclick="changeColor(1)" id="spn2" class=" fa fa-star fa-2x"> </span>
+                            <span onclick="changeColor(2)" id="spn3" class=" fa fa-star fa-2x"> </span>
+                            <span onclick="changeColor(3)" id="spn4" class=" fa fa-star fa-2x"> </span>
+                            <span onclick="changeColor(4)" id="spn5" class=" fa fa-star fa-2x"> </span>
+                        </div>
+
                         <div class="post-comments-form" style="margin-top: 50px">
-                            <h4 class="post-sub-heading mb-3">Leave You Comment</h4>
+                            <h4 class="post-sub-heading mb-3" id="comment-title">Leave You Comment</h4>
                             
                                 <div class="row">
                                     <div class="form-group col-md-12">
@@ -124,7 +132,7 @@
                     }
                     else{
                         <div class="post-comments-form" style="margin-top: 50px">
-                            <h4 class="post-sub-heading mb-3">Leave You Comments</h4>
+                            <h4 class="post-sub-heading mb-3" id="comment-title">Leave You Comments</h4>
                             
                                 <div class="row">
                                     <div class="col-md-6 form-group">    
@@ -148,3 +156,4 @@
         </div>
     </div>
 </section>
+

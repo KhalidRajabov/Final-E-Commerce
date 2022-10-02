@@ -1,4 +1,4 @@
-﻿namespace Final_E_Commerce.Entities
+﻿    namespace Final_E_Commerce.Entities
 {
     public class BlogComment
     {
@@ -6,6 +6,7 @@
         public string? CommentContent { get; set; }
         public string? Author { get; set; }
         public DateTime Date { get; set; }
+        public bool IsDeleted { get; set; }
 
 
         public int BlogId { get; set; }

@@ -267,8 +267,7 @@
                     mainComments.html(response.data.count)
                 })
                 .catch(function (error) {
-                    // handle error
-                    //console.log("error "+error);
+                    console.log("error "+error);
                 })
         })
     )

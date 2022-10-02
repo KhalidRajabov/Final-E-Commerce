@@ -388,6 +388,115 @@
         </div>
     </section>
     <!-- /testimonial -->
+
+
+    <section class="container col-12">
+        <div class="post-comments">
+            <h4 class="post-sub-heading border-bottom pb-3 mb-3">    <span id="comCount">@Model.Comments.Count</span>    Comments</h4>
+            <ul class="media-list" id="comment-area">
+                @if (Model.Comments != null)
+                {
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li style="border: 2px solid rgb(150,151,154); border-radius: 10px; padding: 10px" class="media mt-3 comment-box">
+                            <a href="#">
+                                @if (comment.AppUserId != null)
+                                {
+                                    <img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50">
+                                }
+                                else
+                                {
+                                    <img class="img-fluid" src="~/images/profilepictures/nophoto.jpg" alt="" width="50" height="50">
+                                }
+                            </a>
+                            <div class="media-body">
+                                <div class="comment-info">
+                                    <div class="comment-author d-flex flex-row justify-content-between">
+                                        @if (comment.AppUserId != null)
+                                        {
+                                            <a href="#">@comment.User.Fullname</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#">@comment.Author <span class="text-danger">(Not a member)</span></a>
+                                        }
+                                        @if (ViewBag.RightCounter > 0 || (User.Identity.IsAuthenticated && comment.AppUserId == ViewBag.AppUserId))
+                                        {
+                                            <a class="text-danger mr-3 deleteComment" style="cursor: pointer" data-id="@comment.Id">Delete</a>
+                                        }
+                                    </div>
+                                    <time>@comment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
+                                    @*<a class="comment-button" href="#"><i class="ti-comments"></i>Reply</a>*@
+                                </div>
+                                <h3 class="mt-3">
+                                    @comment.Content <br>
+
+                                </h3>
+                            </div>
+                        </li>
+                    }
+                }
+            </ul>
+            @if (Model.Comments.Count > 10)
+            {
+                <div class="row d-flex justify-content-center mt-5 mb-5">
+                    <button class="btn btn-danger w-25" id="loadmore" com-count="@Model.Comments.Count" data-id="@Model.Product.Id">Load More Comments</button>
+                </div>
+            }
+        </div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div style="display:flex;flex-direction:row !important">
+                <span onclick="changeColor(0)" id="spn1" class=" fa fa-star fa-2x"> </span>
+                <span onclick="changeColor(1)" id="spn2" class=" fa fa-star fa-2x"> </span>
+                <span onclick="changeColor(2)" id="spn3" class=" fa fa-star fa-2x"> </span>
+                <span onclick="changeColor(3)" id="spn4" class=" fa fa-star fa-2x"> </span>
+                <span onclick="changeColor(4)" id="spn5" class=" fa fa-star fa-2x"> </span>
+            </div>
+
+            <div class="post-comments-form" style="margin-top: 50px">
+                <h4 class="post-sub-heading mb-3" id="comment-title">Leave You Comment</h4>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <textarea id="comment-input" class="form-control" placeholder="Comment"></textarea>
+                        <span class="text-danger" id="comment-warning"></span>
+                    </div>
+                    <!-- Send Button -->
+                    <div class="form-group col-md-12">
+                        <a class="btn btn-primary text-light" id="post-comment" data-id="@Model.Product.Id">
+                            Post
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="post-comments-form" style="margin-top: 50px">
+                <h4 class="post-sub-heading mb-3" id="comment-title">Leave You Comments</h4>
+
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <input id="comment-name" class=" form-control" placeholder="Name *">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <textarea id="comment-input" class=" form-control" placeholder="Comment"></textarea>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <a class="btn btn-primary text-light" id="post-comment" data-id="@Model.Product.Id">
+                            Post
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </section>
+
     <!-- related products -->
     <section class="section">
         <div class="container">
@@ -533,4 +642,29 @@
                 <!-- //end of product -->
             </div>
         </div>
+        </section>
+
 </div>
+
+
+
+
+@section Scripts{
+    <script>
+        function changeColor(parameter) {
+            var stars = ["spn1", "spn2", "spn3", "spn4", "spn5"];
+            let title = document.getElementById("comment-title")
+            for (i = 0; i <= parameter; i++) {
+                var element = document.getElementById(stars[i])
+                element.style.color = "orange"
+                title.innerText = parameter + 1
+            }
+            var k = stars.length - 1;
+            for (k; k > parameter; k--) {
+                var element = document.getElementById(stars[k])
+                element.style.color = "black"
+                title.innerText = parameter + 1
+            }
+        }
+    </script>
+}
