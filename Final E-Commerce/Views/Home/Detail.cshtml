@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string decimalString = "";
+    decimalString = Model.Product.Rating.ToString("#.##");
     string discountday="";
     string discountmonth="";
     string discountyear="";
@@ -114,7 +116,7 @@
                             {
                                 <li class="list-inline-item"> <i class="fa fa-star fa-2x" style="color:orange;"></i></li>
                             }
-                            <li class="list-inline-item" style="font-size: 120%">Rated by @ViewBag.RatedBy users</li>
+                            <li class="list-inline-item" style="font-size: 120%">@decimalString Rated by @ViewBag.RatedBy users</li>
                         }
                         else{
                             <span>0 Rating</span>
@@ -151,7 +153,7 @@
                         </div>
                     }
 
-                    <h2 class="mb-3">Description @ViewBag.Just</h2>
+                    <h2 class="mb-3">Description  </h2>
                         <p class="text-gray mb-4">
                           @Model.Product.Description
                         </p>
