@@ -478,18 +478,23 @@
         
         if (comment.length > 3) {
             if (author != undefined || author != null) {
-                axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment + "&author=" + author)
-                    .then(function (response) {
-                        $("#comment-area").prepend(response.data)
-                        let numb = document.getElementById("comment-area").childElementCount;
-                        console.log("lol: " + numb)
+                if (author.length > 3) {
+                    axios.post("/blog/PostComment?id=" + logId + "&comment=" + comment + "&author=" + author)
+                        .then(function (response) {
+                            $("#comment-area").prepend(response.data)
+                            let numb = document.getElementById("comment-area").childElementCount;
+                            console.log("lol: " + numb)
 
-                        $("#comCount").text(numb)
-                        console.log(response)
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
+                            $("#comCount").text(numb)
+                            console.log(response)
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                }
+                else {
+                    $("#name-warning").text("Name must be 3 or longer than")
+                }
             }
             else {
                 axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment)
