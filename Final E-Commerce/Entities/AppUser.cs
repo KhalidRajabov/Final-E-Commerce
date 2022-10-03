@@ -20,6 +20,7 @@ namespace Final_E_Commerce.Entities
         public List<ProductComment>? ProductComment { get; set; }
         public List<Blogs>? Blogs { get; set; }
         public List<BlogComment>? BlogComment { get; set; }
+        public List<UserProductRatings>? UserProductRatings { get; set; }
         //public List<BasketItem> BasketItems { get; set; }
     }
 }

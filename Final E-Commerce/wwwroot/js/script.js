@@ -536,11 +536,10 @@
         let procmntarea = $("#pro-comment-area")
 
 
-        
         if (procomment.length > 3) {
             if (proauthor != undefined || proauthor != null ) {
                 if (proauthor.length > 3) {
-                    axios.post("/home/PostComment?ProductId=" + problogId + "&comment=" + procomment + "&author=" + proauthor)
+                    axios.post("/home/PostComment?ProductId=" + problogId + "&comment=" + procomment +"&author=" + proauthor)
                         .then(function (response) {
                             $("#pro-comment-area").prepend(response.data)
                             let numb = document.getElementById("pro-comment-area").childElementCount;
@@ -630,7 +629,39 @@
 
 
 
+    //rate product
+    let rate = $("#rate-btn")
 
+    rate.click(function () {
+        let rating = this.getAttribute("rating")
+        let productId = this.getAttribute("data-id")
+        if (rating!=null||rating!=undefined) {
+            axios.post("/Home/Rate?Rating=" + rating + "&ProductId=" + productId)
+                .then(function (response) {
+                    console.log(response.data)
+                    if (response.data.result) {
+                        Swal.fire({
+                            timer: 2000,
+                            timerProgressBar: true,
+                            title: 'Thanks for rating!',
+                            text: `${response.data.name}`,
+                            imageUrl: `https://localhost:44393/images/products/${response.data.image}`,
+                            imageWidth: 400,
+                            imageHeight: 200,
+                            imageAlt: 'Custom image',
+                        })
+                        //$("#rate-btn").remove();
+                        setTimeout(
+                            function () {
+                                    window.location.reload()
+                            }, 3000);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        }
+    })
 
 
 

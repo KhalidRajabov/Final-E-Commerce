@@ -31,9 +31,10 @@ namespace Final_E_Commerce.DAL
         public DbSet<Subjects>? Subjects { get; set; }
         public DbSet<BlogComment>? BlogComments { get; set; }
         public DbSet<ProductComment>? ProductComments{ get; set; }
+        public DbSet<UserProductRatings>? UserProductRatings { get; set; }
 
 
-protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<Category>().HasData(

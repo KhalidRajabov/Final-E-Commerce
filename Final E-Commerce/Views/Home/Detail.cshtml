@@ -108,12 +108,24 @@
                         <span class="text-success">@Model.UsersWantIt users want this</span>
                     }
                     <ul class="list-inline mb-4">
-                        <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                        <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                        <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                        <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                        <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                        <li class="list-inline-item"><a href="#" class="text-gray ml-3">( 3 Reviews )</a></li>
+                        @if (Model.Product.Rating>0)
+                        {
+                            @for (int i = 0; i < Model.Product.Rating; i++)
+                            {
+                                <li class="list-inline-item"> <i class="fa fa-star fa-2x" style="color:orange;"></i></li>
+                            }
+                            <li class="list-inline-item" style="font-size: 120%">Rated by @ViewBag.RatedBy users</li>
+                        }
+                        else{
+                            <span>0 Rating</span>
+                        }
+                        @if (Model.Product.ProductComment!=null)
+                        {
+                            <li class="list-inline-item" style="font-size: 120%"><a href="#" class="text-gray ml-3">( @Model.Product.ProductComment.Count Comments)</a></li>
+                        }
+                        else{
+                            <li class="list-inline-item" style="font-size: 120%"><a href="#" class="text-gray ml-3">( 0 Comments)</a></li>
+                        }
                     </ul>
                     @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.Now)
                     {
@@ -124,6 +136,21 @@
                         <h4 style="color:black">$@Model.Product.Price</h4>
                     }
                     
+                    @if (User.Identity.IsAuthenticated && !ViewBag.IsRated)
+                    {
+                        <div class="d-flex flex-column mt-5">
+                            <div style="display:flex;flex-direction:row !important">
+                                <span onclick="changeColor(0)" id="spn1" class=" fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(1)" id="spn2" class=" fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(2)" id="spn3" class=" fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(3)" id="spn4" class=" fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(4)" id="spn5" class=" fa fa-star fa-2x"> </span>
+                            </div>
+                            <span class="text-danger" style="font-size: 150%" id="pro-rating-warning"></span>
+                            <button id="rate-btn" class="btn btn-warning text-light col-3 mt-2"  data-id="@Model.Product.Id">Rate!</button>
+                        </div>
+                    }
+
                         <h2 class="mb-3">Description</h2>
                         <p class="text-gray mb-4">
                           @Model.Product.Description
@@ -414,17 +441,20 @@
                                     <div class="comment-author d-flex flex-row justify-content-between">
                                         @if (comment.AppUserId != null)
                                         {
-                                            <a href="#">@comment.User.Fullname</a>
+                                            <a href="#">@comment.User.Fullname  
+                                            </a>
                                         }
                                         else
                                         {
-                                            <a href="#">@comment.Author <span class="text-danger">(Not a member)</span></a>
+                                            <a href="#">@comment.Author <span class="text-danger">(Not a member) </span>
+                                            </a>
                                         }
                                         @if (ViewBag.RightCounter > 0 || (User.Identity.IsAuthenticated && comment.AppUserId == ViewBag.AppUserId))
                                         {
                                             <a class="text-danger mr-3 pro-deleteComment" style="cursor: pointer" data-id="@comment.Id">Delete</a>
                                         }
                                     </div>
+                                    
                                     <time>@comment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
                                     @*<a class="comment-button" href="#"><i class="ti-comments"></i>Reply</a>*@
                                 </div>
@@ -446,13 +476,6 @@
         </div>
         @if (User.Identity.IsAuthenticated)
         {
-            <div style="display:flex;flex-direction:row !important">
-                <span onclick="changeColor(0)" id="spn1" class=" fa fa-star fa-2x"> </span>
-                <span onclick="changeColor(1)" id="spn2" class=" fa fa-star fa-2x"> </span>
-                <span onclick="changeColor(2)" id="spn3" class=" fa fa-star fa-2x"> </span>
-                <span onclick="changeColor(3)" id="spn4" class=" fa fa-star fa-2x"> </span>
-                <span onclick="changeColor(4)" id="spn5" class=" fa fa-star fa-2x"> </span>
-            </div>
 
             <div class="post-comments-form" style="margin-top: 50px">
                 <h4 class="post-sub-heading mb-3" id="pro-comment-title">Leave You Comment</h4>
@@ -655,17 +678,17 @@
     <script>
         function changeColor(parameter) {
             var stars = ["spn1", "spn2", "spn3", "spn4", "spn5"];
-            let title = document.getElementById("comment-title")
+            let btn = document.getElementById("rate-btn")
             for (i = 0; i <= parameter; i++) {
                 var element = document.getElementById(stars[i])
                 element.style.color = "orange"
-                title.innerText = parameter + 1
+                btn.setAttribute("rating",parameter+1)
             }
             var k = stars.length - 1;
             for (k; k > parameter; k--) {
                 var element = document.getElementById(stars[k])
                 element.style.color = "black"
-                title.innerText = parameter + 1
+                btn.setAttribute("rating",parameter+1)
             }
         }
     </script>

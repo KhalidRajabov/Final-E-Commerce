@@ -8,6 +8,8 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
+using Microsoft.CodeAnalysis;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -70,8 +72,21 @@ namespace Final_E_Commerce.Controllers
                 ?.Include(p => p.Brand)
                 ?.Include(p => p.ProductTags)
                 ?.ThenInclude(t => t.Tags)
+                ?.Include(r=>r.UserProductRatings)
                 .FirstOrDefaultAsync(p => p.Id == id);
-
+            int rates = 0;
+            List<UserProductRatings>? ratings = await _context?.UserProductRatings?
+                .Where(r => r.ProductId == product.Id).ToListAsync();
+            if (ratings.Count>=1)
+            {
+                foreach (var item in ratings)
+                {
+                    rates += item.Rating;
+                }
+                product.Rating = rates / ratings.Count;
+                ViewBag.RatedBy = ratings.Count;
+                await _context.SaveChangesAsync();
+            }
             if (product == null) return RedirectToAction("Error", "home");
             AppUser ProductOwner =await _usermanager.FindByIdAsync(product.AppUserId);
             if (ProductOwner!=null)
@@ -80,14 +95,16 @@ namespace Final_E_Commerce.Controllers
             }
             product.CommentCount = _context.ProductComments.Where(p => p.ProductId == product.Id && !p.IsDeleted).ToList().Count;
             ViewBag.ExistWishlist = false;
+            ViewBag.IsRated = false;
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 bool IsExist = _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).Any();
-                if (IsExist)
-                {
-                    ViewBag.ExistWishlist = true;
-                }
+                if (IsExist) ViewBag.ExistWishlist = true;
+                
+                bool IsRated = await _context.UserProductRatings
+                    .Where(r => r.ProductId == product.Id && r.AppUserId == user.Id).AnyAsync();
+                if (IsRated) ViewBag.IsRated = true;
                 ViewBag.AppUserId = user.Id;
                 int RightCounter = 0;
                 var roles = await _usermanager.GetRolesAsync(user);
@@ -112,10 +129,55 @@ namespace Final_E_Commerce.Controllers
                 .Where(c => c.ProductId == id && !c.IsDeleted)
                 .OrderByDescending(b => b.Id)
                 .Take(10)
-                .ToList(); ;
+                .ToList();
 
             return View(detailVM);
         }
+
+        [Authorize]
+        public async Task<IActionResult> Rate(int Rating, int ProductId)
+        {
+            bool result = false;
+            string? ProductName = "";
+            string? ProductImage = "";
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+                Product? product = await _context?.Products?
+                    .Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id == ProductId);
+                UserProductRatings userProductRating = new UserProductRatings
+                {
+                    AppUserId = user.Id,
+                    ProductId=product.Id,
+                    Rating = Rating
+                };
+                _context.Add(userProductRating);
+                _context.SaveChanges();
+                result = true;
+                ProductName = product.Name;
+                foreach (var item in product.ProductImages)
+                {
+                    if (item.IsMain)
+                    {
+                        ProductImage = item.ImageUrl;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false;
+            }
+            var obj = new
+            {
+                result = result,
+                image = ProductImage,
+                name = ProductName
+            };
+            return Ok(obj);
+        }
+
+
         public IActionResult Error()
         {
             return View();
@@ -210,6 +272,8 @@ namespace Final_E_Commerce.Controllers
             }
             return PartialView("_ProductComments", commentsVM);
         }
+
+        
 
     }
 }

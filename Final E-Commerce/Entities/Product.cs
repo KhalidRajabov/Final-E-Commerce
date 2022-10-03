@@ -35,6 +35,7 @@ namespace Final_E_Commerce.Entities
         public bool NewArrival { get; set; }
         public bool InStock { get; set; }
         public int CommentCount { get; set; }
+        public double Rating { get; set; }
 
 
 
@@ -63,6 +64,7 @@ namespace Final_E_Commerce.Entities
         public List<ProductTag>? ProductTags { get; set; }
         public List<ProductComment>? ProductComment { get; set; }
         public List<ProductImage>? ProductImages { get; set; }
+        public List<UserProductRatings>? UserProductRatings { get; set; }
         public List<Wishlist>? Wishlists { get; set; }
     }
     public enum ProductConfirmationStatus
