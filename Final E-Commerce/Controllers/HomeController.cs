@@ -74,7 +74,7 @@ namespace Final_E_Commerce.Controllers
                 ?.ThenInclude(t => t.Tags)
                 ?.Include(r=>r.UserProductRatings)
                 .FirstOrDefaultAsync(p => p.Id == id);
-            int rates = 0;
+            double rates = 0;
             List<UserProductRatings>? ratings = await _context?.UserProductRatings?
                 .Where(r => r.ProductId == product.Id).ToListAsync();
             if (ratings.Count>=1)
@@ -83,7 +83,8 @@ namespace Final_E_Commerce.Controllers
                 {
                     rates += item.Rating;
                 }
-                product.Rating = rates / ratings.Count;
+                product.Rating = rates /ratings.Count;
+                ViewBag.Just = rates / ratings.Count;
                 ViewBag.RatedBy = ratings.Count;
                 await _context.SaveChangesAsync();
             }

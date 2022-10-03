@@ -110,7 +110,7 @@
                     <ul class="list-inline mb-4">
                         @if (Model.Product.Rating>0)
                         {
-                            @for (int i = 0; i < Model.Product.Rating; i++)
+                            @for (int i = 0; i < Math.Floor(Model.Product.Rating); i++)
                             {
                                 <li class="list-inline-item"> <i class="fa fa-star fa-2x" style="color:orange;"></i></li>
                             }
@@ -151,7 +151,7 @@
                         </div>
                     }
 
-                        <h2 class="mb-3">Description</h2>
+                    <h2 class="mb-3">Description @ViewBag.Just</h2>
                         <p class="text-gray mb-4">
                           @Model.Product.Description
                         </p>
