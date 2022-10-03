@@ -1,0 +1,26 @@
+﻿@model UserPhotoVM
+@{
+    ViewData["Title"] = "ChangeImage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container col-12">
+    <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            <div class="col-10 form-group d-flex flex-column justify-content-center">
+                <label style="font-size: 250%" class="align-self-center">Add profile picture</label>
+                <input asp-for="Photo" style="border:1px solid black; border-radius: 10px" class="col-12 mt-5"/>
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-warning align-self-center">Update</button>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -23,8 +23,9 @@
 				</ul>
 				<div class="dashboard-wrapper user-dashboard">
 					<div class="media">
-						<div class="pull-left mr-3">
+						<div class="pull-left mr-3 d-flex flex-column">
 							<img class="media-object user-img" src="images/ProfilePictures/@Model.User.ProfilePicture" alt="Image">
+							<a class="text-danger" asp-action="changeimage" asp-controller="user">Change Picture</a>
 						</div>
 						<div class="media-body align-self-center">
 							<h2 class="media-heading">@Model.User.Fullname</h2>
@@ -113,6 +114,9 @@
 								</div>
 							</div>
 						}
+						<a class="text-warning" asp-action="UpdateProfile">
+							Update Profile
+						</a>
 					</div>
 				</div>
 			</div>

@@ -55,7 +55,101 @@ namespace Final_E_Commerce.Controllers
             userVM.ZipCode = detail.ZipCode;
             return View(userVM);
         }
-        public async Task<IActionResult> UpdateProfileDetail()
+
+
+        //not working yet
+        public IActionResult ChangeImage()
+        {
+            return View();
+        }
+
+
+        //not working yet
+        [HttpPost]
+        public async Task<IActionResult> ChangeImage(UserPhotoVM photo)
+        {
+            if (photo.Photo == null)
+            {
+                ModelState.AddModelError("Photo", "Do not leave it empty");
+                return View(photo);
+            }
+
+            if (!photo.Photo.IsImage())
+            {
+                ModelState.AddModelError("Photo", "Only images");
+                return View(photo);
+            }
+            if (photo.Photo.ValidSize(10000))
+            {
+                ModelState.AddModelError("Photo", "Image size can not be larger than 10mb");
+                return View(photo);
+            }
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            user.ProfilePicture = photo.Photo.SaveImage(_env, "images/ProfilePictures");
+            return RedirectToAction("index");
+        }
+
+
+        public async Task<IActionResult> UpdateProfile()
+        {
+            AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
+            UserProfile? profile = await _context?.UserProfiles?.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
+            UserProfileVM vM = new UserProfileVM
+            {
+                Firstname = user.Firstname,
+                Lastname = user.Lastname,
+                Username = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                Birthdate = profile.Birthdate,
+                EmailForPublic = profile.EmailForPublic,
+                FavouriteBooks = profile.FavouriteBooks,
+                FavouriteMovies = profile.FavouriteMovies,
+                FavouriteMusics = profile.FavouriteMusics,
+                Hobbies = profile.Hobbies,
+                AboutMe = profile.AboutMe
+            };
+            return View(vM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(UserProfileVM? userProfile)
+        {
+            if (userProfile.Photo == null)
+            {
+                ModelState.AddModelError("Photo", "Do not leave it empty");
+                return View(userProfile);
+            }
+
+            if (!userProfile.Photo.IsImage())
+            {
+                ModelState.AddModelError("Photo", "Only images");
+                return View(userProfile);
+            }
+            if (userProfile.Photo.ValidSize(10000))
+            {
+                ModelState.AddModelError("Photo", "Image size can not be larger than 10mb");
+                return View(userProfile);
+            }
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            user.ProfilePicture = userProfile.Photo.SaveImage(_env, "images/ProfilePictures");
+            user.PhoneNumber = userProfile.PhoneNumber;
+            user.Firstname = userProfile.Firstname;
+            user.Lastname = userProfile.Lastname;
+            user.Fullname = $"{userProfile.Firstname} {userProfile.Lastname}";
+            user.UserName = userProfile.Username;
+
+            UserProfile? profile = await _context?.UserProfiles?.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
+            profile.Birthdate = userProfile.Birthdate;
+            profile.AboutMe = userProfile.AboutMe;
+            profile.Hobbies = userProfile.Hobbies;
+            profile.FavouriteMusics = userProfile.FavouriteMusics;
+            profile.FavouriteMovies = userProfile.FavouriteMovies;
+            profile.FavouriteBooks = userProfile.FavouriteBooks;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("index");
+        }
+
+            public async Task<IActionResult> UpdateProfileDetail()
         {
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetailsVM? userVM = new UserDetailsVM();

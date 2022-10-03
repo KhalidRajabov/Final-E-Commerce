@@ -123,10 +123,10 @@
                         }
                         @if (Model.Product.ProductComment!=null)
                         {
-                            <li class="list-inline-item" style="font-size: 120%"><a href="#" class="text-gray ml-3">( @Model.Product.ProductComment.Count Comments)</a></li>
+                            <li class="list-inline-item" style="font-size: 120%"><a href="#comment-section" class="text-gray ml-3">( @Model.Product.ProductComment.Count Comments)</a></li>
                         }
                         else{
-                            <li class="list-inline-item" style="font-size: 120%"><a href="#" class="text-gray ml-3">( 0 Comments)</a></li>
+                            <li class="list-inline-item" style="font-size: 120%"><a href="#comment-section" class="text-gray ml-3">( 0 Comments)</a></li>
                         }
                     </ul>
                     @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.Now)
@@ -419,10 +419,11 @@
     <!-- /testimonial -->
 
 
-    <section class="container col-12">
+    <section class="container col-12 mt-5" id="comment-section">
         <div class="post-comments">
             <h4 class="post-sub-heading border-bottom pb-3 mb-3">    <span id="pro-comCount">@Model.Product.CommentCount</span>    Comments</h4>
             <ul class="media-list" id="pro-comment-area">
+                
                 @if (Model.Comments != null)
                 {
                     @foreach (var comment in Model.Comments)

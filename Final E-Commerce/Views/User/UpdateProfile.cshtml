@@ -1,0 +1,82 @@
+﻿@model UserProfileVM
+@{
+    ViewData["Title"] = "UpdateProfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-wrapper user-dashboard">
+    <div class="row d-flex flex-column justify-content-center align-content-center">
+        <form method="post" class="col-12" enctype="multipart/form-data">
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Firstname"></label>
+                <input class="form-control" asp-for="Firstname" placeholder="Firstname" />
+                <span class="text-danger" asp-validation-for="Firstname"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Lastname"></label>
+                <input class="form-control" asp-for="Lastname" placeholder="Lastname" />
+                <span class="text-danger" asp-validation-for="Lastname"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Username"></label>
+                <input class="form-control" asp-for="Username" placeholder="Username" />
+                <span class="text-danger" asp-validation-for="Username"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="PhoneNumber"></label>
+                <input class="form-control" asp-for="PhoneNumber" placeholder="PhoneNumber" />
+                <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+            </div>
+
+
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Birthdate"></label>
+                <input class="form-control" asp-for="Birthdate" placeholder="Birthdate" />
+                <span class="text-danger" asp-validation-for="Birthdate"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="EmailForPublic"></label>
+                <input class="form-control" asp-for="EmailForPublic" placeholder="Public email" />
+                <span class="text-danger" asp-validation-for="EmailForPublic"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="FavouriteBooks"></label>
+                <input class="form-control" asp-for="FavouriteBooks" placeholder="FAvourite books" />
+                <span class="text-danger" asp-validation-for="FavouriteBooks"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="FavouriteMovies"></label>
+                <input class="form-control" asp-for="FavouriteMovies" placeholder="FAvourite movies" />
+                <span class="text-danger" asp-validation-for="FavouriteMovies"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="FavouriteMusics"></label>
+                <input class="form-control" asp-for="FavouriteMusics" placeholder="FAvourite songs" />
+                <span class="text-danger" asp-validation-for="FavouriteMusics"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Hobbies"></label>
+                <input class="form-control" asp-for="Hobbies" placeholder="Hobbies" />
+                <span class="text-danger" asp-validation-for="Hobbies"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="AboutMe"></label>
+                <input class="form-control" asp-for="AboutMe" placeholder="About" />
+                <span class="text-danger" asp-validation-for="AboutMe"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-column">
+                <label asp-for="Photo"></label>
+                <input class="form-control" asp-for="Photo" placeholder="Photo" />
+                <span class="text-danger" asp-validation-for="Photo"></span>
+            </div>
+            <div class="col-10 form-group d-flex flex-row justify-content-center">
+                <button asp-action="UpdateProfile" type="submit" class="w-25 btn btn-success text-light">Done</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
