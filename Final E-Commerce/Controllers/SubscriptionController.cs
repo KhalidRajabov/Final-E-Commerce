@@ -33,7 +33,7 @@ namespace Final_E_Commerce.Controllers
             {
                 if (subscriber.Email==email)
                 {
-                    return StatusCode(200);
+                    return StatusCode(409);
                 }
             }
             Subscriber? newsubscriber = new Subscriber();
@@ -56,7 +56,7 @@ namespace Final_E_Commerce.Controllers
                 token
             }, Request.Scheme);
 
-            return StatusCode(200);
+            return StatusCode(201);
 
         }
     }

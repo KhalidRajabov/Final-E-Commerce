@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Controllers
 {
-    [Authorize]
+    
     public class UserController:Controller
     {
         private readonly AppDbContext _context;
@@ -30,6 +30,9 @@ namespace Final_E_Commerce.Controllers
             _env = env;
             _config = config;
         }
+
+
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -39,6 +42,9 @@ namespace Final_E_Commerce.Controllers
             userVM.UserProfile = await _context?.UserProfiles?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             return View(userVM);
         }
+
+
+        [Authorize]
         public async Task<IActionResult> UserDetail()
         {
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -64,8 +70,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        //not working yet
-        [HttpPost]
+        [Authorize,HttpPost]
         public async Task<IActionResult> ChangeImage(UserPhotoVM image)
         {
             if (image.Photo == null)
@@ -92,7 +97,6 @@ namespace Final_E_Commerce.Controllers
 
 
 
-
         public async Task<IActionResult> ProfilePage(string id)
         {
             if (id==null) return RedirectToAction("error", "home");
@@ -101,11 +105,13 @@ namespace Final_E_Commerce.Controllers
             UserVM userVM = new UserVM
             {
                 User = user,
-                UserProfile = await _context.UserProfiles.FirstOrDefaultAsync(u=>u.AppUserId==id)
+                UserProfile = await _context?.UserProfiles?.FirstOrDefaultAsync(u=>u.AppUserId==id)
 
             };
             return View(userVM);
         }
+
+        [Authorize]
         public async Task<IActionResult> UpdateProfile()
         {
             AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -126,8 +132,8 @@ namespace Final_E_Commerce.Controllers
             };
             return View(vM);
         }
-
-        [HttpPost]
+        [Authorize, HttpPost]
+        
         public async Task<IActionResult> UpdateProfile(UserProfileVM? userProfile)
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -179,7 +185,7 @@ namespace Final_E_Commerce.Controllers
             userVM.ZipCode = detail.ZipCode;
             return View(userVM);
         }
-        [HttpPost]
+        [Authorize,HttpPost]
         public async Task<IActionResult> UpdateProfileDetail(UserDetailsVM detail)
         {
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -196,6 +202,7 @@ namespace Final_E_Commerce.Controllers
             _context.SaveChanges();
             return RedirectToAction("UserDetail", "user");
         }
+        [Authorize]
         public async Task<IActionResult> Orders()
         {
             List<Product>? AllProducts = await _context?.Products?
@@ -216,7 +223,7 @@ namespace Final_E_Commerce.Controllers
             orderVM.Orders = order;
             return View(orderVM);
         }
-
+        [Authorize]
         public async Task<IActionResult> Detail(int id)
         {
             List<Product>? AllProducts = await _context?.Products?
@@ -240,7 +247,7 @@ namespace Final_E_Commerce.Controllers
             orderItemVM.OrderItems = orderItems;
             return View(orderItemVM);
         }
-
+        [Authorize]
         public async Task<IActionResult> Products()
         {
             List<Product>? AllProducts = await _context?.Products?
@@ -263,6 +270,9 @@ namespace Final_E_Commerce.Controllers
                 .ToListAsync();
             return View(userProductsVM);
         }
+
+
+        [Authorize]
         public async Task<IActionResult> CreateProduct()
         {
             var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
@@ -273,7 +283,9 @@ namespace Final_E_Commerce.Controllers
             ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             return View();
         }
-        [HttpPost]
+
+
+        [Authorize,HttpPost]
         public async Task<IActionResult> CreateProduct(ProductCreateVM? vm)
         {
             var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
@@ -375,6 +387,8 @@ namespace Final_E_Commerce.Controllers
             
             return RedirectToAction("Products");
         }
+
+        [Authorize]
         public async Task<IActionResult> ProductDetail(int id)
         {
             AppUser? CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -392,6 +406,9 @@ namespace Final_E_Commerce.Controllers
             detailVM.Product = p;
             return View(detailVM);
         }
+
+
+        [Authorize]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             Product? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
@@ -400,6 +417,9 @@ namespace Final_E_Commerce.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Products");
         }
+
+
+        [Authorize]
         public async Task<IActionResult> EditProduct(int? id)
         {
             List<Product>? AllProducts = await _context?.Products?
@@ -457,7 +477,7 @@ namespace Final_E_Commerce.Controllers
             return View(vm);
         }
 
-        [HttpPost]
+        [Authorize,HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(int id, ProductUpdateVM? product)
         {
@@ -584,7 +604,7 @@ namespace Final_E_Commerce.Controllers
                 foreach (var receiver in subscribers)
                 {   
                     token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. +Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n"+
-                        "Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
+                        "Məhsula keçid linki http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}";
                     var emailResult = helper.SendNews(receiver.Email, token, subject);
                     continue;
                 }
@@ -606,7 +626,7 @@ namespace Final_E_Commerce.Controllers
                     
                         token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
                             $"Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n" +
-                            $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
+                            $"Məhsula keçid linki http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}";
                         var emailResult = helper.SendNews(appUser.Email, token, subject);
                         
                     string? discountemail = Url.Action("ConfirmEmail", "Account", new
@@ -632,6 +652,9 @@ namespace Final_E_Commerce.Controllers
 
             return RedirectToAction("products","user");
         }
+
+
+        [Authorize]
         public async Task<IActionResult> EditPictures(int id)
         {
             List<Product>? AllProducts = await _context?.Products?
@@ -660,6 +683,9 @@ namespace Final_E_Commerce.Controllers
             vm.Product = p;
             return View(vm);
         }
+
+
+        [Authorize]
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string? Returnurl)
         {
             List<Product>? AllProducts = await _context?.Products?
@@ -692,6 +718,9 @@ namespace Final_E_Commerce.Controllers
             }
             return RedirectToAction("index");
         }
+
+
+        [Authorize]
         public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
         {
             List<Product>? AllProducts = await _context?.Products?

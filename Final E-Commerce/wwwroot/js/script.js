@@ -442,7 +442,7 @@
                 .catch(function (error) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Oops...',
+                        title: 'Oops... Email exists or another error',
                         text: error.error,
                     })
                 })

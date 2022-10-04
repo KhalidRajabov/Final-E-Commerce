@@ -45,7 +45,11 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Detail(int? id)
         {
-            Blogs? dbBlog = await _context?.Blogs?.Include(b => b.BlogSubjects).ThenInclude(bs => bs.Subjects).FirstOrDefaultAsync(b => b.Id == id);
+            Blogs? dbBlog = await _context?.Blogs?
+                .Include(b => b.BlogSubjects)
+                .ThenInclude(bs => bs.Subjects)
+                .Include(b=>b.AppUser)
+                .FirstOrDefaultAsync(b => b.Id == id);
             if (dbBlog.IsDeleted||dbBlog==null)
             {
                 return RedirectToAction("error", "home");

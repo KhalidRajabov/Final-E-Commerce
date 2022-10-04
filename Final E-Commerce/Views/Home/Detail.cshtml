@@ -329,7 +329,9 @@
                             }
                             else
                             {
-                                @Model.Owner.Fullname
+                                <a asp-action="profilepage" asp-controller="user" asp-route-id="@Model.Owner.Id">
+                                    @Model.Owner.Fullname
+                                </a>
                             }
                         </div>
                     </div>

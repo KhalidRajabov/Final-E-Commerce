@@ -2444,15 +2444,16 @@ textarea.form-control {
 
 .post-meta ul li {
   display: inline-block;
-  color: #898a8f;
   margin-right: 20px;
-  font-size: 12px;
   letter-spacing: 1px;
-  font-weight: 200;
+  font-family: sans-serif !important;
 }
 
-.post-meta ul li a {
-  color: #898a8f;
+@media screen and (max-width: 500px) {
+    .subscription-box {
+        display:flex;
+        flex-direction: column;
+    }
 }
 
 .post-meta ul li a:hover {

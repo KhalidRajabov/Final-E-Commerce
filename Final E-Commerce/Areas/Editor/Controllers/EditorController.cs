@@ -96,7 +96,7 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
             foreach (var receiver in subscribers)
             {
-                token = $"{NewBlog.Content.Substring(0,50)}... <a style='color: red' href='https://localhost:44393/blog/detail/{NewBlog.Id}'>read more</a> ";
+                token = $"{NewBlog.Content.Substring(0,50)}... <a style='color: red' href='http://dante666-001-site1.atempurl.com/blog/detail/{NewBlog.Id}'>read more</a> ";
                 var emailResult = helper.SendNews(receiver.Email, token, subject);
                 continue;
             }
