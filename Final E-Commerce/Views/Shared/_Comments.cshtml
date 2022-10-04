@@ -6,7 +6,7 @@
         <a href="#">
             @if (comment.AppUserId != null)
             {
-                <img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50">
+                <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@comment.AppUserId"><img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50"></a>
             }
             else
             {
@@ -18,11 +18,11 @@
                 <div class="comment-author d-flex flex-row justify-content-between">
                     @if (comment.AppUserId != null)
                     {
-                        <a href="#">@comment.User.Fullname</a>
+                        <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@comment.AppUserId">@comment.User.Fullname</a>
                     }
                     else
                     {
-                        <a href="#">@comment.Author <span class="text-danger">(Not a member)</span></a>
+                        <a >@comment.Author <span class="text-danger">(Not a member)</span></a>
                     }
                     @if (Model.RightCounter>0||Model.UserId==comment.AppUserId)
                     {

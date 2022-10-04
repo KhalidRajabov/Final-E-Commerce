@@ -91,6 +91,21 @@ namespace Final_E_Commerce.Controllers
         }
 
 
+
+
+        public async Task<IActionResult> ProfilePage(string id)
+        {
+            if (id==null) return RedirectToAction("error", "home");
+            AppUser user =await _usermanager.FindByIdAsync(id);
+            if (user == null) return RedirectToAction("error", "home");
+            UserVM userVM = new UserVM
+            {
+                User = user,
+                UserProfile = await _context.UserProfiles.FirstOrDefaultAsync(u=>u.AppUserId==id)
+
+            };
+            return View(userVM);
+        }
         public async Task<IActionResult> UpdateProfile()
         {
             AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);

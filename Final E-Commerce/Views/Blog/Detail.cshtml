@@ -62,7 +62,7 @@
                                         <a href="#">
                                             @if (comment.AppUserId!=null)
                                             {
-                                                <img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50">
+                                                <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@comment.AppUserId"><img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50"></a>
                                             }
                                             else{
                                                 <img class="img-fluid" src="~/images/profilepictures/nophoto.jpg" alt="" width="50" height="50">
@@ -73,7 +73,7 @@
                                                 <div class="comment-author d-flex flex-row justify-content-between">
                                                     @if (comment.AppUserId!=null)
                                                     {
-                                                        <a href="#">@comment.User.Fullname</a>
+                                                        <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@comment.AppUserId">@comment.User.Fullname</a>
                                                     }
                                                     else{
                                                         <a href="#">@comment.Author <span class="text-danger">(Not a member)</span></a>
@@ -98,7 +98,7 @@
                                 @if (Model.Blog.CommentCount>10)
                         {
                             <div class="row d-flex justify-content-center mt-5 mb-5">
-                                <button class="btn btn-danger w-25" id="loadmore" com-count="@Model.Blog.CommentCount" data-id="@Model.Blog.Id">Load More Comments</button>
+                                <button class="btn btn-danger" id="loadmore" com-count="@Model.Blog.CommentCount" data-id="@Model.Blog.Id">Load More Comments</button>
                             </div>
                         }
                     </div>

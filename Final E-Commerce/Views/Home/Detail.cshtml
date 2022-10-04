@@ -116,7 +116,7 @@
                             {
                                 <li class="list-inline-item"> <i class="fa fa-star fa-2x" style="color:orange;"></i></li>
                             }
-                            <li class="list-inline-item" style="font-size: 120%">@decimalString Rated by @ViewBag.RatedBy users</li>
+                            <li class="list-inline-item" style="font-size: 120%">(@decimalString) Rated by @ViewBag.RatedBy users</li>
                         }
                         else{
                             <span>0 Rating</span>
@@ -149,7 +149,7 @@
                                 <span onclick="changeColor(4)" id="spn5" class=" fa fa-star fa-2x"> </span>
                             </div>
                             <span class="text-danger" style="font-size: 150%" id="pro-rating-warning"></span>
-                            <button id="rate-btn" class="btn btn-warning text-light col-3 mt-2"  data-id="@Model.Product.Id">Rate!</button>
+                            <button id="rate-btn" class="btn btn-warning text-light col-5 mt-2"  data-id="@Model.Product.Id">Rate!</button>
                         </div>
                     }
 
@@ -158,8 +158,9 @@
                           @Model.Product.Description
                         </p>
                     <h4 class="text-primary" style="color:blue !important">View: <span class="text-color">@Model.Product.Views</span></h4>
-                    <div class="col-8 d-flex flex-row">
-                        <input id="quantity" class="quantity mr-sm-2 mb-3 mb-sm-0" type="text" value="" name="quantity">
+                    <div class="col-12 d-flex flex-row">
+                        <input style="width:100%" id="quantity" class="quantity mr-sm-2 mb-3 mb-sm-0" type="text" value="" name="quantity">
+                        <br>
                         <a class="btn btn-danger text-light mb-4 add" data-id="@Model.Product.Id" > add to cart</a>
                     </div>
                     @if (!ViewBag.ExistWishlist)
@@ -191,7 +192,7 @@
                             <b style="max-height:400px" class="col-2">
                                 Released:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.ReleaseDate
 
                                 @*year: @year, month: @month, day: @days,*@
@@ -202,7 +203,7 @@
                             <b style="max-height:400px" class="col-2">
                                 OS:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.OperationSystem
                             </div>
                         </div>
@@ -210,7 +211,7 @@
                             <b style="max-height:400px" class="col-2">
                                 GPU:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.GPU
                             </div>
                         </div>
@@ -218,7 +219,7 @@
                             <b style="max-height:400px" class="col-2">
                                 Chipset:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.Chipset
                             </div>
                         </div>
@@ -226,7 +227,7 @@
                             <b style="max-height:400px" class="col-2">
                                 Memory:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.Memory
                             </div>
                         </div>
@@ -234,7 +235,7 @@
                             <b style="max-height:400px" class="col-2">
                                 Body:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.Body
                             </div>
                         </div>
@@ -242,7 +243,7 @@
                             <b style="max-height:400px" class="col-2">
                                 Display:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.Display
                             </div>
                     </div>
@@ -252,7 +253,7 @@
                         <b style="max-height:400px" class="col-2">
                             Selfie:
                         </b>
-                        <div style="max-height:400px" class="col-9 flex-wrap">
+                        <div style="max-height:400px" class="col-8 flex-wrap">
                             @Model.Product.FrontCamera
                         </div>
                     </div>
@@ -264,7 +265,7 @@
                             <b style="max-height:400px" class="col-2">
                                 Camera:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-wrap">
+                            <div style="max-height:400px" class="col-8 flex-wrap">
                                 @Model.Product.RearCamera
                             </div>
                         </div>
@@ -273,7 +274,7 @@
                         <b style="max-height:400px" class="col-2">
                             Battery:
                         </b>
-                        <div style="max-height:400px" class="col-9 flex-nowrap">
+                        <div style="max-height:400px" class="col-8 flex-nowrap">
                             @Model.Product.Battery
                         </div>
                     </div>
@@ -282,7 +283,7 @@
                             <b style="max-height:400px" class="col-2">
                                 Weight:
                             </b> 
-                            <div style="max-height:400px" class="col-9 flex-nowrap">
+                            <div style="max-height:400px" class="col-8 flex-nowrap">
                                 @Model.Product.Weight
                             </div>
                     </div>
@@ -291,7 +292,7 @@
                         <b style="max-height:400px" class="col-2">
                             Category:
                         </b>
-                        <div style="max-height:400px" class="col-9 flex-nowrap">
+                        <div style="max-height:400px" class="col-8 flex-nowrap">
                             @Model.Product.Category.Name
                         </div>
                     </div>
@@ -299,8 +300,8 @@
                         <b style="max-height:400px" class="col-2">
                             Brand:
                         </b>
-                        <div style="max-height:400px" class="col-9 flex-nowrap">
-                            @Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" />
+                        <div style="max-height:400px" class="col-8 flex-nowrap">
+                            <a class="text-dark" asp-action="brands" asp-route-id="@Model.Product.Brand.Id">@Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" /></a>
                         </div>
                     </div>
                     @if (Model.Product.ProductTags!=null)
@@ -309,7 +310,7 @@
                         <b style="max-height:400px" class="col-2">
                             Tags:
                         </b>
-                        <div style="max-height:400px" class="col-9 flex-nowrap">
+                        <div style="max-height:400px" class="col-8 flex-nowrap">
                             @foreach (var tag in Model.Product.ProductTags)
                             {
                                 <span> @tag.Tags.Name </span>
@@ -321,7 +322,7 @@
                         <b style="max-height:400px" class="col-2">
                             Added by:
                         </b>
-                        <div style="max-height:400px" class="col-9 flex-nowrap">
+                        <div style="max-height:400px" class="col-8 flex-nowrap">
                             @if (Model.Owner == null)
                             {
                                 <i><b>System</b></i>
@@ -440,7 +441,7 @@
                             <a href="#">
                                 @if (comment.AppUserId != null)
                                 {
-                                    <img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50">
+                                    <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@comment.AppUserId"><img class="img-fluid" src="~/images/profilepictures/@comment.User.ProfilePicture" alt="" width="50" height="50"></a>
                                 }
                                 else
                                 {
@@ -452,8 +453,7 @@
                                     <div class="comment-author d-flex flex-row justify-content-between">
                                         @if (comment.AppUserId != null)
                                         {
-                                            <a href="#">@comment.User.Fullname  
-                                            </a>
+                                            <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@comment.AppUserId">@comment.User.Fullname</a>
                                         }
                                         else
                                         {
@@ -481,7 +481,7 @@
             @if (Model.Product.CommentCount> 10)
             {
                 <div class="row d-flex justify-content-center mt-5 mb-5">
-                    <button class="btn btn-danger w-25" id="pro-loadmore" com-count="@Model.Product.CommentCount" data-id="@Model.Product.Id">Load More Comments</button>
+                    <button class="btn btn-danger" id="pro-loadmore" com-count="@Model.Product.CommentCount" data-id="@Model.Product.Id">Load More Comments</button>
                 </div>
             }
         </div>

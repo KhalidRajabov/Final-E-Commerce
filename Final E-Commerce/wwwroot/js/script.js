@@ -26,7 +26,7 @@
                             bTotal.innerHTML = response.data.count
                             tPrice.innerHTML = ` $${response.data.price}`
                             let cartitem = `<li id="cart-item${dataId}"  class="d-flex border-bottom">
-                                            <img width="70" src="https://localhost:44393/images/products/${response.data.image}" alt="product-img">
+                                            <img width="70" src="images/products/${response.data.image}" alt="product-img">
                                             <div class="mx-3">
                                                 <h6>${response.data.name}</h6>
                                                 <span id="oneproductCount${response.data.id}">${response.data.productcount} X</span> 
@@ -39,7 +39,7 @@
                                 timerProgressBar: true,
                                 title: 'Added to basket!',
                                 text: `${response.data.name}`,
-                                imageUrl: `https://localhost:44393/images/products/${response.data.image}`,
+                                imageUrl: `images/products/${response.data.image}`,
                                 imageWidth: 400,
                                 imageHeight: 200,
                                 imageAlt: 'Custom image',
@@ -321,7 +321,7 @@
                         }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
-                                location.replace("https://localhost:44393/account/login")
+                                location.replace("account/login")
                             }
                         })
                     }
@@ -406,7 +406,7 @@
                     productName.text(response.data.name)
                     productPrice.text(`$` + response.data.price)
                     productDesc.text(response.data.description)
-                    modalImage.attr(`src`, `https://localhost:44393/images/products/${response.data.image}`)
+                    modalImage.attr(`src`, `images/products/${response.data.image}`)
                     modalImage.attr(`width`, `100%`)
 
                 })
@@ -645,7 +645,7 @@
                             timerProgressBar: true,
                             title: 'Thanks for rating!',
                             text: `${response.data.name}`,
-                            imageUrl: `https://localhost:44393/images/products/${response.data.image}`,
+                            imageUrl: `images/products/${response.data.image}`,
                             imageWidth: 400,
                             imageHeight: 200,
                             imageAlt: 'Custom image',
@@ -673,7 +673,7 @@
         $("#SearchList li").slice(1).remove();
         $("#SearchList").html()
         $.ajax({
-            url: "https://localhost:44393/search/searchProduct?search=" + inputValue,
+            url: "search/searchProduct?search=" + inputValue,
             method: "get",
             success: function (res) {
                 $("#SearchList").append(res);
@@ -688,7 +688,7 @@
             $("#SearchList li").slice(1).remove();
             $("#SearchList").html()
             $.ajax({
-                url: "https://localhost:44393/search/PopularProducts/",
+                url: "search/PopularProducts/",
                 method: "get",
                 success: function (res) {
                     $("#SearchList").append(res);

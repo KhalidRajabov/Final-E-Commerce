@@ -73,7 +73,7 @@ namespace Final_E_Commerce.Controllers
             }
             List<Blogs>? blogs = _context?.Blogs?
                 .Where(b=>b.Title.ToLower().Contains(search.ToLower())||
-                b.Content.Contains(search.ToLower())).ToList();
+                b.Content.Contains(search.ToLower())).Take(5).ToList();
             DetailVM detailVM = new DetailVM();
             detailVM.SearchProducts = products;
             detailVM.Blogs=blogs;

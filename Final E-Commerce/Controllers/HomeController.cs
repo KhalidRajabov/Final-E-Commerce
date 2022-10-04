@@ -274,7 +274,22 @@ namespace Final_E_Commerce.Controllers
             return PartialView("_ProductComments", commentsVM);
         }
 
-        
+        public async Task<IActionResult> Brands(int id)
+        {
+            List<Product>? products = await _context?.Products?
+                .Where(p=>p.BrandId==id)
+                .Include(p => p.ProductImages)
+                .Include(p=>p.Brand)
+                .ToListAsync();
+            ListProductsVM listProducts = new ListProductsVM
+            {
+                Products = products,
+                Brand = await _context?.Brands?.FirstOrDefaultAsync(b=>b.Id==id)
+            };
+            return View(listProducts);
+        }
+
+
 
     }
 }

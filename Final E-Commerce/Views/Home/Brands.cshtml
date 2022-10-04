@@ -1,0 +1,63 @@
+﻿@model ListProductsVM
+@{
+    ViewData["Title"] = "Brands";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row d-flex flex-column justify-content-center align-items-center">
+        <span class="align-self-center">@Model.Brand.Name</span>
+        <img style="width:150px" src="~/images/brands/@Model.Brand.ImageUrl"/>
+    </div>
+    <div class="row d-flex flex-row flex-wrap">
+        @foreach (var item in Model.Products)
+        {
+            <div class="col-lg-3 col-sm-6 mb-5 mb-lg-0">
+                <div class="product text-center">
+                    <div class="product-thumb">
+                        <div class="overflow-hidden position-relative">
+                            <a href="product-single.html">
+                                @foreach (var image in item.ProductImages)
+                                {
+                                    if (image.IsMain)
+                                    {
+                                        <img style="width: 150px; height:150px" class="img-fluid w-100 mb-3 img-first" src="~/images/products/@image.ImageUrl" alt="product-img">
+                                    }
+                                }
+                                @foreach (var image in item.ProductImages)
+                                {
+                                    if (!image.IsMain)
+                                    {
+                                        <img style="width: 150px; height:150px" class="img-fluid w-100 mb-3 img-second" src="~/images/products/@image.ImageUrl" alt="product-img">
+                                        break;
+                                    }
+                                }
+                            </a>
+                            <div class="btn-cart">
+                                <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
+                            </div>
+                        </div>
+                        <div class="product-hover-overlay">
+                            <a href="#" class="product-icon favorite" data-toggle="tooltip" data-placement="left" title="Wishlist">
+                                <i class="ti-heart"></i>
+                            </a>
+                            <a href="#" class="product-icon cart" data-toggle="tooltip" data-placement="left" title="Compare">
+                                <i class="ti-direction-alt"></i>
+                            </a>
+                            <a data-vbtype="inline" href="#quickView" class="product-icon view venobox" data-toggle="tooltip"
+                           data-placement="left" title="Quick View"><i class="ti-search"></i></a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="h5"><a class="text-color" href="product-single.html">@item.Name</a></h3>
+                        <span class="h5">$@item.Price</span>
+                    </div>
+                    <!-- product label badge -->
+                    <div class="product-label new">
+                        new
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

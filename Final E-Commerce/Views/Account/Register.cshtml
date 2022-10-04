@@ -14,35 +14,36 @@
                     </a>
                     <h2 class="text-center">Create Your Account</h2>
                     <form class="text-left clearfix" method="post">
+                        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                         <div class="form-group">
                             <label asp-for="Firstname"></label>
                             <input asp-for="Firstname" class="form-control" placeholder="First Name">
-                            <span asp-validation-for="Firstname"></span>
+                            <span class="text-danger" asp-validation-for="Firstname"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Lastname"></label>
                             <input asp-for="Lastname" class="form-control" placeholder="Last Name">
-                            <span asp-validation-for="Lastname"></span>
+                            <span class="text-danger"  asp-validation-for="Lastname"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Username"></label>
                             <input asp-for="Username" class="form-control" placeholder="Username">
-                            <span asp-validation-for="Username"></span>
+                            <span class="text-danger" asp-validation-for="Username"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Email"></label>
                             <input asp-for="Email" class="form-control" placeholder="Email">
-                            <span asp-validation-for="Email"></span>
+                            <span class="text-danger"  asp-validation-for="Email"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Password"></label>
                             <input asp-for="Password" class="form-control" placeholder="Password">
-                            <span asp-validation-for="Password"></span>
+                            <span class="text-danger" asp-validation-for="Password"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="ConfirmPassword"></label>
                             <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm password">
-                            <span asp-validation-for="ConfirmPassword"></span>
+                            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Sign Up</button>
