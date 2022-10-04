@@ -468,62 +468,7 @@ namespace Final_E_Commerce.Controllers
             {
                 return View(product);
             }
-            string? path = "";
-            if (product.Photos == null)
-            {
-                foreach (var item in dbProduct.ProductImages)
-                {
-                    item.ImageUrl = item.ImageUrl;
-                    _context.Add(item);
-                }
-            }
-            else
-            {
-                foreach (var item in product.Photos)
-                {
-                    if (item == null)
-                    {
-                        ModelState.AddModelError("Photo", "Can not be empty");
-                        return View();
-                    }
-                    if (!item.IsImage())
-                    {
-                        ModelState.AddModelError("Photo", "Only images");
-                        return View();
-                    }
-
-                    if (item.ValidSize(20000))
-                    {
-                        ModelState.AddModelError("Photo", "The image size is larger than required size(max 20 mb)");
-                        return View();
-                    }
-                    ProductImage image = new ProductImage();
-                    image.ImageUrl = item.SaveImage(_env, "images/products");
-
-                    if (product.Photos.Count == 1)
-                    {
-                        image.IsMain = true;
-                    }
-                    
-                    dbProduct.ProductImages.Add(image);
-                }
-
-                /*foreach (var item in product.Photos)
-                {
-                    if (!item.IsImage())
-                    {
-                        ModelState.AddModelError("Photo", "Images only");
-                        return View();
-                    }
-
-                    if (item.ValidSize(20000))
-                    {
-                        ModelState.AddModelError("Photo", "The image size is larger than required size(max 20 mb)");
-                        return View();
-                    }
-                }*/
-            }
-
+            
             
 
             if (product.TagId == null)
@@ -623,9 +568,8 @@ namespace Final_E_Commerce.Controllers
                 EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
                 foreach (var receiver in subscribers)
                 {   
-                    token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
-                        $"Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n"+
-                        $"Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
+                    token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. +Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n"+
+                        "Məhsula keçid linki https://localhost:44347/Home/detail/{dbProduct.Id}";
                     var emailResult = helper.SendNews(receiver.Email, token, subject);
                     continue;
                 }

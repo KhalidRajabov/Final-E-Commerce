@@ -12,6 +12,9 @@
             <img width="250" class="m-3" src="~/images/products/@item.ImageUrl" />
         }
     </div>
+    <div class="row col-12 d-flex flex-row justify-content-center">
+        <a class="text-light btn btn-primary w-25" asp-action="EditPictures" asp-controller="product" asp-route-id="@Model.Product.Id">Edit Images</a>
+    </div>
 
 
     <div class="row mt-5">

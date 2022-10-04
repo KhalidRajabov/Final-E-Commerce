@@ -16,6 +16,9 @@
     <div class="mt-3">
         Viewed: @Model.Blog.ViewCount
     </div>
+    <div class="mt-3">
+        Comments: @Model.Blog.CommentCount
+    </div>
 
 
     <div class="mt-3">
@@ -33,19 +36,27 @@
         Written at: @Model.Blog.Date
     </div>
 
-    <div class="mt-3">
-        Updated: @Model.Blog.LastUpdated
-    </div>
+    @if (Model.Blog.LastUpdated!=null)
+    {
+        <div class="mt-3">
+            Updated: @Model.Blog.LastUpdated
+        </div>
 
-    <div class="mt-3">
-        Updated by: @Model.Blog.LastUpdatedBy
-    </div>
+        <div class="mt-3">
+            Updated by: @Model.Blog.LastUpdatedBy
+        </div>
+    }
+    else{
+        <div class="mt-3">
+            Not updated yet
+        </div>
+    }
 
     <div class="mt-3">
         <a class="text-primary" asp-area="default" asp-action="detail" asp-controller="blog" asp-route-id="@Model.Blog.Id">Go to blog</a>
     </div>
     <div class="col-12 mt-3 d-flex flex-row justify-content-around">
-        <a class="w-25 btn btn-secondary" asp-action="blogdetail" asp-controller="editor" asp-route-id="@Model.Blog.Id">Go back</a>
+        <a class="w-25 btn btn-secondary" asp-action="index" >Go back</a>
         <a class="w-25 btn btn-warning" asp-action="update" asp-controller="editor" asp-route-id="@Model.Blog.Id">Update</a>
         @if (Model.Blog.IsDeleted)
         {

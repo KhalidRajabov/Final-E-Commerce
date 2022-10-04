@@ -109,7 +109,11 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
         }
         public async Task<IActionResult> BlogDetail(int id)
         {
-            Blogs? blog = await _context?.Blogs?.Include(b => b.BlogSubjects).ThenInclude(bs => bs.Subjects).FirstOrDefaultAsync(b => b.Id == id);
+            Blogs? blog = await _context?.Blogs?
+                .Include(b => b.BlogSubjects)
+                .ThenInclude(bs => bs.Subjects)
+                .Include(bs => bs.Comments)
+                .FirstOrDefaultAsync(b => b.Id == id);
             BlogDetailVM blogDetailVM = new BlogDetailVM();
             blogDetailVM.Blog = blog;
             return View(blogDetailVM); 

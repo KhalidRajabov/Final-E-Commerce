@@ -1,0 +1,29 @@
+﻿@model ProductUpdateVM
+@{
+    ViewData["Title"] = "EditPictures";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container justify-content-center align-content-center d-flex flex-column">
+    <div style="display:flex; flex-direction:row; justify-content:space-around; flex-wrap: wrap;">
+        @foreach (var item in Model.Product.ProductImages)
+        {
+            <div class="product-update-image-card col-2 d-flex flex-column justify-content-around align-content-around">
+                <img width="100%" style="align-self: center" class="m-3" src="~/images/products/@item.ImageUrl" />
+                @if (item.IsMain)
+                {
+                    <span style="align-self: center" class="text-success">Main image</span>
+                }
+                else
+                {
+                    <div class="row d-flex flex-row justify-content-around">
+                        <a asp-action="MainImage" asp-controller="product" asp-route-imageid="@item.Id" asp-route-productid="@Model.Product.Id" asp-route-Returnurl="@Context.Request.Path" class="btn p-2 m-2 text-light btn-info">Make it main</a>
+                        <a asp-action="RemoveImage" asp-controller="product" asp-route-imageid="@item.Id" asp-route-productid="@Model.Product.Id" asp-route-Returnurl="@Context.Request.Path" class="btn p-2 m-2 btn-danger">Remove</a>
+                    </div>
+
+                }
+            </div>
+        }
+    </div>
+    <a class="btn btn-primary w-50 mt-5 align-self-center" asp-action="Detail" asp-controller="product" asp-route-id="@Model.Product.Id">Go back</a>
+</div>

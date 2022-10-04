@@ -444,5 +444,92 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             var SubCategory_List = _context?.Categories?.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).Select(c => new { Id = c.Id, Name = c.Name }).ToList();
             return Json(SubCategory_List);
         }
+        public async Task<IActionResult> EditPictures(int id)
+        {
+            List<Product>? AllProducts = await _context?.Products?
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    _context?.SaveChangesAsync();
+                }
+            }
+            
+            Product? p = await _context?.Products?
+                .Include(i => i.ProductImages)?
+                .Include(c => c.Category)?
+                .Include(t => t.ProductTags)?
+                .ThenInclude(p => p.Tags)
+                .Include(b => b.Brand)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            if (p == null) return RedirectToAction("error", "home");
+            ProductUpdateVM vm = new ProductUpdateVM();
+            vm.Product = p;
+            return View(vm);
+        }
+
+        public async Task<IActionResult> MainImage(int? imageid, int? productid, string? Returnurl)
+        {
+            List<Product>? AllProducts = await _context?.Products?
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            if (imageid == null || productid == null) return RedirectToAction("error", "home");
+            var image = await _context?.ProductImages?.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
+            if (image == null) return RedirectToAction("error", "home");
+            var product = await _context?.Products?.Include(x => x.ProductImages).FirstOrDefaultAsync(x => x.Id == productid);
+            if (product == null) return RedirectToAction("error", "home");
+            var mainImage = product.ProductImages?.FirstOrDefault(x => x.IsMain);
+            mainImage.IsMain = false;
+
+            image.IsMain = true;
+            product.LastUpdatedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+            if (Returnurl != null)
+            {
+                return Redirect(Returnurl);
+            }
+            return RedirectToAction("index");
+        }
+        public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
+        {
+            List<Product>? AllProducts = await _context?.Products?
+               .Where(p => p.DiscountPercent > 0).ToListAsync();
+            foreach (var item in AllProducts)
+            {
+                if (item.DiscountUntil < DateTime.Now)
+                {
+                    item.DiscountUntil = null;
+                    item.DiscountPercent = 0;
+                    item.DiscountPrice = 0;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            if (imageid == null || productid == null) return RedirectToAction("error", "home");
+            var image = await _context?.ProductImages?.FirstOrDefaultAsync(x => x.Id == imageid && x.ProductId == productid);
+            if (image == null) return RedirectToAction("error", "home");
+
+            string? path = Path.Combine(_env.WebRootPath, @"images\products", image.ImageUrl);
+            Helper.Helper.DeleteImage(path);
+
+            _context.ProductImages.Remove(image);
+            Product? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
+            product.LastUpdatedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return Redirect(Returnurl);
+        }
     }
 }
