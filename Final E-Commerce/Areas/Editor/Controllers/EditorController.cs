@@ -3,6 +3,7 @@ using Final_E_Commerce.Areas.Editor.ViewModels;
 using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Extensions;
+using Final_E_Commerce.Helper;
 using Final_E_Commerce.Migrations;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using static System.Net.WebRequestMethods;
 
 namespace Final_E_Commerce.Areas.Editor.Controllers
 {
@@ -35,14 +37,14 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
         {
             EditorVM? editorVM = new EditorVM
             {
-                Blogs = await _context?.Blogs?.ToListAsync()
+                Blogs = await _context?.Blogs?.OrderByDescending(b=>b.Date).ToListAsync()
             };
             return View(editorVM);
         }
         [HttpGet]
         public IActionResult NewBlog()
         {
-            ViewBag.Subjects = new SelectList(_context.Subjects.Where(s => s.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Subjects = new SelectList(_context?.Subjects?.Where(s => s.IsDeleted != true).ToList(), "Id", "Name");
             return View();
         }
         [HttpPost]
@@ -88,6 +90,21 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             }
             await _context.AddAsync(NewBlog);
             await _context.SaveChangesAsync();
+            List<Subscriber>? subscribers = await _context?.Subscribers?.ToListAsync();
+            var token = "";
+            string subject = $"{NewBlog.Title}";
+            EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+            foreach (var receiver in subscribers)
+            {
+                token = $"{NewBlog.Content.Substring(0,50)}... <a style='color: red' href='https://localhost:44393/blog/detail/{NewBlog.Id}'>read more</a> ";
+                var emailResult = helper.SendNews(receiver.Email, token, subject);
+                continue;
+            }
+            string? discountemail = Url.Action("ConfirmEmail", "Account", new
+            {
+                token
+            }, Request.Scheme);
+            
             return RedirectToAction("index");
         }
         public async Task<IActionResult> BlogDetail(int id)
@@ -99,7 +116,7 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
         }
         public async Task<IActionResult> Update(int id)
         {
-            ViewBag.Subjects = new SelectList(_context.Subjects.Where(s => s.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Subjects = new SelectList(_context?.Subjects?.Where(s => s.IsDeleted != true).ToList(), "Id", "Name");
             Blogs? blog = await _context?.Blogs?.FirstOrDefaultAsync(b => b.Id == id);
             BlogEditVM editVM = new BlogEditVM();
             editVM.Title = blog.Title;

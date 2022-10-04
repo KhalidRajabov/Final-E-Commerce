@@ -66,26 +66,27 @@ namespace Final_E_Commerce.Controllers
 
         //not working yet
         [HttpPost]
-        public async Task<IActionResult> ChangeImage(UserPhotoVM photo)
+        public async Task<IActionResult> ChangeImage(UserPhotoVM image)
         {
-            if (photo.Photo == null)
+            if (image.Photo == null)
             {
                 ModelState.AddModelError("Photo", "Do not leave it empty");
-                return View(photo);
+                return View(image);
             }
 
-            if (!photo.Photo.IsImage())
+            if (!image.Photo.IsImage())
             {
                 ModelState.AddModelError("Photo", "Only images");
-                return View(photo);
+                return View(image);
             }
-            if (photo.Photo.ValidSize(10000))
+            if (image.Photo.ValidSize(10000))
             {
                 ModelState.AddModelError("Photo", "Image size can not be larger than 10mb");
-                return View(photo);
+                return View(image);
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            user.ProfilePicture = photo.Photo.SaveImage(_env, "images/ProfilePictures");
+            user.ProfilePicture = image.Photo.SaveImage(_env, "images/ProfilePictures");
+            await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }
 
@@ -114,24 +115,22 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(UserProfileVM? userProfile)
         {
-            if (userProfile.Photo == null)
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            if (userProfile.Photo != null)
             {
-                ModelState.AddModelError("Photo", "Do not leave it empty");
-                return View(userProfile);
+                if (!userProfile.Photo.IsImage())
+                {
+                    ModelState.AddModelError("Photo", "Only images");
+                    return View(userProfile);
+                }
+                if (userProfile.Photo.ValidSize(10000))
+                {
+                    ModelState.AddModelError("Photo", "Image size can not be larger than 10mb");
+                    return View(userProfile);
+                }
+                user.ProfilePicture = userProfile.Photo.SaveImage(_env, "images/ProfilePictures");
             }
 
-            if (!userProfile.Photo.IsImage())
-            {
-                ModelState.AddModelError("Photo", "Only images");
-                return View(userProfile);
-            }
-            if (userProfile.Photo.ValidSize(10000))
-            {
-                ModelState.AddModelError("Photo", "Image size can not be larger than 10mb");
-                return View(userProfile);
-            }
-            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            user.ProfilePicture = userProfile.Photo.SaveImage(_env, "images/ProfilePictures");
             user.PhoneNumber = userProfile.PhoneNumber;
             user.Firstname = userProfile.Firstname;
             user.Lastname = userProfile.Lastname;
@@ -386,7 +385,7 @@ namespace Final_E_Commerce.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Products");
         }
-        public async Task<IActionResult> EditProduct(int id)
+        public async Task<IActionResult> EditProduct(int? id)
         {
             List<Product>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();

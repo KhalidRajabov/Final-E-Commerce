@@ -14,7 +14,9 @@
                 <input asp-for="Photo" style="border:1px solid black; border-radius: 10px" class="col-12 mt-5"/>
                 <span asp-validation-for="Photo" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-warning align-self-center">Update</button>
+            <button type="submit" asp-action="ChangeImage" class="btn btn-warning align-self-center">
+                Update
+            </button> 
         </form>
     </div>
 </div>

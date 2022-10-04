@@ -34,7 +34,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public IActionResult Index(int page = 1, int take = 5)
         {
 
-            List<Product> product = _context.Products
+            List<Product>? product = _context?.Products?
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p => p.Id)
                 .Include(p => p.Category).Include(pi => pi.ProductImages)
@@ -46,7 +46,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         private int PageCount(int take)
         {
-            List<Product> products = _context.Products
+            List<Product>? products = _context?.Products?
                 .Where(p => p.IsDeleted != true&& p.Status == ProductConfirmationStatus.Approved).ToList();
             return (int)Math.Ceiling((decimal)products.Count() / take);
         }
@@ -56,24 +56,24 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
 
-            var mainCategories = await _context.Categories.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
+            var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
             var altCategories = await _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
-            ViewBag.Brands = new SelectList(_context.Brands.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Brands = new SelectList(_context?.Brands?.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateVM product)
         {
-            var mainCategories = await _context.Categories.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
+            var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
             var altCategories = await _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
-            ViewBag.Brands = new SelectList(_context.Brands.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Brands = new SelectList(_context?.Brands?.Where(c => c.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
 
             if (product.Name == null)
             {
@@ -81,7 +81,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 return View();
             }
 
-            List<ProductImage> Images = new List<ProductImage>();
+            List<ProductImage>? Images = new List<ProductImage>();
             foreach (var item in product.Photos)
             {
                 if (item == null)
@@ -105,7 +105,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             }
 
 
-            Product NewProduct = new Product
+            Product? NewProduct = new Product
             {
                 Price = product.Price,
                 Name = product.Name,
@@ -176,11 +176,11 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Update(int? id)
         {
-            var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
-            ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            var altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
+            ViewBag.Brands = new SelectList(_context?.Brands?.ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (id == null) return RedirectToAction("error", "home");
             Product? product = await _context?.Products
                 ?.Include(i => i.ProductImages)
@@ -190,8 +190,29 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 ?.ThenInclude(p => p.Tags)
                 ?.FirstOrDefaultAsync(c => c.Id == id);
             if (product == null) return RedirectToAction("error", "home");
-            ProductUpdateVM productUpdateVM = new ProductUpdateVM();
-            productUpdateVM.Product = product;
+            ProductUpdateVM productUpdateVM = new ProductUpdateVM
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                ReleaseDate = product.ReleaseDate,
+                OperationSystem = product.OperationSystem,
+                GPU = product.GPU,
+                Chipset = product.Chipset,
+                Memory = product.Memory,
+                Body = product.Body,
+                Display = product.Display,
+                FrontCamera = product.FrontCamera,
+                RearCamera = product.RearCamera,
+                Battery = product.Battery,
+                Weight = product.Weight,
+                DiscountPercent = product.DiscountPercent,
+                DiscountUntil = product.DiscountUntil,
+                Count = product.Count,
+                CategoryId = product.CategoryId,
+                BrandId = product.BrandId,
+                Product = product,
+            };
             return View(productUpdateVM);
         }
 
@@ -202,18 +223,18 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(int? id, ProductUpdateVM? product)
         {
-            var altCategories = _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
-            ViewBag.Brands = new SelectList(_context.Brands.ToList(), "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            var altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
+            ViewBag.Brands = new SelectList(_context?.Brands?.ToList(), "Id", "Name");
+            ViewBag.Categories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
-            ViewBag.Tags = new SelectList(_context.Tags.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
+            ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (!ModelState.IsValid)
             {
                 return View();
             }
-            Product dbProduct = await _context.Products
-                .Include(p => p.ProductImages)
-                .Include(p => p.ProductTags)
+            Product? dbProduct = await _context?.Products
+                ?.Include(p => p.ProductImages)
+                ?.Include(p => p.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .Include(b => b.Brand)
                 .Include(c => c.Category)
@@ -224,7 +245,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 return View();
             }
             List<ProductImage> images = new List<ProductImage>();
-            string path = "";
+            string? path = "";
             if (product.Photos == null)
             {
                 foreach (var item in dbProduct.ProductImages)
@@ -319,14 +340,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             {
                 dbProduct.InStock = false;
             }
-            /*List<Category> categories = _context.Categories.Where(p => p.IsDeleted != true).Where(c => c.ImageUrl != null).ToList();
-            for (int i = 0; i < categories.Count; i++)
-            {
-                if (product.Category == categories[0])
-                {
-                    dbProduct.CategoryId = dbProduct.CategoryId;
-                }
-            }*/
+            
 
 
 
@@ -370,7 +384,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             }
             if (product.DiscountPercent > 0 && product.DiscountPercent>dbProduct.DiscountPercent)
             {
-                List<Wishlist> wishlist = _context.Wishlists.Where(p => p.ProductId == dbProduct.Id).ToList();
+                List<Wishlist>? wishlist = _context?.Wishlists?.Where(p => p.ProductId == dbProduct.Id).ToList();
                 foreach (var user in wishlist)
                 {
                     AppUser appUser = await _usermanager.FindByIdAsync(user.AppUserId);
@@ -402,8 +416,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         {
             if (id == null) return RedirectToAction("error", "home");
             Product? dbProduct = await _context?.Products?.Include(c => c.Category)
-                .Include(c => c.ProductTags)
+                ?.Include(c => c.ProductTags)
                 .ThenInclude(t => t.Tags)
+                .Include(p=>p.Brand)
                 .Include(pi => pi.ProductImages)
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (dbProduct == null) return RedirectToAction("error", "home");
@@ -426,7 +441,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public IActionResult GetSubCategory(int cid)
         {
-            var SubCategory_List = _context.Categories.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).Select(c => new { Id = c.Id, Name = c.Name }).ToList();
+            var SubCategory_List = _context?.Categories?.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).Select(c => new { Id = c.Id, Name = c.Name }).ToList();
             return Json(SubCategory_List);
         }
     }
