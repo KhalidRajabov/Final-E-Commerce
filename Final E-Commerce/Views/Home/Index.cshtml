@@ -261,7 +261,7 @@
                                         </div>
                                 }
                                     @*@{
-                                        DateTime? date = DateTime.Now;
+                                        DateTime? date = DateTime.UtcNow.AddHours(4);
                                         var time = Int32.Parse(date?.ToString("dd"));
                                     }*@
                                 @*@if (time-Int32.Parse(item.CreatedTime?.ToString("dd"))!=null)

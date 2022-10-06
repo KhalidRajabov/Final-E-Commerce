@@ -131,7 +131,8 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> PostComment(int id, string comment, string? author)
         {
-            Blogs? blog =await _context?.Blogs?.FirstOrDefaultAsync(b => b.Id == id);
+            Blogs? blog =await _context?.Blogs?
+                .FirstOrDefaultAsync(b => b.Id == id);
             BlogComment NewComment = new BlogComment();
             CommentsVM commentVM = new CommentsVM();
             if (User.Identity.IsAuthenticated)
@@ -146,7 +147,7 @@ namespace Final_E_Commerce.Controllers
             }
             NewComment.CommentContent = comment;
             NewComment.BlogId = blog.Id;
-            NewComment.Date = DateTime.Now;
+            NewComment.Date = DateTime.UtcNow.AddHours(4);
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
             commentVM.Comment = NewComment;

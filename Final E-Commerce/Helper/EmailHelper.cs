@@ -19,7 +19,7 @@ namespace Final_E_Commerce.Helper
             mailMessage.From = new MailAddress(_email);
             mailMessage.To.Add(new MailAddress(UserEmail));
 
-            mailMessage.Subject = "Confirm Email";
+            mailMessage.Subject = "Confirmation Email";
             mailMessage.IsBodyHtml = true;
             mailMessage.Body = ConfirmationLink;
 

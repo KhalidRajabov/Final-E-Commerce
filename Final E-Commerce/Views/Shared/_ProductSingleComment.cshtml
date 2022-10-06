@@ -3,7 +3,7 @@
     <a href="#">
         @if (Model.ProductComment.AppUserId!=null)
         {
-            <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@Model.Comment.AppUserId"><img class="img-fluid" src="~/images/profilepictures/@Model.Comment.User.ProfilePicture" alt="" width="50" height="50"></a>
+            <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@Model.ProductComment.AppUserId"><img class="img-fluid" src="~/images/profilepictures/@Model.User.ProfilePicture" alt="" width="50" height="50"></a>
         }
         else{
             <img class="img-fluid" src="~/images/profilepictures/nophoto.jpg" alt="" width="50" height="50">
@@ -14,7 +14,7 @@
             <div id="pro-cmnt-author" class="comment-author d-flex flex-row justify-content-between">
                 @if (Model.ProductComment.AppUserId != null)
                 {
-                    <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@Model.Comment.AppUserId">@Model.Comment.User.Fullname</a>
+                    <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@Model.ProductComment.AppUserId">@Model.User.Fullname</a>
                 }
                 else
                 {

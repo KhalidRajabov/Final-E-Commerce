@@ -53,7 +53,7 @@ namespace Final_E_Commerce.Controllers
                 UserName = registerVM.Username,
                 Email = registerVM.Email,
                 ProfilePicture = "default.jpg",
-                DateRegistered = DateTime.Now
+                DateRegistered = DateTime.UtcNow.AddHours(4)
             };
 
             IdentityResult result = await _usermanager.CreateAsync(appUser, registerVM.Password);
@@ -80,6 +80,7 @@ namespace Final_E_Commerce.Controllers
             UserProfile Profile = new UserProfile();
             UserDetails Detail = new UserDetails();
             Profile.AppUserId = appUser.Id;
+            
             Detail.AppUserId = appUser.Id;
             _context.Add(Profile);
             _context.Add(Detail);

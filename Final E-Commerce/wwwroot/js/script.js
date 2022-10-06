@@ -479,7 +479,7 @@
         if (comment.length > 3) {
             if (author != undefined || author != null) {
                 if (author.length > 3) {
-                    axios.post("/blog/PostComment?id=" + logId + "&comment=" + comment + "&author=" + author)
+                    axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment + "&author=" + author)
                         .then(function (response) {
                             $("#comment-area").prepend(response.data)
                             let numb = document.getElementById("comment-area").childElementCount;
@@ -487,6 +487,8 @@
 
                             $("#comCount").text(numb)
                             console.log(response)
+                            $("#comment-input").val("")
+                            $("#comment-name").val("")
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -506,6 +508,7 @@
                         
                         $("#comCount").text(numb)
                         console.log(response)
+                        $("#comment-input").val("")
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -522,7 +525,7 @@
 
     //product page
 
-    //post comment
+    //addProductComment
 
     let propostBtn = $("#pro-post-comment")
 
@@ -534,7 +537,7 @@
         let problogId = this.getAttribute("data-id")
         let proauthor = $("#pro-comment-name").val()
         let procmntarea = $("#pro-comment-area")
-
+        
 
         if (procomment.length > 3) {
             if (proauthor != undefined || proauthor != null ) {
@@ -544,9 +547,10 @@
                             $("#pro-comment-area").prepend(response.data)
                             let numb = document.getElementById("pro-comment-area").childElementCount;
                             console.log("lol: " + numb)
-
                             $("#pro-comCount").text(numb)
                             console.log(response)
+                            $("#pro-comment-input").val("")
+                            $("#pro-comment-name").val("")
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -566,6 +570,7 @@
 
                         $("#pro-comCount").text(numb)
                         console.log(response)
+                        $("#pro-comment-input").val("")
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -667,13 +672,13 @@
 
   //search
 
-
+    var searchUrl = `http://dante666-001-site1.atempurl.com/`
     $(document).on("keyup", "#search", function () {
         let inputValue = $(this).val();
         $("#SearchList li").slice(1).remove();
         $("#SearchList").html()
         $.ajax({
-            url: "search/searchProduct?search=" + inputValue,
+            url: `${searchUrl}search/searchProduct?search=` + inputValue,
             method: "get",
             success: function (res) {
                 $("#SearchList").append(res);
@@ -688,7 +693,7 @@
             $("#SearchList li").slice(1).remove();
             $("#SearchList").html()
             $.ajax({
-                url: "search/PopularProducts/",
+                url: `${searchUrl}search/PopularProducts/`,
                 method: "get",
                 success: function (res) {
                     $("#SearchList").append(res);

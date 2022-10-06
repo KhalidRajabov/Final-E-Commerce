@@ -28,7 +28,7 @@ namespace Final_E_Commerce.Controllers
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
             foreach (var product in AllProducts)
             {
-                if (product.DiscountUntil<DateTime.Now)
+                if (product.DiscountUntil<DateTime.UtcNow.AddHours(4))
                 {
                     product.DiscountUntil = null;
                     product.DiscountPercent = 0;
@@ -41,10 +41,10 @@ namespace Final_E_Commerce.Controllers
             homeVM.Category = _context.Categories?.FirstOrDefault(c=>c.Id==1);
             homeVM.MostPopularProduct = _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
-                .OrderByDescending(p=>p.Views).Take(1).Include(p=>p.ProductImages).FirstOrDefault();
+                .OrderByDescending(p=>p.Rating).Take(1).Include(p=>p.ProductImages).FirstOrDefault();
             homeVM.PopularProducts = _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
-                .OrderByDescending(p=>p.Views).Skip(1).Take(3).Include(p=>p.ProductImages).ToList();
+                .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToList();
             homeVM.BestSellerProducts = _context.Products
                 .OrderByDescending(p => p.Sold).Take(8)
                 .Where(p=>p.Status==ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToList();
@@ -56,7 +56,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -186,7 +186,8 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> PostComment(int ProductId, string comment, string? author)
         {
-            Product? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id == ProductId);
+            Product? product = await _context?.Products?
+                .FirstOrDefaultAsync(p=>p.Id == ProductId);
             ProductComment NewComment = new ProductComment();
             CommentsVM commentVM = new CommentsVM();
             if (User.Identity.IsAuthenticated)
@@ -194,6 +195,7 @@ namespace Final_E_Commerce.Controllers
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 NewComment.AppUserId = user.Id;
                 commentVM.UserId = user.Id;
+                commentVM.User = user;
             }
             else
             {
@@ -201,10 +203,11 @@ namespace Final_E_Commerce.Controllers
             }
             NewComment.Content = comment;
             NewComment.ProductId = product.Id;
-            NewComment.Date = DateTime.Now;
+            NewComment.Date = DateTime.UtcNow.AddHours(4);
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
             commentVM.ProductComment= NewComment;
+            
             return PartialView("_ProductSingleComment", commentVM);
         }
         [Authorize]

@@ -4,6 +4,7 @@ namespace Final_E_Commerce.ViewModels
 {
     public class CommentsVM
     {
+        public AppUser? User { get; set; }
         public List<BlogComment>? BlogComments { get; set; }
         public BlogComment? Comment { get; set; }
         public List<ProductComment>? ProductComments { get; set; }
