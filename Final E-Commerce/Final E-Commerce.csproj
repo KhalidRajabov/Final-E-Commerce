@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\admin\" />
+    <Folder Include="wwwroot\images\Slider\" />
   </ItemGroup>
 
   <ItemGroup>

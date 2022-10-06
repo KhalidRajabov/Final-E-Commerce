@@ -1,0 +1,53 @@
+﻿@model SliderVM
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="row">
+
+
+     <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Create Product</h4>
+                  <form class="forms-sample" method="POST" enctype="multipart/form-data">
+                      <div class="form-group">
+                      <label asp-for="Photo" ></label>
+                      <input asp-for="Photo" class="form-control">
+                      <span style="color: red;" asp-validation-for="Photo"></span>
+                    </div>
+                    <div class="form-group">
+                      <label asp-for="Subtitle" ></label>
+                      <input asp-for="Subtitle" class="form-control">
+                      <span style="color: red;" asp-validation-for="Subtitle"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label asp-for="MainTitle" ></label>
+                      <input asp-for="MainTitle" class="form-control">
+                      <span style="color: red;" asp-validation-for="MainTitle"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label asp-for="Description" ></label>
+                      <input asp-for="Description" class="form-control">
+                      <span style="color: red;" asp-validation-for="Description"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-success me-2">Save</button>
+                    <a asp-action="index" class="btn btn-primary"> Go Back</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

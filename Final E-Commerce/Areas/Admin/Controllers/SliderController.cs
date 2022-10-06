@@ -2,6 +2,7 @@
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Extensions;
 using Final_E_Commerce.Migrations;
+using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,8 +24,12 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            List<Slider> slider = _context.Sliders.ToList();
-            return View(slider);
+            List<Slider>? slider = _context?.Sliders?.ToList();
+            ListSliderVM sliderVM = new ListSliderVM
+            {
+                Sliders = slider
+            };
+            return View(sliderVM);
         }
 
         public IActionResult Create()
@@ -38,7 +43,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Slider slider)
+        public IActionResult Create(SliderVM slider)
         {
 
             if (slider.Photo == null)
@@ -62,7 +67,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
             Slider newslider = new Slider
             {
-                ImageUrl = slider.Photo.SaveImage(_env, "images"),
+                ImageUrl = slider.Photo.SaveImage(_env, "images/Slider"),
                 Subtitle = slider.Subtitle,
                 MainTitle = slider.MainTitle,
                 Description = slider.Description
@@ -77,7 +82,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Detail(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Slider slider = await _context.Sliders.FindAsync(id);
+            Slider? slider = await _context.Sliders.FindAsync(id);
             if (slider == null) return RedirectToAction("error", "home");
             return View(slider);
         }
@@ -85,9 +90,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Slider slider = await _context.Sliders.FindAsync(id);
+            Slider? slider = await _context.Sliders.FindAsync(id);
             if (slider == null) return RedirectToAction("error", "home");
-            string path = Path.Combine(_env.WebRootPath, "img", slider.ImageUrl);
+            string? path = Path.Combine(_env.WebRootPath, "img", slider.ImageUrl);
             Helper.Helper.DeleteImage(path);
             _context.Sliders.Remove(slider);
             await _context.SaveChangesAsync();

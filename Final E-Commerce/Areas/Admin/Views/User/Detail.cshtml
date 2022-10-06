@@ -1,0 +1,99 @@
+﻿@model UserInfoVM
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+
+    <div class="card col-12">
+        @*<img src="..." class="card-img-top" alt="...">*@
+        <div class="card-body">
+            <h5 class="card-title ">Name: @Model.Fullname</h5>
+            <p class="card-text ">Username: @Model.Username</p>
+        </div>
+
+        <ul class="list-group list-group-flush ">
+            <li class="list-group-item"> <h5>Roles:</h5></li>
+            @foreach (var item in Model.Role)
+            {
+                <li class="list-group-item">
+                    @if (item.ToLower() == "ban" || item == "")
+                    {
+                        <span style="font-size:130%; font-weight: 500; color: red">
+                            A banned account
+                        </span>
+                    }
+                    else
+                    {
+                        <span style="font-size:130%; font-weight: 500; color: black">
+                            @item
+                        </span>
+                    }
+                    @*@((item.ToLower()=="ban"||item==null)?"Account is banned":$"{item}")*@
+                </li>
+            }
+        </ul>
+
+        <ul class="list-group list-group-flush ">
+            <li class="list-group-item">Email: @Model.Email</li>
+            <li class="list-group-item">Phone number: @(Model.Phone == null ? "Not entered" : $"{Model.Phone}")</li>
+            <li class="list-group-item">Account activated: @(Model.EmailConfirmed == false ? "Not activated yet" : "Activated")</li>
+        </ul>
+
+        @if (Model.Orders.Count < 1)
+        {
+            <h1 style="margin: 10px auto" class="text-warning mt-3"><span class="text-info">@Model.Fullname</span> has not bought anything.</h1>
+        }
+        else
+        {
+            <h1 style="margin: 10px auto" class="text-success mt-3">Orders:</h1>
+
+            <div class="table-responsive mt-3">
+                <table id="user-table" class="table table-hover">
+                    <thead>
+                        <tr>
+                            
+                            <th>Price</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Orders)
+                        {
+                            
+                            <tr>
+                            
+
+                                <td>@item.Price</td>
+                                <td>@item.OrderedAt.ToString("dddd, dd MMMM yyyy HH:mm:ss")</td>
+                                @if (item.OrderStatus == OrderStatus.Pending)
+                                {
+                                    <td style="font-weight: 700; font-size: 120%" class="text-info">Pending </td>
+                                }
+                                else if (item.OrderStatus == OrderStatus.Approved)
+                                {
+                                    <td style="font-weight: 700; font-size: 120%" class="text-success">Approved</td>
+                                }
+                                else if (item.OrderStatus == OrderStatus.Refused)
+                                {
+                                    <td style="font-weight: 700; font-size: 120%" class="text-danger">Declined</td>
+                                }
+                                <td>
+                                    <a class="btn btn-success fs-5" asp-action="orderdetail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="card-body w-100 d-flex justify-content-center">
+            <a asp-action="index" class="card-link btn w-25 btn-dark text-light">Go back</a>
+        </div>
+    </div>
+
+</div>

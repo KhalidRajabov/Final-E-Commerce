@@ -1,0 +1,78 @@
+﻿@model UserVM
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+
+<div class="row">
+
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <a class="btn btn-warning fs-5" asp-action="create">Register a User</a>
+
+                <form>
+
+                    <div class="form-group">
+                        <input style="background-color:rgb(244,245,247); padding: 30px 15px; color:black" name="search" id="search-user" type="text" class="mt-4 text-dark form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+
+                <div class="table-responsive">
+
+                    <table id="find-user-table" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Settings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Users)
+                            {
+                                count++;
+                                <tr>
+                                    <td>@count</td>
+                                    <td>@item.Fullname</td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.Email</td>
+                                    <td>
+
+                                        @{
+                                            #region
+                                            //adminin diger adminleri ve super adminleri
+                                            //edit etmek uchun funksiyalar bu sehifeye viewmodel
+                                            //ve ya viewbag istifadesi ile gonderilmelidi
+                                            #endregion
+                                        }
+
+                                        @if (User.Identity.Name == item.UserName)
+                                        {
+                                            <a class="btn btn-success" asp-action="detail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
+
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-info" asp-action="edit" asp-route-id="@item.Id">Edit Role</a>
+                                            <a class="btn btn-success" asp-action="detail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
+                                        }
+
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

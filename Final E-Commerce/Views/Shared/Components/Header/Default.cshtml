@@ -4,7 +4,9 @@
     <div class="top-header">
         <div class="row">
             <div class="col-lg-6 text-center text-lg-left">
-                <p class="text-white mb-lg-0 mb-1">@Model.Bio.Headertext</p>
+                <p class="text-white mb-lg-0 mb-1">
+                    Register for free
+                    @*@Model.Bio.Headertext*@</p>
             </div>
             <div class="col-lg-6 text-center text-lg-right">
                 <ul class="list-inline">
@@ -12,7 +14,7 @@
                         <div class="dropdown">
                                 @if (!User.Identity.IsAuthenticated)
                                 {
-                            <button class="btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn-dark dropdown-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Account
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -22,7 +24,7 @@
                                     </div>
                                 }
                                 else{
-                                    <button class="btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn-dark dropdown-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @ViewBag.User
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">

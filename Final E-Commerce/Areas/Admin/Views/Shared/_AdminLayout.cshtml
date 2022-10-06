@@ -422,18 +422,18 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="usermanager" asp-action="index">
+                        <a class="nav-link" asp-controller="user" asp-action="index">
                             <i style="font-size:180%" class="mdi mdi-human"></i>
                             <span style="margin-left: 16px" class="menu-title">Users</span>
                         </a>
                     </li>
-
+@*
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="role" asp-action="index">
                             <i style="font-size:180%" class="mdi mdi-human-greeting"></i>
                             <span style="margin-left: 16px" class="menu-title">Role Manager</span>
                         </a>
-                    </li>
+                    </li>*@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="orders" asp-action="index">
                             <i class="mdi mdi-grid-large menu-icon"></i>
@@ -562,6 +562,7 @@
     <script src="~/admin/js/Chart.roundedBarCharts.js"></script>
 
     @RenderSection("JqueryValidationScript", false);
+    @RenderSection("Scripts", false);
     <!-- End custom js for this page-->
 </body>
 

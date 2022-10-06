@@ -1,6 +1,7 @@
 ﻿using Final_E_Commerce.Areas.Admin.ViewModels;
 using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
+using Final_E_Commerce.Helper;
 using Final_E_Commerce.Migrations;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -12,34 +13,41 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin, SuperAdmin")]
-    public class UserManagerController : Controller
+    public class UserController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly AppDbContext _context;
+        private IConfiguration _config { get; }
 
-        public UserManagerController
+        public UserController
             (UserManager<AppUser> usermanager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<AppUser> signInManager,
             AppDbContext context
-            )
+,
+            IConfiguration config)
         {
             _userManager = usermanager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _context = context;
+            _config = config;
         }
 
-        public IActionResult Index(string search)
+        public IActionResult Index(string? search)
         {
             var users = search == null ?
                 _userManager.Users.ToList() :
                 _userManager.Users.Where(users => users.Fullname.ToLower().Contains(search.ToLower()) ||
                 users.UserName.ToLower().Contains(search.ToLower()) ||
                 users.Email.ToLower().Contains(search.ToLower())).ToList();
-            return View(users);
+            UserVM userVM = new UserVM
+            {
+                Users = users
+            };
+            return View(userVM);
         }
 
         public async Task<IActionResult> Edit(string id)
@@ -78,7 +86,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
             if (user == null) return RedirectToAction("error", "home");
-            List<Order>? order = _context.Orders.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
+            List<Order>? order = _context?.Orders?.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
             UserInfoVM? userVM = new UserInfoVM();
             var roles = await _userManager.GetRolesAsync(user);
             userVM.Role = roles.ToList();
@@ -94,8 +102,8 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> OrderDetail(int id)
         {
-            Order? order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
-            List<OrderItem> orderItems = await _context.OrderItems.Where(o => o.OrderId == order.Id).ToListAsync();
+            Order? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            List<OrderItem> orderItems = await _context?.OrderItems?.Where(o => o.OrderId == order.Id).ToListAsync();
             AppUser? user = await _userManager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
             OrderItemVM orderItemVM = new OrderItemVM();
             orderItemVM.User = user;
@@ -103,33 +111,12 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             orderItemVM.OrderItems = orderItems;
             return View(orderItemVM);
         }
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null) return RedirectToAction("error", "home");
-            AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return RedirectToAction("error", "home");
-            UserInfoVM userVM = new UserInfoVM();
-            var roles = await _userManager.GetRolesAsync(user);
-            userVM.Role = roles.ToList();
-            userVM.Fullname = user.Fullname;
-            userVM.Email = user.Email;
-            userVM.Phone = user.PhoneNumber;
-
-            userVM.Username = user.UserName;
-            userVM.Id = user.Id;
-            return View(userVM);
-        }
-        public async Task<IActionResult> DeleteUser(string id)
-        {
-            if (id == null) return RedirectToAction("error", "home");
-            AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return RedirectToAction("error", "home");
-            await _userManager.DeleteAsync(user);
-            return RedirectToAction("index");
-        }
+      
+      
         public IActionResult Create()
         {
-            return View();
+            RegisterVM registerVM = new RegisterVM();
+            return View(registerVM);
         }
 
 
@@ -137,16 +124,20 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RegisterVM registerVM)
         {
-
+            if (User.Identity.IsAuthenticated) return RedirectToAction("index", "home");
 
             if (!ModelState.IsValid) return View();
             AppUser appUser = new AppUser
             {
+                Firstname = registerVM.Firstname,
+                Lastname = registerVM.Lastname,
                 Fullname = $"{registerVM.Firstname} {registerVM.Lastname}",
                 UserName = registerVM.Username,
-                Email = registerVM.Email
-
+                Email = registerVM.Email,
+                ProfilePicture = "default.jpg",
+                DateRegistered = DateTime.UtcNow.AddHours(4)
             };
+
             IdentityResult result = await _userManager.CreateAsync(appUser, registerVM.Password);
             if (!result.Succeeded)
             {
@@ -157,33 +148,27 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 return View(registerVM);
             }
             await _userManager.AddToRoleAsync(appUser, "Member");
+            string token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+            string? ConfirmationLink = Url.Action("ConfirmEmail", "EmailConfirmation", new { token, Email = registerVM.Email }, Request.Scheme);
+
+            EmailHelper emailHelper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+            var emailResult = emailHelper.SendEmail(registerVM.Email, ConfirmationLink);
+
+            if (!emailResult)
+            {
+                return View(registerVM);
+            }
+
+            UserProfile Profile = new UserProfile();
+            UserDetails Detail = new UserDetails();
+            Profile.AppUserId = appUser.Id;
+
+            Detail.AppUserId = appUser.Id;
+            _context.Add(Profile);
+            _context.Add(Detail);
+            _context.SaveChanges();
             return RedirectToAction("index");
         }
-        /*public async Task<IActionResult> Index()
-        {
-            List<AppUser> users = _userManager.Users.ToList();
-            List<UserVM> usersVM = new List<UserVM>();
-            foreach (AppUser user in users)
-            {
-                UserVM userVM = new UserVM
-                {
-                    Id = user.Id,
-                    Name = user.FullName,
-                    Username = user.UserName,
-                    Email = user.Email,
-                    IsActivated = user.IsActivated,
-                    Role = (await _userManager.GetRolesAsync(user))[0]
-                };
-            usersVM.Add(userVM);
-            }
-            return View(usersVM);
-        }
-        public async Task<IActionResult> Activate(string? id)
-        {
-            if (id == null) return RedirectToAction("error", "home");
-            AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null) return RedirectToAction("error", "home");
-            return View(user);
-        }*/
+      
     }
 }

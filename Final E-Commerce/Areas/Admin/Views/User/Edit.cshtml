@@ -1,0 +1,20 @@
+﻿@model RoleVM
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <form method="post">
+        <h1>@Model.Fullname.ToString()</h1>
+        <input type="hidden" name="id" value="@Model.UserId" />
+        @foreach (var item in Model.Roles)
+        {
+            <input name="roles" type="checkbox" value="@item.ToString()" class="form-check-input" @(Model.UserRoles.Contains(item.ToString())?"checked=\"checked\"":"") /> @item.ToString()
+
+            <br />
+        }
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a class="btn btn-dark text-light" asp-action="index">Go Back</a>
+    </form>
+</div>
