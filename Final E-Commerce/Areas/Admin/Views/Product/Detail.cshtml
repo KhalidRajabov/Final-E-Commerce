@@ -285,6 +285,13 @@
             </div>
         </div>
     </div>
+    @if (Model.Product.Status==ProductConfirmationStatus.Pending)
+    {
+        <div class="row bg-gray d-flex flex-row justify-content-around mt-5 flex-wrap">
+            <a class="btn btn-success w-25" asp-action="confirm" asp-route-id="@Model.Product.Id">Confirm</a>
+            <a class="btn btn-warning w-25" asp-action="decline" asp-route-id="@Model.Product.Id">Decline</a>
+        </div>
+    }
     <div class="row bg-gray d-flex flex-row justify-content-around mt-5 flex-wrap">
         <a class="btn btn-secondary w-25" asp-action="index" asp-controller="product">Go back</a>
 

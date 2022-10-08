@@ -124,7 +124,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RegisterVM registerVM)
         {
-            if (User.Identity.IsAuthenticated) return RedirectToAction("index", "home");
+            
 
             if (!ModelState.IsValid) return View();
             AppUser appUser = new AppUser

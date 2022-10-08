@@ -123,7 +123,7 @@ namespace Final_E_Commerce.Controllers
                 {
                     if (!appUser.EmailConfirmed)
                     {
-                        ModelState.AddModelError("", "Please confirm your email");
+                        ModelState.AddModelError("", "Email was sent to your email. Please confirm it");
                         return View();
                     }
                     SignInResult test = await _signInManager.PasswordSignInAsync(appUser, loginvm.Password, loginvm.RememberMe, true);
@@ -148,7 +148,7 @@ namespace Final_E_Commerce.Controllers
             
             if (!appUser.EmailConfirmed)
             {
-                ModelState.AddModelError("", "Please confirm your email");
+                ModelState.AddModelError("", "Email was sent to your email. Please confirm it");
                 return View(loginvm);
             }
 

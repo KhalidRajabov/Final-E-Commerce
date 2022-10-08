@@ -31,7 +31,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Index(int page = 1, int take = 5)
+        public async Task<IActionResult> Index(int page = 1, int take = 5)
         {
 
             List<Product>? product = _context?.Products?
@@ -39,6 +39,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 .OrderByDescending(p => p.Id)
                 .Include(p => p.Category).Include(pi => pi.ProductImages)
                 .Where(p => p.IsDeleted != true).Skip((page - 1) * take).Take(take).ToList();
+            List<Product>? awaiting = await _context?.Products?
+                .Where(p => !p.IsDeleted && p.Status == ProductConfirmationStatus.Pending).ToListAsync();
+            ViewBag.Pending = awaiting.Count;
             PaginationVM<Product> paginationVM = new PaginationVM<Product>(product, PageCount(take), page);
 
             return View(paginationVM);
@@ -51,7 +54,8 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             return (int)Math.Ceiling((decimal)products.Count() / take);
         }
 
-
+        
+            
 
         public async Task<IActionResult> Create()
         {
@@ -212,6 +216,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
                 Product = product,
+                
             };
             return View(productUpdateVM);
         }
@@ -363,6 +368,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.RearCamera = product.RearCamera;
             dbProduct.Battery = product.Battery;
             dbProduct.Weight = product.Weight;
+            dbProduct.Status = ProductConfirmationStatus.Approved;
             if (product.SubCategory == null)
             {
                 dbProduct.CategoryId = product.CategoryId;
@@ -530,6 +536,42 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
 
             return Redirect(Returnurl);
+        }
+
+
+
+
+
+        public async Task<IActionResult> Pendings()
+        {
+            ListProductsVM listProductsVM = new ListProductsVM
+            {
+                Products = await _context?.Products?
+                .Where(p => !p.IsDeleted && p.Status == ProductConfirmationStatus.Pending).ToListAsync()
+            };
+            return View(listProductsVM);
+        }
+
+
+        public async Task<IActionResult> Confirm(int id)
+        {
+            if (id == null) return RedirectToAction("error", "home");
+            Product? product= await _context?.Products?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            if (product == null) return RedirectToAction("error", "home");
+            product.Status = ProductConfirmationStatus.Approved;
+            await _context.SaveChangesAsync();
+            return View();
+        }
+
+
+        public async Task<IActionResult> Decline(int? id)
+        {
+            if (id == null) return RedirectToAction("error", "home");
+            Product? product = await _context?.Products?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            if (product == null) return RedirectToAction("error", "home");
+            product.Status = ProductConfirmationStatus.Refused;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("index");
         }
     }
 }
