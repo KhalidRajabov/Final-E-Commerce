@@ -434,6 +434,10 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             detailVM.Owner = user;
             return View(detailVM);
         }
+
+
+        
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
@@ -547,9 +551,33 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             ListProductsVM listProductsVM = new ListProductsVM
             {
                 Products = await _context?.Products?
-                .Where(p => !p.IsDeleted && p.Status == ProductConfirmationStatus.Pending).ToListAsync()
+                .Where(p => !p.IsDeleted && p.Status == ProductConfirmationStatus.Pending)
+                ?.Include(p => p.ProductImages)
+                ?.Include(c => c.Category)
+                ?.Include(p => p.Brand)
+                ?.Include(p => p.ProductTags)
+                ?.ThenInclude(t => t.Tags)
+                ?.Include(r => r.UserProductRatings)
+                .ToListAsync()
             };
             return View(listProductsVM);
+        }
+        public async Task<IActionResult> PendingDetail(int? id)
+        {
+            DetailVM product = new DetailVM
+            {
+                Product = await _context?.Products?
+                .Where(p => !p.IsDeleted && p.Status == ProductConfirmationStatus.Pending)
+                ?.Include(p => p.ProductImages)
+                ?.Include(c => c.Category)
+                ?.Include(p => p.Brand)
+                ?.Include(p => p.ProductTags)
+                ?.ThenInclude(t => t.Tags)
+                ?.Include(r => r.UserProductRatings)
+                .FirstOrDefaultAsync(p=>p.Id==id)
+            };
+            return View(product);
+            
         }
 
 
@@ -560,7 +588,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             if (product == null) return RedirectToAction("error", "home");
             product.Status = ProductConfirmationStatus.Approved;
             await _context.SaveChangesAsync();
-            return View();
+            return RedirectToAction("index");
         }
 
 

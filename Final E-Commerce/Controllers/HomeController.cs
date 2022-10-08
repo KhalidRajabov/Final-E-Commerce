@@ -10,6 +10,7 @@ using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.CodeAnalysis;
+using Final_E_Commerce.Migrations;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -74,6 +75,10 @@ namespace Final_E_Commerce.Controllers
                 ?.ThenInclude(t => t.Tags)
                 ?.Include(r=>r.UserProductRatings)
                 .FirstOrDefaultAsync(p => p.Id == id);
+            if (product==null)
+            {
+                return RedirectToAction("error");
+            }
             double rates = 0;
             List<UserProductRatings>? ratings = await _context?.UserProductRatings?
                 .Where(r => r.ProductId == product.Id).ToListAsync();

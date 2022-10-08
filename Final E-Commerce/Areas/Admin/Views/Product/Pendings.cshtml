@@ -44,8 +44,10 @@
                                     <td> @item.Category.Name</td>
                                     <td> @item.Sold</td>
                                     <td>
-                                        <a class="btn btn-warning" asp-action="confirm" asp-route-id="@item.Id"><i class="mdi mdi-key-plus"></i></a>
-                                        <a class="btn btn-success" asp-action="detail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
+                                    <a class="btn btn-warning" asp-action="confirm" asp-route-id="@item.Id">
+                                        <i class="mdi mdi-check"></i>
+                                    </a>
+                                        <a class="btn btn-success" asp-action="pendingdetail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
                                         <a class="btn btn-danger" asp-action="decline" asp-route-id="@item.Id"><i class="mdi mdi-delete-forever"></i></a>
                                     </td>
                                 </tr>

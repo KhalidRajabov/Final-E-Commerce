@@ -17,6 +17,10 @@
                 <p class="card-text">Updated: @Model.Brand.LastUpdatedAt</p>
             }
             <a asp-action="index" class="btn btn-primary">Go back</a>
+            @if (@ViewBag.BrandProducts<=0)
+            {
+                <a class="btn btn-danger" asp-action="delete" asp-route-id="@Model.Brand.Id"></a>
+            }
         </div>
     </div>
 </div>

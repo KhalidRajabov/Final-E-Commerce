@@ -24,11 +24,12 @@
                     Added by:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @if (Model.Owner==null)
+                    @if (Model.Owner == null)
                     {
                         <i><b>System</b></i>
                     }
-                    else{
+                    else
+                    {
                         @Model.Owner.Fullname
                     }
                 </div>
@@ -92,7 +93,7 @@
                     Brand:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    <a asp-action="brands" asp-controller="home" asp-route-id="@Model.Product.Id">@Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" /> </a>
+                    <a asp-action="brands" asp-controller="home" asp-route-id="@Model.Product.Brand.Id" asp-area="default">@Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" /></a>
                 </div>
             </div>
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -100,14 +101,15 @@
                     Tags:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @if (Model.Product.ProductTags !=null)
+                    @if (Model.Product.ProductTags != null)
                     {
                         foreach (var tag in Model.Product.ProductTags)
                         {
                             <span>@tag.Tags.Name</span>
                         }
                     }
-                    else{
+                    else
+                    {
                         <span>No tags</span>
                     }
                 </div>
@@ -234,11 +236,12 @@
                     Created:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @if (Model.Product.CreatedTime==null)
+                    @if (Model.Product.CreatedTime == null)
                     {
                         <i><b>System</b></i>
                     }
-                    else{
+                    else
+                    {
                         @Model.Product.CreatedTime?.ToString("dddd, dd MMMM yyyy HH:mm:ss")
                     }
                 </div>
@@ -249,11 +252,12 @@
                     Updated at:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @if (Model.Product.LastUpdatedAt==null)
+                    @if (Model.Product.LastUpdatedAt == null)
                     {
                         <i><b>Not updated yet</b></i>
                     }
-                    else{
+                    else
+                    {
                         @Model.Product.LastUpdatedAt?.ToString("dddd, dd MMMM yyyy HH:mm:ss")
                     }
                 </div>
@@ -285,45 +289,13 @@
             </div>
         </div>
     </div>
-    @if (Model.Product.Status==ProductConfirmationStatus.Pending)
+    @if (Model.Product.Status == ProductConfirmationStatus.Pending)
     {
-        <h3 class="text-dark align-self-center mt-5">@Model.Owner.Fullname updated or created this product and awaits your response</h3>
         <div class="row bg-gray d-flex flex-row justify-content-around mt-1 flex-wrap" style="border: dotted black">
             <a class="m-3 btn btn-success w-25" asp-action="confirm" asp-route-id="@Model.Product.Id">Confirm</a>
             <a class="m-3 btn btn-dark w-25" asp-action="decline" asp-route-id="@Model.Product.Id">Decline</a>
         </div>
     }
-    <div class="row bg-gray d-flex flex-row justify-content-around mt-5 flex-wrap">
-        <a class="btn btn-primary w-25" asp-action="index" asp-controller="product">Go back</a>
-
-        <a class="btn btn-warning text-light w-25" asp-action="update" asp-controller="product" asp-route-id="@Model.Product.Id">Edit</a>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-danger w-25" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Delete
-        </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog ">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-danger" id="exampleModalLabel">Warning</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <span class="text-light">Are you sure you want to delete @(Model.Product.Name)?</span> <br />
-                        <span class="text-warning mt-5">If you accidentally delete a product, you can contact an admin to restore it.</span>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn text-light" style="background-color: rgb(13,110,253)" data-bs-dismiss="modal">Cancel</button>
-                        <a class="btn btn-danger" asp-action="DeleteProduct" asp-controller="user">Yes, delete it</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-    </div>
+    
 </div>
 
