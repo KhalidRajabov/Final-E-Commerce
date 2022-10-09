@@ -5,6 +5,7 @@ using Final_E_Commerce.Migrations;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Areas.Admin.Controllers
 {
@@ -34,7 +35,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (_context.Sliders.Count() >= 6)
+            if (_context?.Sliders?.Count() >= 6)
             {
                 return RedirectToAction("index");
             }
@@ -68,6 +69,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             Slider newslider = new Slider
             {
                 ImageUrl = slider.Photo.SaveImage(_env, "images/Slider"),
+                FirstTitle = slider.FirstTitle,
                 Subtitle = slider.Subtitle,
                 MainTitle = slider.MainTitle,
                 Description = slider.Description
@@ -84,7 +86,59 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             if (id == null) return RedirectToAction("error", "home");
             Slider? slider = await _context.Sliders.FindAsync(id);
             if (slider == null) return RedirectToAction("error", "home");
-            return View(slider);
+            SliderVM sliderVM = new SliderVM
+            {
+                Id = slider.Id,
+                FirstTitle = slider.FirstTitle,
+                MainTitle = slider.MainTitle,
+                Subtitle = slider.Subtitle,
+                Description = slider.Description,
+                ImageUrl = slider.ImageUrl,
+            };
+            return View(sliderVM);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int? id)
+        {
+            Slider? slider = await _context?.Sliders?.FirstOrDefaultAsync(s => s.Id == id);
+            SliderVM sliderVM = new SliderVM 
+            {
+                FirstTitle = slider.FirstTitle,
+                MainTitle=slider.MainTitle,
+                Subtitle=slider.Subtitle,
+                Description=slider.Description,
+            };
+            return View(sliderVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(int id,SliderVM? slider)
+        {
+            Slider? NewSlider =await _context?.Sliders?.FirstOrDefaultAsync(s => s.Id == id);
+            if (slider.Photo != null)
+            {
+                if (!slider.Photo.IsImage())
+                {
+                    ModelState.AddModelError("Photo", "Do not leave it empty");
+                    return View();
+                }
+                if (slider.Photo.ValidSize(10000))
+                {
+                    ModelState.AddModelError("Photo", "Image size can not be large");
+                    return View();
+                }
+                NewSlider.ImageUrl = slider?.Photo?.SaveImage(_env, "images/hero-area");
+            }
+
+            NewSlider.Subtitle = slider.Subtitle;
+            NewSlider.FirstTitle = slider.FirstTitle;
+            NewSlider.MainTitle = slider.MainTitle;
+            NewSlider.Description = slider.Description;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("index");
         }
 
         public async Task<IActionResult> Delete(int? id)

@@ -26,6 +26,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Image</th>
+                                <th>Name</th>
                                 <th>Settings</th>
                             </tr>
                         </thead>
@@ -35,8 +36,10 @@
                                 count++;
                                 <tr>
                                     <td>@count</td>
-                                    <td> <img style="border-radius:0; width:200px; height:80px" src="~/images/@item.ImageUrl"> </td>
+                                    <td> <img style="border-radius:0; width:100px; height:100px" src="~/images/hero-area/@item.ImageUrl" /> </td>
+                                    <td>@item.MainTitle</td>
                                     <td>
+                                        <a class="btn btn-warning" asp-action="update" asp-route-id="@item.Id"><i class="mdi mdi-key-plus"></i></a>
                                         <a class="btn btn-success fs-5" asp-action="detail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
                                         <a class="btn btn-danger fs-5" asp-action="delete" asp-route-id="@item.Id"><i class="mdi mdi-delete-forever"></i></a>
 

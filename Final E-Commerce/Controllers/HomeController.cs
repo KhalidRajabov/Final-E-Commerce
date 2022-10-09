@@ -49,6 +49,7 @@ namespace Final_E_Commerce.Controllers
             homeVM.BestSellerProducts = _context.Products
                 .OrderByDescending(p => p.Sold).Take(8)
                 .Where(p=>p.Status==ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToList();
+            homeVM.Sliders = await _context?.Sliders?.ToListAsync();
             return View(homeVM);
         }
         public async Task<IActionResult> Detail(int? id)

@@ -8,62 +8,28 @@
 <section class="section bg-gray hero-area">
   <div class="container">
     <div class="hero-slider">
-      <!-- Start first slide  -->
-      <div class="slider-item">
-        <div class="row">
-          <div class="col-lg-6 align-self-center text-center text-md-left mb-4 mb-lg-0">
-            <h3 data-duration-in=".5" data-animation-in="fadeInLeft" data-delay-in="0" data-animation-out="fadeOutLeft" data-delay-out="5" data-duration-out=".3">For Men’s</h3>
-            <!-- Start Title -->
-            <h1 data-duration-in=".5" data-animation-in="fadeInLeft" data-delay-in=".2" data-animation-out="fadeOutLeft" data-delay-out="5" data-duration-out=".3">High Quality Converse</h1> 
-            <!-- end title -->
-            <!-- Start Subtitle -->
-            <h3 class="mb-4" data-duration-in=".5" data-animation-in="fadeInLeft" data-delay-in=".4" data-animation-out="fadeOutLeft" data-delay-out="5" data-duration-out=".3">for only $59.00</h3>
-            <!-- end subtitle -->
-            <!-- Start description -->
-            <p class="mb-4" data-duration-in=".5" data-animation-in="fadeInLeft" data-delay-in=".6" data-animation-out="fadeOutLeft" data-delay-out="5" data-duration-out=".3">Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <!-- end description -->
-            <!-- Start button -->
-            <a href="shop.html" class="btn btn-primary" data-duration-in=".5" data-animation-in="fadeInLeft" data-delay-in=".8" data-animation-out="fadeOutLeft" data-delay-out="5" data-duration-out=".3">shop now</a>
-            <!-- end button -->
-          </div>
-          <!-- Start slide image -->
-          <div class="col-lg-6 text-center text-md-left">
-            <!-- background letter -->
-            <div class="bg-letter">
-              <span data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1.2" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
-                C 
-              </span>
-              <!-- Slide image -->
-              <img class="img-fluid d-unset" src="~/images/hero-area/converse.png" alt="converse" data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
-            </div>
-          </div>
-          <!-- end slide image  -->
-        </div>
-      </div> <!-- end slider item -->
-
-
-      <!-- Start slide  -->
-      <div class="slider-item">
-        <div class="row">
-          <div class="col-lg-6 align-self-center text-center text-md-left mb-4 mb-lg-0">
-            <h3 data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in="0" data-animation-out="fadeOutDown" data-delay-out="5.8" data-duration-out=".3">For Women’s</h3>
-            <h1 data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".2" data-animation-out="fadeOutDown" data-delay-out="5.4" data-duration-out=".3">High Quality Bag</h1>
-            <h3 class="mb-4" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".4" data-animation-out="fadeOutDown" data-delay-out="5" data-duration-out=".3">for only $37.00</h3>
-            <p class="mb-4" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".6" data-animation-out="fadeOutDown" data-delay-out="4.6" data-duration-out=".3">Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <a href="shop.html" class="btn btn-primary" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".8" data-animation-out="fadeOutDown" data-delay-out="4.2" data-duration-out=".3">shop now</a>
-          </div>
-          <div class="col-lg-6 text-center">
-            <div class="bg-letter">
-                <!-- background letter -->
-              <span data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1.2" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
-                B
-              </span>
-              <img class="img-fluid d-unset" src="~/images/hero-area/bag.png" alt="converse" data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
-            </div>
-          </div>
-        </div>
-      </div> 
-      <!-- end slide  -->
+      
+        @foreach (var item in Model.Sliders)
+        {
+                <div class="slider-item">
+                    <div class="row">
+                        <div class="col-lg-6 align-self-center text-center text-md-left mb-4 mb-lg-0">
+                            <h3 data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in="0" data-animation-out="fadeOutDown" data-delay-out="5.8" data-duration-out=".3">@item.FirstTitle</h3>
+                            <h1 data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".2" data-animation-out="fadeOutDown" data-delay-out="5.4" data-duration-out=".3">@item.MainTitle</h1>
+                            <h3 class="mb-4" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".4" data-animation-out="fadeOutDown" data-delay-out="5" data-duration-out=".3">@item.Subtitle</h3>
+                            <p class="mb-4" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".6" data-animation-out="fadeOutDown" data-delay-out="4.6" data-duration-out=".3">@item.Description</p>
+                            <a href="shop.html" class="btn btn-primary" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".8" data-animation-out="fadeOutDown" data-delay-out="4.2" data-duration-out=".3">shop now</a>
+                        </div>
+                        <div class="col-lg-6 text-center">
+                            <div class="bg-letter">
+                                <!-- background letter -->
+                                
+                                <img class="img-fluid d-unset" src="~/images/hero-area/@item.ImageUrl" alt="converse" data-duration-in=".5" data-animation-in="fadeInRight" data-delay-in="1" data-animation-out="fadeOutRight" data-delay-out="5" data-duration-out=".3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
     </div>
   </div>

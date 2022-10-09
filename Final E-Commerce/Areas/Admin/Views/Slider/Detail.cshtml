@@ -1,8 +1,37 @@
-﻿
+﻿@model SliderVM
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Detail</h1>
+<div class="container d-flex flex-column justify-content-center align-items-center">
+    <div class="col-10">
+        <img src="~/images/hero-area/@Model.ImageUrl" />
+    </div>
+    <div class="col-10">
+        <h3>
+            @Model.FirstTitle
+        </h3>
+    </div>
+    <div class="col-10">
+        <h1>
+            @Model.MainTitle
+        </h1>
+    </div>
+    <div class="col-10">
+        <h3>
+            @Model.Subtitle
+        </h3>
+    </div>
+    <div class="col-10">
+        <h5>
+            @Model.Description
+        </h5>
+    </div>
 
+    <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+        <a class="col-8 mt-1 mb-1 btn btn-warning" asp-action="update" asp-controller="slider" asp-route-id="@Model.Id">Update</a>
+        <a class="col-8 mt-1 mb-1 btn btn-danger" asp-action="delete" asp-controller="slider" asp-route-id="@Model.Id">Delete</a>
+        <a class="col-8 mt-1 mb-1 btn btn-dark" asp-action="index" asp-controller="slider">Go back</a>
+    </div>
+</div>

@@ -8,6 +8,7 @@ namespace Final_E_Commerce.Entities
         public string? ImageUrl { get; set; }
         [NotMapped]
         public IFormFile? Photo { get; set; }
+        public string? FirstTitle  { get; set; }
         public string? Subtitle { get; set; }
         public string? MainTitle { get; set; }
         public string? Description { get; set; }
