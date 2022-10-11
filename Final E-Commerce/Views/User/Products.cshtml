@@ -36,6 +36,7 @@
                                 <tr>
                                     <th>Image</th>
                                     <th>Name</th>
+                                    <th>Status</th>
                                     <th>Price</th>
                                     <th>Sold</th>
                                     <th>Profit</th>
@@ -58,6 +59,23 @@
                                         </td>
 
                                         <td><a class="text-dark" asp-action="detail" asp-controller="home" asp-route-id="@item.Id">@item.Name</a></td>
+                                            @{
+                                                string? color = "";
+                                                if (item.Status==ProductConfirmationStatus.Pending)
+                                                {
+                                                    color = "blue";
+                                                }
+                                                else if(item.Status==ProductConfirmationStatus.Approved)
+                                                {
+                                                    color = "green";
+                                                }
+                                                else if (item.Status == ProductConfirmationStatus.Refused)
+                                                {
+                                                    color = "red";
+                                                }
+                                               
+                                            }
+                                            <td style="color:@color">@item.Status</td>
                                         <td>$@item.Price</td>
                                         <td>@item.Sold</td>
                                         <td>$<span class="text-success">@item.Profit</span></td>

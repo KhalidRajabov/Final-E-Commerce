@@ -14,6 +14,7 @@ namespace Final_E_Commerce.Areas.Editor.ViewModels
         [Required(ErrorMessage = "Photo can not be empty")]
         public IFormFile? Photo { get; set; }
 
+        [Required(ErrorMessage = "At least one tag")]
         public List<int>? SubjectId { get; set; }
         public List<Subjects>? Subjects { get; set; }
     }

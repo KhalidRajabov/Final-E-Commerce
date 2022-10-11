@@ -1,0 +1,14 @@
+﻿@model UserVM
+<li class=" px-3  bg-dark text-light cool-search-list" style="width:90%; text-align:start">
+    Popular products:
+</li>
+@foreach (var user in Model.Users)
+{
+    <li class=" px-3  bg-dark p-2 search-list-content cool-search-list" style="width:90%;">
+        <a class="text-dark d-flex flex-row align-content-center justify-content-between" style="width:100%;align-items: center" asp-controller="users" asp-action="detail" asp-route-Id="@user.Id">
+            <span class="text-danger">@user.Fullname</span>
+                    <img width="100" src="~/images/ProfilePictures/@user.ProfilePicture">
+             
+        </a>
+    </li>
+}

@@ -16,7 +16,10 @@ namespace Final_E_Commerce.ViewModels
         public string? MainTitle { get; set; }
         [Required]
         public string? Description { get; set; }
-        
+
+        [Required]
+        public string? Link { get; set; }
+
         public string? ImageUrl { get; set; }
     }
 }

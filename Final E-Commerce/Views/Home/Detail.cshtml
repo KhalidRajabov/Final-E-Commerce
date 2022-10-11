@@ -10,7 +10,7 @@
     string year="";
     string discounthour="";
     string hours="";
-    if (Model.Product.DiscountUntil > DateTime.UtcNow.AddHours(4) && Model.Product.DiscountUntil != null && Model.Product.DiscountPercent > 0)
+    if (Model.Product.DiscountUntil > DateTime.Now && Model.Product.DiscountUntil != null && Model.Product.DiscountPercent > 0)
     {
         discountday = Model.Product.DiscountUntil.ToString().Split('/')[1];
         discountmonth = Model.Product.DiscountUntil.ToString().Split('/')[0];
@@ -129,7 +129,7 @@
                             <li class="list-inline-item" style="font-size: 120%"><a href="#comment-section" class="text-gray ml-3">( 0 Comments)</a></li>
                         }
                     </ul>
-                    @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.UtcNow.AddHours(4))
+                    @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.Now)
                     {
                         <h4 class="text-primary h3">$@Model.Product.DiscountPrice <s class="text-color ml-2">$@Model.Product.Price</s></h4>
                         <h5 class="mb-4">You save: <span class="text-primary" style="color:green !important">$@(Model.Product.Price-@Model.Product.DiscountPrice) USD (@(Model.Product.DiscountPercent)%)</span></h5>
@@ -168,7 +168,7 @@
                         <a class="btn btn-success add-to-wishlist text-light" data-id="@Model.Product.Id" >Add to wishlist</a>
                     }
 
-                    @if (Model.Product.DiscountUntil>DateTime.UtcNow.AddHours(4)&&Model.Product.DiscountPercent>0)
+                    @if (Model.Product.DiscountUntil>DateTime.Now&&Model.Product.DiscountPercent>0)
                     {
                         <h4 class="mb-3"><span class="text-primary">Hurry up!</span> Sale ends in</h4>
                         <!-- syo-timer -->
@@ -199,7 +199,9 @@
                             
                             </div>
                         </div>
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    @if (Model.Product.OperationSystem!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                             <b style="max-height:400px" class="col-2">
                                 OS:
                             </b> 
@@ -207,7 +209,10 @@
                                 @Model.Product.OperationSystem
                             </div>
                         </div>
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    }
+                    @if (Model.Product.GPU!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                             <b style="max-height:400px" class="col-2">
                                 GPU:
                             </b> 
@@ -215,15 +220,22 @@
                                 @Model.Product.GPU
                             </div>
                         </div>
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    }
+                    @if (Model.Product.Chipset!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                             <b style="max-height:400px" class="col-2">
                                 Chipset:
                             </b> 
                             <div style="max-height:400px" class="col-8 flex-nowrap ml-5">
                                 @Model.Product.Chipset
                             </div>
-                        </div>
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                        </div>    
+                    }
+                    
+                    @if (Model.Product.Memory!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                             <b style="max-height:400px" class="col-2">
                                 Memory:
                             </b> 
@@ -231,22 +243,29 @@
                                 @Model.Product.Memory
                             </div>
                         </div>
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                            <b style="max-height:400px" class="col-2">
-                                Body:
-                            </b> 
-                            <div style="max-height:400px" class="col-8 flex-nowrap ml-5">
-                                @Model.Product.Body
+                    }
+                    @if (Model.Blogs!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                                <b style="max-height:400px" class="col-2">
+                                    Body:
+                                </b> 
+                                <div style="max-height:400px" class="col-8 flex-nowrap ml-5">
+                                    @Model.Product.Body
+                                </div>
                             </div>
+                    }
+                    @if (Model.Product.Display != null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                                <b style="max-height:400px" class="col-2">
+                                    Display:
+                                </b> 
+                                <div style="max-height:400px" class="col-8 flex-nowrap ml-5">
+                                    @Model.Product.Display
+                                </div>
                         </div>
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                            <b style="max-height:400px" class="col-2">
-                                Display:
-                            </b> 
-                            <div style="max-height:400px" class="col-8 flex-nowrap ml-5">
-                                @Model.Product.Display
-                            </div>
-                    </div>
+                    }
                     @if (Model.Product.FrontCamera!=null)
                     {
                         <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -270,7 +289,9 @@
                             </div>
                         </div>
                     }
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    @if (Model.Product.Battery!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                         <b style="max-height:400px" class="col-2">
                             Battery:
                         </b>
@@ -278,15 +299,18 @@
                             @Model.Product.Battery
                         </div>
                     </div>
-                    
-                    <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                            <b style="max-height:400px" class="col-2">
-                                Weight:
-                            </b> 
-                            <div style="max-height:400px" class="col-8 flex-nowrap ml-5">
-                                @Model.Product.Weight
-                            </div>
-                    </div>
+                    }
+                    @if (Model.Product.Weight!=null)
+                    {
+                        <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                                <b style="max-height:400px" class="col-2">
+                                    Weight:
+                                </b> 
+                                <div style="max-height:400px" class="col-8 flex-nowrap ml-5">
+                                    @Model.Product.Weight
+                                </div>
+                        </div>
+                    }
 
                     <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                         <b style="max-height:400px" class="col-2">
@@ -304,6 +328,7 @@
                             <a class="text-dark" asp-action="brands" asp-route-id="@Model.Product.Brand.Id">@Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" /></a>
                         </div>
                     </div>
+                    
                     @if (Model.Product.ProductTags!=null)
                     {
                         <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -349,84 +374,6 @@
     </section>
     <!-- /product-single -->
     <!-- testimonial -->
-    <section class="section bg-gray">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3 class="mb-4">What Our Customers Think?</h3>
-                </div>
-                <!-- testimonial-item -->
-                <div class="col-lg-4 col-sm-6 mb-5 mb-lg-0">
-                    <div class="d-flex">
-                        <div>
-                            <img class="rounded-circle mr-4" src="~/images/customer/customer-1.jpg" alt="customer-img">
-                        </div>
-                        <div>
-                            <ul class="list-inline">
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                            </ul>
-                            <h4 class="text-dark">Best quality for the price</h4>
-                            <p class="text-gray">
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremqe
-                                laudant tota rem ape riamipsa eaque.
-                            </p>
-                            <h5 class="customer-name text-dark">Maggie Scott</h5>
-                        </div>
-                    </div>
-                </div>
-                <!-- testimonial-item -->
-                <div class="col-lg-4 col-sm-6 mb-5 mb-lg-0">
-                    <div class="d-flex">
-                        <div>
-                            <img class="rounded-circle mr-4" src="~/images/customer/customer-2.jpg" alt="customer-img">
-                        </div>
-                        <div>
-                            <ul class="list-inline">
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                            </ul>
-                            <h4 class="text-dark">Best quality for the price</h4>
-                            <p class="text-gray">
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremqe
-                                laudant tota rem ape riamipsa eaque.
-                            </p>
-                            <h5 class="customer-name text-dark">Maggie Scott</h5>
-                        </div>
-                    </div>
-                </div>
-                <!-- testimonial-item -->
-                <div class="col-lg-4 col-sm-6 mb-5 mb-lg-0">
-                    <div class="d-flex">
-                        <div>
-                            <img class="rounded-circle mr-4" src="~/images/customer/customer-3.jpg" alt="customer-img">
-                        </div>
-                        <div>
-                            <ul class="list-inline">
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                                <li class="list-inline-item mx-0"><a href="#" class="rated"><i class="ti-star"></i></a></li>
-                            </ul>
-                            <h4 class="text-dark">Best quality for the price</h4>
-                            <p class="text-gray">
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremqe
-                                laudant tota rem ape riamipsa eaque.
-                            </p>
-                            <h5 class="customer-name text-dark">Maggie Scott</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <!-- /testimonial -->
 
 
@@ -459,7 +406,7 @@
                                         }
                                         else
                                         {
-                                            <a href="#">@comment.Author <span class="text-danger">(Not a member) </span>
+                                            <a >@comment.Author <span class="text-danger">(Not a member) </span>
                                             </a>
                                         }
                                         @if (ViewBag.RightCounter > 0 || (User.Identity.IsAuthenticated && comment.AppUserId == ViewBag.AppUserId))

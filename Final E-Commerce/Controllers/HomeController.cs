@@ -29,7 +29,7 @@ namespace Final_E_Commerce.Controllers
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
             foreach (var product in AllProducts)
             {
-                if (product.DiscountUntil<DateTime.UtcNow.AddHours(4))
+                if (product.DiscountUntil<DateTime.Now)
                 {
                     product.DiscountUntil = null;
                     product.DiscountPercent = 0;
@@ -58,7 +58,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -209,7 +209,7 @@ namespace Final_E_Commerce.Controllers
             }
             NewComment.Content = comment;
             NewComment.ProductId = product.Id;
-            NewComment.Date = DateTime.UtcNow.AddHours(4);
+            NewComment.Date = DateTime.Now;
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
             commentVM.ProductComment= NewComment;

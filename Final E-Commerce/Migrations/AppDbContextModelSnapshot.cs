@@ -956,6 +956,9 @@ namespace Final_E_Commerce.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MainTitle")
                         .HasColumnType("nvarchar(max)");
 

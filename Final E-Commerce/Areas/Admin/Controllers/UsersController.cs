@@ -135,7 +135,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 UserName = registerVM.Username,
                 Email = registerVM.Email,
                 ProfilePicture = "default.jpg",
-                DateRegistered = DateTime.UtcNow.AddHours(4)
+                DateRegistered = DateTime.Now
             };
 
             IdentityResult result = await _userManager.CreateAsync(appUser, registerVM.Password);
@@ -169,6 +169,23 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             _context.SaveChanges();
             return RedirectToAction("index");
         }
-      
+
+        public async Task<IActionResult> SearchUsers(string search)
+        {
+            List<AppUser> users = await _userManager.Users
+                .Where(u => u.Fullname.ToLower().Contains(search)||
+                u.UserName.ToLower().Contains(search)||
+                u.Email.ToLower().Contains(search)||
+                u.PhoneNumber.ToLower().Contains(search))
+                .ToListAsync();
+            UserVM userVM = new UserVM
+            {
+                Users = users,
+            };
+            return PartialView("_Users", userVM);
+        }
+
+
+
     }
 }

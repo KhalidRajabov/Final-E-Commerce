@@ -18,7 +18,7 @@
                             <h1 data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".2" data-animation-out="fadeOutDown" data-delay-out="5.4" data-duration-out=".3">@item.MainTitle</h1>
                             <h3 class="mb-4" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".4" data-animation-out="fadeOutDown" data-delay-out="5" data-duration-out=".3">@item.Subtitle</h3>
                             <p class="mb-4" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".6" data-animation-out="fadeOutDown" data-delay-out="4.6" data-duration-out=".3">@item.Description</p>
-                            <a href="shop.html" class="btn btn-primary" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".8" data-animation-out="fadeOutDown" data-delay-out="4.2" data-duration-out=".3">shop now</a>
+                            <a href="@item.Link" class="btn btn-primary" data-duration-in=".5" data-animation-in="fadeInDown" data-delay-in=".8" data-animation-out="fadeOutDown" data-delay-out="4.2" data-duration-out=".3">shop now</a>
                         </div>
                         <div class="col-lg-6 text-center">
                             <div class="bg-letter">
@@ -223,19 +223,17 @@
                                 {
                                         <div class="sale" style="background-color: rgb(255,51,133);padding:3px 10px;color:white;margin: 5px 0">
                                             @(item.DiscountPercent)%
-
                                         </div>
                                 }
-                                    @*@{
-                                        DateTime? date = DateTime.UtcNow.AddHours(4);
-                                        var time = Int32.Parse(date?.ToString("dd"));
-                                    }*@
-                                @*@if (time-Int32.Parse(item.CreatedTime?.ToString("dd"))!=null)
+                                    @{
+                                        TimeSpan? difference = DateTime.Now - item?.CreatedTime;
+                                    }
+                                @if (difference?.Days<5)
                                 {
                                         <div class="new" style="background-color: rgb(102,126,234);padding:3px 10px;color:white;margin: 5px 0">
-                                        new
-                                    </div>
-                                }*@
+                                            new
+                                        </div>
+                                }
                                     </div>
                             </div>
                         </div>

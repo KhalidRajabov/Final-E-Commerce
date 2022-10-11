@@ -4,8 +4,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-    <div class="row ">
-        <h1 class="text-success">Email confirmed successfully</h1>
+<div class="container col-12">
+    <div class="row col-12 d-flex flex-row justify-content-center mt-5">
+        <h1 class="text-success text-center">Email confirmed successfully</h1>
+    </div>
+
+    <div class="row col-12 d-flex flex-row justify-content-center mt-4">
+        <a class="btn btn-info w-25 text-light" asp-action="login" asp-controller="account">Login now</a>
     </div>
 </div>

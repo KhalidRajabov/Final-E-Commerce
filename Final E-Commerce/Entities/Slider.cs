@@ -12,5 +12,6 @@ namespace Final_E_Commerce.Entities
         public string? Subtitle { get; set; }
         public string? MainTitle { get; set; }
         public string? Description { get; set; }
+        public string? Link { get; set; }
     }
 }

@@ -35,6 +35,11 @@
                       <input asp-for="Description" class="form-control">
                       <span style="color: red;" asp-validation-for="Description"></span>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="Link"></label>
+                        <input asp-for="Link" class="form-control">
+                        <span style="color: red;" asp-validation-for="Link"></span>
+                    </div>
 
                     <button type="submit" class="btn btn-success me-2">Save</button>
                     <a asp-action="index" class="btn btn-primary"> Go Back</a>

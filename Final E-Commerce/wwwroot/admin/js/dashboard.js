@@ -1,5 +1,29 @@
-(function($) {
-  'use strict';
+(function ($) {
+
+    
+
+    'use strict';
+
+
+    //search
+
+    var searchUrl = `https://dante666-001-site1.atempurl.com/`
+    $(document).on("keyup", "#search-user", function () {
+        
+        let inputValue = $(this).val();
+        $("#SearchList li").slice(1).remove();
+        $("#SearchList").html()
+        $.ajax({
+            url: `${searchUrl}admin/users/SearchUsers?search=` + inputValue,
+            method: "get",
+            success: function (res) {
+                $("#SearchList").append(res);
+            }
+        })
+    });
+
+
+
   $(function() {
     if ($("#performaneLine").length) {
       var graphGradient = document.getElementById("performaneLine").getContext('2d');

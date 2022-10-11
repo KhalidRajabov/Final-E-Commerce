@@ -74,7 +74,7 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             NewBlog.Content = blog.Content;
             NewBlog.Author = user.Fullname;
             NewBlog.AppUserId = user.Id;
-            NewBlog.Date = DateTime.UtcNow.AddHours(4);
+            NewBlog.Date = DateTime.Now;
             NewBlog.CommentCount = 0;
             NewBlog.ImageUrl = blog.Photo.SaveImage(_env, "images/blog");
             if (blog.SubjectId!= null)
@@ -160,7 +160,7 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             }
             blog.Title=editVM.Title;
             blog.Content = editVM.Content;
-            blog.LastUpdated = DateTime.UtcNow.AddHours(4);
+            blog.LastUpdated = DateTime.Now;
             blog.LastUpdatedBy = user.Fullname;
             if (editVM.SubjectId== null)
             {

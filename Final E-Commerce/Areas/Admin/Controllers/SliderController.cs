@@ -72,7 +72,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 FirstTitle = slider.FirstTitle,
                 Subtitle = slider.Subtitle,
                 MainTitle = slider.MainTitle,
-                Description = slider.Description
+                Description = slider.Description,
+                Link = slider.Link
+                
             };
 
             _context.Sliders.Add(newslider);
@@ -94,6 +96,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 Subtitle = slider.Subtitle,
                 Description = slider.Description,
                 ImageUrl = slider.ImageUrl,
+                Link=slider.Link
             };
             return View(sliderVM);
         }
@@ -109,6 +112,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 MainTitle=slider.MainTitle,
                 Subtitle=slider.Subtitle,
                 Description=slider.Description,
+                Link = slider.Link
             };
             return View(sliderVM);
         }
@@ -136,6 +140,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             NewSlider.FirstTitle = slider.FirstTitle;
             NewSlider.MainTitle = slider.MainTitle;
             NewSlider.Description = slider.Description;
+            NewSlider.Link = slider.Link;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("index");

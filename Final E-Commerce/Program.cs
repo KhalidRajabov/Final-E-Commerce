@@ -5,13 +5,14 @@ using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Microsoft.AspNetCore.Identity;
 using Final_E_Commerce.Helper;
-
+using Final_E_Commerce.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 
 // Add services to the container.
+builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -61,6 +62,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+app.MapHub<DashboardHub>("/dashboardHub");
 
 app.UseEndpoints(endpoints =>
 {

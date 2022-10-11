@@ -26,6 +26,11 @@
             <input class="form-control" asp-for="Description" />
             <span asp-validation-for="Description"></span>
         </div>
+        <div class="form-group">
+            <label asp-for="Link"></label>
+            <input asp-for="Link" class="form-control">
+            <span style="color: red;" asp-validation-for="Link"></span>
+        </div>
         <div class="form-group col-10 d-flex flex-column">
             <label asp-for="Photo"></label>
             <input class="form-control" asp-for="Photo" />

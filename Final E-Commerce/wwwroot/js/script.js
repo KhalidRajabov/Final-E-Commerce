@@ -672,7 +672,7 @@
 
   //search
 
-    var searchUrl = `http://dante666-001-site1.atempurl.com/`
+    var searchUrl = `https://localhost:44393/`
     $(document).on("keyup", "#search", function () {
         let inputValue = $(this).val();
         $("#SearchList li").slice(1).remove();

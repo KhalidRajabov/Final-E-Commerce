@@ -16,7 +16,7 @@
                 <div class="product text-center">
                     <div class="product-thumb">
                         <div class="overflow-hidden position-relative">
-                            <a href="product-single.html">
+                            <a asp-action="detail" asp-controller="home" asp-route-id="@item.Id">
                                 @foreach (var image in item.ProductImages)
                                 {
                                     if (image.IsMain)

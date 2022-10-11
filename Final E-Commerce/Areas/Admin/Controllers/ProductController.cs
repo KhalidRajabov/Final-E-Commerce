@@ -132,17 +132,17 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 IsDeleted = false,
                 ProductImages = Images,
                 BrandId = product.BrandId,
-                CreatedTime = DateTime.UtcNow.AddHours(4),
+                CreatedTime = DateTime.Now,
                 InStock = true,
                 Status = ProductConfirmationStatus.Approved
                 
             };
-            if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.UtcNow.AddHours(4))
+            if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
                 return View(product);
             }
-            else if (product.DiscountUntil > DateTime.UtcNow.AddHours(4) && product.DiscountUntil != null && product.DiscountPercent > 0)
+            else if (product.DiscountUntil > DateTime.Now && product.DiscountUntil != null && product.DiscountPercent > 0)
             {
                 NewProduct.DiscountUntil = product.DiscountUntil;
                 NewProduct.DiscountPercent = product.DiscountPercent;
@@ -356,7 +356,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.Count = product.Count;
             dbProduct.BrandId = product.BrandId;
             dbProduct.Description = product.Description; 
-            dbProduct.LastUpdatedAt = System.DateTime.UtcNow.AddHours(4);
+            dbProduct.LastUpdatedAt = System.DateTime.Now;
             dbProduct.ReleaseDate = product.ReleaseDate;
             dbProduct.OperationSystem = product.OperationSystem;
             dbProduct.GPU = product.GPU;
@@ -377,12 +377,12 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             {
                 dbProduct.CategoryId = product.SubCategory;
             }
-            if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.UtcNow.AddHours(4))
+            if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
                 return View(product);
             }
-            else if (product.DiscountUntil > DateTime.UtcNow.AddHours(4) && product.DiscountUntil != null && product.DiscountPercent > 0)
+            else if (product.DiscountUntil > DateTime.Now && product.DiscountUntil != null && product.DiscountPercent > 0)
             {
                 dbProduct.DiscountUntil = product.DiscountUntil;
                 dbProduct.DiscountPercent = product.DiscountPercent;
@@ -444,7 +444,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             Product? product = await _context.Products.FindAsync(id);
             if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = true;
-            product.DeletedAt = DateTime.UtcNow.AddHours(4);
+            product.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }
@@ -460,7 +460,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -488,7 +488,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -505,7 +505,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             mainImage.IsMain = false;
 
             image.IsMain = true;
-            product.LastUpdatedAt = DateTime.UtcNow.AddHours(4);
+            product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             if (Returnurl != null)
             {
@@ -519,7 +519,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -536,7 +536,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
             _context.ProductImages.Remove(image);
             Product? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
-            product.LastUpdatedAt = DateTime.UtcNow.AddHours(4);
+            product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return Redirect(Returnurl);
@@ -581,14 +581,31 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
 
 
-        public async Task<IActionResult> Confirm(int id)
+        public async Task<IActionResult> Confirm(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
             Product? product= await _context?.Products?.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (product == null) return RedirectToAction("error", "home");
             product.Status = ProductConfirmationStatus.Approved;
             await _context.SaveChangesAsync();
-            return RedirectToAction("index");
+            AppUser user =await _usermanager.FindByIdAsync(product.AppUserId);
+            if (user == null) return RedirectToAction("error", "home");
+            else
+            {
+                var token = "";
+                string subject = "Your product was confirmed";
+                EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+                token = $"Hello {user.Fullname}. We've finished rewieving {product.Name}, now it is available on the site. \n" +
+                    $"Review your <a href='https://localhost:44393/User/productdetail/{product.Id}' style='color:red'>{product.Name} </a>";
+                var emailResult = helper.SendNews(user.Email, token, subject);
+
+                string? discountemail = Url.Action("ConfirmEmail", "Account", new
+                {
+                    token
+                }, Request.Scheme);
+            }
+            return RedirectToAction("Pendings");
         }
 
 
@@ -599,7 +616,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             if (product == null) return RedirectToAction("error", "home");
             product.Status = ProductConfirmationStatus.Refused;
             await _context.SaveChangesAsync();
-            return RedirectToAction("index");
+            return RedirectToAction("Pendings");
         }
     }
 }

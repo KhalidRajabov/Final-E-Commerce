@@ -19,7 +19,6 @@
         <div class="form-group d-flex flex-column">
             <label asp-for="Subjects"></label>
             <select asp-for="SubjectId" class="form-select" asp-items="ViewBag.Subjects">
-                <option selected>Choose Tags</option>
             </select>
             <span style="color: red;" asp-validation-for="Subjects"></span>
         </div>

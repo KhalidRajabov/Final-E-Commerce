@@ -28,6 +28,11 @@
             @Model.Description
         </h5>
     </div>
+    <div class="col-10">
+        <h5>
+            <a href="@Model.Link">@Model.Link</a>
+        </h5>
+    </div>
 
     <div class="col-12 d-flex flex-column justify-content-center align-items-center">
         <a class="col-8 mt-1 mb-1 btn btn-warning" asp-action="update" asp-controller="slider" asp-route-id="@Model.Id">Update</a>

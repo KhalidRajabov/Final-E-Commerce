@@ -209,7 +209,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -230,7 +230,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -254,7 +254,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -344,7 +344,7 @@ namespace Final_E_Commerce.Controllers
                 Count = vm.Count,
                 Sold = 0,
                 Profit = 0,
-                CreatedTime = DateTime.UtcNow.AddHours(4),
+                CreatedTime = DateTime.Now,
                 InStock = true,
                 Views = 0
             };
@@ -359,12 +359,12 @@ namespace Final_E_Commerce.Controllers
             }
 
 
-            if (vm.DiscountPercent > 0 && vm.DiscountUntil < DateTime.UtcNow.AddHours(4))
+            if (vm.DiscountPercent > 0 && vm.DiscountUntil < DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
                 return View(vm);
             }
-            else if (vm.DiscountUntil > DateTime.UtcNow.AddHours(4) && vm.DiscountUntil != null && vm.DiscountPercent > 0)
+            else if (vm.DiscountUntil > DateTime.Now && vm.DiscountUntil != null && vm.DiscountPercent > 0)
             {
                 product.DiscountUntil = vm.DiscountUntil;
                 product.DiscountPercent = vm.DiscountPercent;
@@ -384,7 +384,22 @@ namespace Final_E_Commerce.Controllers
             product.Status = ProductConfirmationStatus.Pending;
             await _context.AddAsync(product);
             await _context.SaveChangesAsync();
-            
+
+            var token = "";
+            string subject = "Product added successfully";
+            EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+            token = $"Hello. You recently added {product.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
+                $"It will be posted on site and you will get notified\n"+
+                $"You can still see details of your product: \n" +
+                $" <a href='https://localhost:44393/User/productdetail/{product.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
+            var emailResult = helper.SendNews(user.Email, token, subject);
+
+            string? discountemail = Url.Action("ConfirmEmail", "Account", new
+            {
+                token
+            }, Request.Scheme);
+
             return RedirectToAction("Products");
         }
 
@@ -413,7 +428,7 @@ namespace Final_E_Commerce.Controllers
         {
             Product? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
-            product.DeletedAt = DateTime.UtcNow.AddHours(4);
+            product.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             return RedirectToAction("Products");
         }
@@ -426,7 +441,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -573,12 +588,12 @@ namespace Final_E_Commerce.Controllers
                 dbProduct.DiscountPercent = 0;
                 dbProduct.DiscountPrice = 0;
             }
-            if(product.DiscountPercent>0&&product.DiscountUntil<DateTime.UtcNow.AddHours(4))
+            if(product.DiscountPercent>0&&product.DiscountUntil<DateTime.Now)
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
                 return View(product);
             }
-            else if (product.DiscountUntil>DateTime.UtcNow.AddHours(4)&&product.DiscountUntil!=null&&product.DiscountPercent>0)
+            else if (product.DiscountUntil>DateTime.Now&&product.DiscountUntil!=null&&product.DiscountPercent>0)
             {
                 dbProduct.DiscountUntil = product.DiscountUntil;
                 dbProduct.DiscountPercent = product.DiscountPercent;
@@ -594,21 +609,21 @@ namespace Final_E_Commerce.Controllers
                 dbProduct.CategoryId = product.SubCategory;
             }
             
-            dbProduct.LastUpdatedAt = DateTime.UtcNow.AddHours(4);
-            if (dbProduct.DiscountPercent > 30)
+            dbProduct.LastUpdatedAt = DateTime.Now;
+            if (dbProduct.DiscountPercent >= 70)
             {
                 List<Subscriber>? subscribers = await _context?.Subscribers?.ToListAsync();
                 var token = "";
-                string subject = "Endirim var!";
+                string subject = "Big discount!";
                 EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
                 foreach (var receiver in subscribers)
                 {   
-                    token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. +Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n"+
-                        "Məhsula keçid linki http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}";
-                    var emailResult = helper.SendNews(receiver.Email, token, subject);
+                    token = $"Hello {CurrentUser.Fullname}. A big discount price for {dbProduct.Name}. Now only {dbProduct.DiscountPrice} AZN instead of {dbProduct.Price} AZN\n"+
+                        $"See it on <a style='color: red' href='http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}'>Store</a>";
+                    var emailResult2 = helper.SendNews(receiver.Email, token, subject);
                     continue;
                 }
-                string? discountemail = Url.Action("ConfirmEmail", "Account", new
+                string? discountemail2 = Url.Action("ConfirmEmail", "Account", new
                 {
                     token
                 }, Request.Scheme);
@@ -621,15 +636,15 @@ namespace Final_E_Commerce.Controllers
                     AppUser appUser = await _usermanager.FindByIdAsync(user.AppUserId);
 
                     var token = "";
-                    string subject = "Endirim var!";
+                    string subject = "Discount on an item you want!";
                     EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
                     
-                        token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
-                            $"Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n" +
-                            $"Məhsula keçid linki http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}";
-                        var emailResult = helper.SendNews(appUser.Email, token, subject);
+                        token = $"Hello {CurrentUser.Fullname}. {dbProduct.Name} has a discount of {dbProduct.DiscountPercent}%. \n" +
+                            $"Now just {dbProduct.DiscountPrice}AZN instead if{dbProduct.Price} AZN\n" +
+                            $"See it on <a style='color: red' href='http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}'>Store</a>";
+                        var emailResult2 = helper.SendNews(appUser.Email, token, subject);
                         
-                    string? discountemail = Url.Action("ConfirmEmail", "Account", new
+                    string? discountemail2 = Url.Action("ConfirmEmail", "Account", new
                     {
                         token
                     }, Request.Scheme);
@@ -650,6 +665,21 @@ namespace Final_E_Commerce.Controllers
             
             await _context.SaveChangesAsync();
 
+            var token2 = "";
+            string subject2 = "Product updated successfully";
+            EmailHelper helper2 = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+            token2 = $"Hello {CurrentUser.Fullname}. You recently updated {dbProduct.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
+                $"It will be posted on site and you will get notified\n" +
+                $"You can still see details of your product: \n" +
+                $" <a href='https://localhost:44393/User/productdetail/{dbProduct.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
+            var emailResult = helper2.SendNews(CurrentUser.Email, token2, subject2);
+
+            string? discountemail = Url.Action("ConfirmEmail", "Account", new
+            {
+                token2
+            }, Request.Scheme);
+
             return RedirectToAction("products","user");
         }
 
@@ -661,7 +691,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -692,7 +722,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -710,7 +740,7 @@ namespace Final_E_Commerce.Controllers
             mainImage.IsMain = false;
 
             image.IsMain = true;
-            product.LastUpdatedAt = DateTime.UtcNow.AddHours(4);
+            product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             if (Returnurl!=null)
             {
@@ -727,7 +757,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.UtcNow.AddHours(4))
+                if (item.DiscountUntil < DateTime.Now)
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -744,7 +774,7 @@ namespace Final_E_Commerce.Controllers
 
             _context.ProductImages.Remove(image);
             Product? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
-            product.LastUpdatedAt = DateTime.UtcNow.AddHours(4);
+            product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return Redirect(Returnurl);

@@ -85,7 +85,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             {
                 Name = category.Name,
                 ImageUrl = category.Images.SaveImage(_env, "images"),
-                CreatedTime = DateTime.UtcNow.AddHours(4),
+                CreatedTime = DateTime.Now,
                 Description = category.Description
             };
             await _context.AddAsync(newcategory);
@@ -139,7 +139,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             Category category = await _context.Categories.FindAsync(id);
             if (category == null) return RedirectToAction("error", "home");
             category.IsDeleted = true;
-            category.DeletedAt = DateTime.UtcNow.AddHours(4);
+            category.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }
@@ -194,7 +194,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             }
             dbCategory.Name = category.Name;
             dbCategory.Description = category.Description;
-            dbCategory.LastUpdatedAt = DateTime.UtcNow.AddHours(4);
+            dbCategory.LastUpdatedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
