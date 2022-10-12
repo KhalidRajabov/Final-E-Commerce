@@ -40,6 +40,6 @@ namespace Final_E_Commerce.ViewModels
         public List<int>? TagId { get; set; }
         public List<Tag>? Tags { get; set; }
 
-        public Product? Product { get; set; }
+        public Products? Product { get; set; }
     }
 }

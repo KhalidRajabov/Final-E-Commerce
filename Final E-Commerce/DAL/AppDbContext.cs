@@ -17,7 +17,7 @@ namespace Final_E_Commerce.DAL
         public DbSet<Category>? Categories { get; set; }
         public DbSet<Order>? Orders { get; set; }
         public DbSet<OrderItem>? OrderItems { get; set; }
-        public DbSet<Product>? Products { get; set; }
+        public DbSet<Products>? Products { get; set; }
         public DbSet<ProductImage>? ProductImages { get; set; }
         public DbSet<ProductTag>? ProductTags { get; set; }
         public DbSet<Slider>? Sliders { get; set; }
@@ -147,8 +147,8 @@ namespace Final_E_Commerce.DAL
                     ImageUrl="apple.jpg"
                 }
                 );
-            builder.Entity<Product>().HasData(
-                new Product
+            builder.Entity<Products>().HasData(
+                new Products
                 {
                     Id=1,
                     BrandId=1,
@@ -169,7 +169,7 @@ namespace Final_E_Commerce.DAL
                     Battery= "Li-Po 4000 mAh, non-removable, quick charge 3.0",
                     Count = 50
                 },
-                new Product
+                new Products
                 {
                     Id = 2,
                     BrandId=1,
@@ -193,7 +193,7 @@ namespace Final_E_Commerce.DAL
                     Battery = "Li-Ion 5000 mAh, non-removable",
                     Count = 50
                 },
-                new Product
+                new Products
                 {
                     Id = 3,
                     BrandId=2,

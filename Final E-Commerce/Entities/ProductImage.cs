@@ -11,6 +11,6 @@ namespace Final_E_Commerce.Entities
         public List<IFormFile>? Photo { get; set; }
 
         public int ProductId { get; set; }
-        public Product? Product { get; set; }
+        public Products? Product { get; set; }
     }
 }

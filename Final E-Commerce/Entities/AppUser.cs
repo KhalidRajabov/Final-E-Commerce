@@ -12,7 +12,7 @@ namespace Final_E_Commerce.Entities
         public DateTime DateRegistered { get; set; }
 
 
-        public List<Product>? Products { get; set; }
+        public List<Products>? Products { get; set; }
         public List<Order>? Orders { get; set; }
         public List<Wishlist>? Wishlist { get; set; }
         public UserDetails? UserDetails { get; set; }

@@ -72,7 +72,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             List<OrderItem> orderitem = await _context.OrderItems.Where(o => o.OrderId == order.Id).ToListAsync();
             foreach (var item in orderitem)
             {
-                Product dbProduct = _context?.Products?.Find(item.ProductId);
+                Products dbProduct = _context?.Products?.Find(item.ProductId);
                 dbProduct.Count += item.Count;
             }
             await _context.SaveChangesAsync();

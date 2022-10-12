@@ -207,7 +207,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             if (dbCategory == null) return RedirectToAction("error", "home");
             CategoryVM category = new CategoryVM();
             category.Category = dbCategory;
-            List<Product> products = _context?.Products?.Where(c => c.Category.ParentId == dbCategory.Id).ToList();
+            List<Products> products = _context?.Products?.Where(c => c.Category.ParentId == dbCategory.Id).ToList();
             ViewBag.ProductCount=products.Count();
             return View(category);
         }

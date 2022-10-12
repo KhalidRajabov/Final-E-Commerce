@@ -13,16 +13,16 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
             this.connectionString = connectionString;
         }
 
-        public List<Product> GetProducts()
+        public List<Products> GetProducts()
         {
-            List<Product> products = new List<Product>();
+            List<Products> products = new List<Products>();
             
 
             var data = GetProductDetailsFromDb();
 
             foreach (DataRow row in data.Rows)
             {
-                Product product = new Product
+                Products product = new Products
                 {
                     Id = Convert.ToInt32(row["Id"]),
                     Name = row["Name"].ToString(),
@@ -35,7 +35,7 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
 
         public DataTable GetProductDetailsFromDb()
         {
-            var query = "SELECT Id, Name, Price FROM Product";
+            var query = "SELECT Id, Name, Price FROM Products";
             DataTable dataTable = new DataTable();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -52,7 +52,7 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
                     }
                     return dataTable;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                     throw;

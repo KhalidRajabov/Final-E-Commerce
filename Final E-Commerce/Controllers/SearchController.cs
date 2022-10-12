@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Final_E_Commerce.DAL;
+﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +21,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -39,7 +38,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> SearchProduct(string search)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -51,7 +50,7 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
-            List<Product> products = _context.Products
+            List<Products> products = _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .Where(p =>
                 p.Name.ToLower().Contains(search.ToLower()) ||
@@ -83,7 +82,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> PopularProducts()
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -95,7 +94,7 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
-            List<Product> PopularProducts = _context.Products
+            List<Products> PopularProducts = _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p => p.Views).Take(6).Include(p=>p.ProductImages).ToList();
             DetailVM detailVM = new DetailVM();
@@ -104,7 +103,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> GetProductForModal(int id)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -116,7 +115,7 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
-            Product? product = await _context?.Products?
+            Products? product = await _context?.Products?
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .Include(p=>p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
             DetailVM? detailVM = new DetailVM();

@@ -11,6 +11,6 @@ namespace Final_E_Commerce.Entities
         public Nullable<int> ParentId { get; set; }
         public Category? Parent { get; set; }
         public List<Category>? Children { get; set; }
-        public List<Product>? Products { get; set; }
+        public List<Products>? Products { get; set; }
     }
 }

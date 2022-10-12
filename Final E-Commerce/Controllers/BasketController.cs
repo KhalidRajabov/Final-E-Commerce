@@ -27,7 +27,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            List<Product>? AllProducts =  _context?.Products?
+            List<Products>? AllProducts =  _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToList();
             foreach (var item in AllProducts)
             {
@@ -55,7 +55,7 @@ namespace Final_E_Commerce.Controllers
                 basketVM = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
                 foreach (var item in basketVM)
                 {
-                    Product? dbProducts = _context?.Products?.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
+                    Products? dbProducts = _context?.Products?.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
                     item.Name = dbProducts.Name;
                     if (dbProducts.DiscountPercent > 0)
                     {
@@ -84,7 +84,7 @@ namespace Final_E_Commerce.Controllers
     
         public async Task<IActionResult> AddItem(int? id, int? quantity)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -110,7 +110,7 @@ namespace Final_E_Commerce.Controllers
             }
             if (id == null)
                 if (id == null) return RedirectToAction("error", "home");
-            Product? dbProduct = await _context?.Products?.Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id ==id);
+            Products? dbProduct = await _context?.Products?.Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id ==id);
             if (dbProduct == null) return RedirectToAction("error", "home");
             List<BasketVM>? products;
             if (Request.Cookies[$"basket{username}"] == null)
@@ -192,7 +192,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> RemoveItem(int? id, string returnurl)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -252,7 +252,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Minus(int? id)
         {
-            List<Product>? AllProducts = await _context.Products?
+            List<Products>? AllProducts = await _context.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -342,7 +342,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Plus(int? id)
         {
-            List<Product>? AllProducts = await _context.Products?
+            List<Products>? AllProducts = await _context.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -401,7 +401,7 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> CheckOut()
         {
 
-            List<Product>? AllProducts = await _context.Products?
+            List<Products>? AllProducts = await _context.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -440,7 +440,7 @@ namespace Final_E_Commerce.Controllers
                 {
                     ViewBag.BasketCount += item.ProductCount;
                     ViewBag.TotalPrice += item.Price * item.ProductCount;
-                    Product? dbProducts = _context?.Products?.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
+                    Products? dbProducts = _context?.Products?.Include(pi => pi.ProductImages).FirstOrDefault(x => x.Id == item.Id);
                     item.Name = dbProducts.Name;
                     if (dbProducts.DiscountPercent > 0)
                     {
@@ -481,7 +481,7 @@ namespace Final_E_Commerce.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Order(CheckoutVM newOrder)
         {
-            List<Product>? AllProducts = await _context.Products?
+            List<Products>? AllProducts = await _context.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -529,7 +529,7 @@ namespace Final_E_Commerce.Controllers
                 double? total = 0;
                 foreach (var basketProduct in basketProducts)
                 {
-                    Product? dbProduct = await _context.Products.FindAsync(basketProduct.Id);
+                    Products? dbProduct = await _context.Products.FindAsync(basketProduct.Id);
                     if (basketProduct.ProductCount > dbProduct.Count)
                     {
                         TempData["fail"] = "Satış uğursuzdur..";

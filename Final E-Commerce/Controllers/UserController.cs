@@ -217,7 +217,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> Orders()
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -238,7 +238,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> Detail(int id)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -262,7 +262,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> Products()
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -335,7 +335,7 @@ namespace Final_E_Commerce.Controllers
                 image.ImageUrl = item.SaveImage(_env, "images/products");
                 Images.Add(image);
             }
-            Product product = new Product
+            Products product = new Products
             {
                 Name = vm.Name,
                 AppUserId = user.Id,
@@ -419,7 +419,7 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> ProductDetail(int id)
         {
             AppUser? CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product? p = await _context?.Products?
+            Products? p = await _context?.Products?
                 .Where(p => p.AppUserId == CurrentUser.Id)?
                 .Include(i => i.ProductImages)?
                 .Include(c => c.Category)?
@@ -438,7 +438,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            Product? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
+            Products? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
             await _context.SaveChangesAsync();
@@ -449,7 +449,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> EditProduct(int? id)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -468,7 +468,7 @@ namespace Final_E_Commerce.Controllers
             ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (id == null) return RedirectToAction("error", "home");
             AppUser? CurrentUser =await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product? p = await _context?.Products?
+            Products? p = await _context?.Products?
                 .Where(p=>p.AppUserId==CurrentUser.Id)
                 .Include(i => i.ProductImages)?
                 .Include(c => c.Category)?
@@ -518,7 +518,7 @@ namespace Final_E_Commerce.Controllers
                 return View();
             }
             AppUser? CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product? dbProduct = await _context?.Products?
+            Products? dbProduct = await _context?.Products?
                 .Where(p => p.AppUserId == CurrentUser.Id && p.IsDeleted != true)?
                 .Include(p => p.ProductImages)?
                 .Include(p => p.ProductTags)?
@@ -699,7 +699,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> EditPictures(int id)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -712,7 +712,7 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product? p = await _context?.Products?
+            Products? p = await _context?.Products?
                 .Where(p => p.AppUserId == CurrentUser.Id)?
                 .Include(i => i.ProductImages)?
                 .Include(c => c.Category)?
@@ -730,7 +730,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string? Returnurl)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -765,7 +765,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -785,7 +785,7 @@ namespace Final_E_Commerce.Controllers
             Helper.Helper.DeleteImage(path);
 
             _context.ProductImages.Remove(image);
-            Product? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
+            Products? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
             product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 

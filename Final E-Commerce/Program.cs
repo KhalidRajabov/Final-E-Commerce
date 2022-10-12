@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Final_E_Commerce.DAL;
-
+using Final_E_Commerce.MiddlewareExtensions;
 using Final_E_Commerce.Entities;
 using Microsoft.AspNetCore.Identity;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.Hubs;
+using Final_E_Commerce.SubscribeTableDependency;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<DashboardHub>();
+builder.Services.AddSingleton<SubscribeProductTableDependency>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -75,4 +78,7 @@ app.UseEndpoints(endpoints =>
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 });
+
+app.UseProductTableDependency();
+
 app.Run();

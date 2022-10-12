@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Final_E_Commerce.DAL;
+﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -16,14 +15,11 @@ namespace Final_E_Commerce.ViewComponents
 
         public FooterViewComponent(AppDbContext context)
         {
-            _context = context;
-            
+            _context = context;   
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            
-            FooterVM footerVM = new FooterVM();
-            
+            FooterVM footerVM = new FooterVM();    
             footerVM.Bio = await _context.Bios.FirstOrDefaultAsync();
             footerVM.Categories = await _context.Categories.Where(c=>c.ParentId==null).Take(4).ToListAsync();
             return View(await Task.FromResult(footerVM));   

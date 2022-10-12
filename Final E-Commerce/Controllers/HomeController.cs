@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Final_E_Commerce.DAL;
+﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +24,7 @@ namespace Final_E_Commerce.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<Product>? AllProducts = await _context.Products?
+            List<Products>? AllProducts = await _context.Products?
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
 
             
@@ -42,35 +41,32 @@ namespace Final_E_Commerce.Controllers
             }
             
             HomeVM? homeVM = new HomeVM();
-            List<Product> Bestsellers = _context.Products
+            List<Products> Bestsellers = await _context.Products
                 .OrderByDescending(p => p.Sold).Take(8)
-                .Where(p => p.Status == ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToList();
+                .Where(p => p.Status == ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToListAsync();
             if (User.Identity.IsAuthenticated)
             {
                 
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 homeVM.User = user;
-                foreach (var item in Bestsellers)
-                {
-                    bool IsExist = _context.Wishlists
-                        .Where(w => w.AppUserId == user.Id && w.ProductId == item.Id).Any();
-                }
+                homeVM.Wishlists = await _context.Wishlists.Where(w => w.AppUserId == user.Id).ToListAsync(); ;
+
             }
-            homeVM.Bio = _context?.Bios?.FirstOrDefault();
-            homeVM.Category = _context.Categories?.FirstOrDefault(c=>c.Id==1);
-            homeVM.MostPopularProduct = _context.Products
+            homeVM.Bio = await _context?.Bios?.FirstOrDefaultAsync();
+            homeVM.Category =await _context.Categories?.FirstOrDefaultAsync(c=>c.Id==1);
+            homeVM.MostPopularProduct = await _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
-                .OrderByDescending(p=>p.Rating).Take(1).Include(p=>p.ProductImages).FirstOrDefault();
-            homeVM.PopularProducts = _context.Products
+                .OrderByDescending(p=>p.Rating).Take(1).Include(p=>p.ProductImages).FirstOrDefaultAsync();
+            homeVM.PopularProducts = await _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
-                .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToList();
+                .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToListAsync();
             homeVM.BestSellerProducts = Bestsellers;
             homeVM.Sliders = await _context?.Sliders?.ToListAsync();
             return View(homeVM);
         }
         public async Task<IActionResult> Detail(int? id)
         {
-            List<Product>? AllProducts = await _context.Products?
+            List<Products>? AllProducts = await _context.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -83,7 +79,7 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             DetailVM? detailVM = new DetailVM();
-            Product? product = await _context?.Products?
+            Products? product = await _context?.Products?
                 .Where(p=>p.Status==ProductConfirmationStatus.Approved)
                 ?.Include(p => p.ProductImages)
                 ?.Include(c => c.Category)
@@ -122,7 +118,7 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                bool IsExist = _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).Any();
+                bool IsExist = await _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).AnyAsync();
                 if (IsExist) ViewBag.ExistWishlist = true;
                 
                 bool IsRated = await _context.UserProductRatings
@@ -142,10 +138,10 @@ namespace Final_E_Commerce.Controllers
             }
             product.Views++;
             await _context.SaveChangesAsync();
-            var UsersWantThis = _context.Wishlists?.Where(p=>p.ProductId==id).ToList();
+            var UsersWantThis = await _context.Wishlists?.Where(p=>p.ProductId==id).ToListAsync();
             detailVM.Product = product;
 
-            List<Product> related = await _context.Products
+            List<Products> related = await _context.Products
                 .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
                 .Include(p => p.ProductImages)
                 .Take(4)
@@ -156,12 +152,12 @@ namespace Final_E_Commerce.Controllers
 
             detailVM.UsersWantIt = UsersWantThis.Count;
             
-            detailVM.Comments= _context.ProductComments
+            detailVM.Comments= await _context.ProductComments
                 .Include(b => b.User)
                 .Where(c => c.ProductId == id && !c.IsDeleted)
                 .OrderByDescending(b => b.Id)
                 .Take(10)
-                .ToList();
+                .ToListAsync();
 
             return View(detailVM);
         }
@@ -175,7 +171,7 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                Product? product = await _context?.Products?
+                Products? product = await _context?.Products?
                     .Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id == ProductId);
                 UserProductRatings userProductRating = new UserProductRatings
                 {
@@ -226,7 +222,7 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> PostComment(int ProductId, string comment, string? author)
         {
-            Product? product = await _context?.Products?
+            Products? product = await _context?.Products?
                 .FirstOrDefaultAsync(p=>p.Id == ProductId);
             ProductComment NewComment = new ProductComment();
             CommentsVM commentVM = new CommentsVM();
@@ -284,10 +280,10 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> LoadComments(int skip, int? BlogId)
         {
 
-            List<ProductComment>? comments = _context?.ProductComments?
+            List<ProductComment>? comments = await _context?.ProductComments?
                 .Include(b => b.User)
                 .Where(bc => bc.ProductId == BlogId && !bc.IsDeleted)
-                .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToList();
+                .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToListAsync();
             CommentsVM commentsVM = new CommentsVM
             {
                 ProductComments = comments
@@ -319,7 +315,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Brands(int id)
         {
-            List<Product>? products = await _context?.Products?
+            List<Products>? products = await _context?.Products?
                 .Where(p=>p.BrandId==id)
                 .Include(p => p.ProductImages)
                 .Include(p=>p.Brand)
@@ -331,8 +327,5 @@ namespace Final_E_Commerce.Controllers
             };
             return View(listProducts);
         }
-
-
-
     }
 }

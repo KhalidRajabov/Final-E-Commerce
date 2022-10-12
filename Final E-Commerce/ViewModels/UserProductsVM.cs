@@ -4,6 +4,6 @@ namespace Final_E_Commerce.ViewModels
 {
     public class UserProductsVM
     {
-        public List<Product>? Products { get; set; }
+        public List<Products>? Products { get; set; }
     }
 }

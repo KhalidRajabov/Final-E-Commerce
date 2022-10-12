@@ -23,7 +23,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Products>? AllProducts = await _context.Products
                    .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -38,10 +38,10 @@ namespace Final_E_Commerce.Controllers
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             WishlistVM wishlistVM = new WishlistVM();
             List<Wishlist> wihlist= _context.Wishlists.Where(w => w.AppUserId == user.Id).ToList();
-            List<Product> listproduct = new List<Product>();
+            List<Products> listproduct = new List<Products>();
             foreach (var item in wihlist)
             {
-                Product product = _context?.Products?.Include(p=>p.ProductImages).FirstOrDefault(p => p.Id == item.ProductId);
+                Products product = _context?.Products?.Include(p=>p.ProductImages).FirstOrDefault(p => p.Id == item.ProductId);
                 listproduct.Add(product);
             }
             wishlistVM.Products = listproduct;
@@ -50,7 +50,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Add(int id)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Products>? AllProducts = await _context.Products
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -68,7 +68,7 @@ namespace Final_E_Commerce.Controllers
                 online = true;
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
+            Products product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist wishlist = new Wishlist();
             wishlist.ProductId = product.Id;
             wishlist.AppUserId = user.Id;
@@ -95,7 +95,7 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Remove(int id)
         {
-            List<Product>? AllProducts = await _context.Products
+            List<Products>? AllProducts = await _context.Products
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -108,7 +108,7 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Product product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
+            Products product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist IsExist = _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).FirstOrDefault();
             if (IsExist==null)
             {

@@ -186,7 +186,7 @@
                                             {
                                                 if (image.IsMain)
                                                 {
-                                                    <img style="width:200px; height:140px;" class="img-fluid mb-3 img-first" src="~/images/products/@image.ImageUrl" alt="product-img">
+                                                    <img style="width:100%; height:200px;" class="img-fluid align-self-center mb-3 img-first" src="~/images/products/@image.ImageUrl" alt="product-img">
                                                 }
                                             }
                                         </a>
@@ -196,19 +196,30 @@
                                     </div>
                                     @if (User.Identity.IsAuthenticated)
                                     {
+                                        bool exist = false;
+                                        foreach (var w in Model.Wishlists)
+                                        {
+                                             if (w.AppUserId==Model.User.Id&&w.ProductId==item.Id)
+                                            {
+                                                exist = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!exist)
+                                        {
                                             <div class="product-hover-overlay">
                                         
                                                     <a class="product-icon favorite add-to-wishlist-from-card" data-id="@item.Id" data-toggle="tooltip" data-placement="left" title="Wishlist">
                                                         <i class="fa-regular fa-heart text-danger"></i>
                                                     </a>
                                             </div>
+                                        }
                                     }
                                 </div>
                                 <div class="product-info">
                                     <h3 class="h5"><a class="text-color" href="product-single.html">@item.Name</a></h3>
                                     @if (item.DiscountPercent>0)
                                     {
-                                        
                                         <span class="h5">$@item.DiscountPrice</span>
                                     }
                                     else{

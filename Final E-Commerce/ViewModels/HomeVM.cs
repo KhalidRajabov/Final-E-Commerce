@@ -6,10 +6,11 @@ namespace Final_E_Commerce.ViewModels
     {
         public Bio? Bio { get; set; }
         public Category? Category { get; set; }
-        public List<Product>? PopularProducts { get; set; }
-        public Product? MostPopularProduct { get; set; }
-        public List<Product>? BestSellerProducts { get; set; }
+        public List<Products>? PopularProducts { get; set; }
+        public Products? MostPopularProduct { get; set; }
+        public List<Products>? BestSellerProducts { get; set; }
         public List<Slider>? Sliders { get; set; }
         public AppUser? User { get; set; }
+        public List<Wishlist>? Wishlists { get; set; }
     }
 }

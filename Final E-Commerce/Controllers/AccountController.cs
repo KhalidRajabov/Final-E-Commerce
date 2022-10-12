@@ -237,9 +237,6 @@ namespace Final_E_Commerce.Controllers
             return View(model);
         }*/
 
-
-
-
         /*[HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

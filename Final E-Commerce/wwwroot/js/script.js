@@ -36,7 +36,6 @@
                             cartlist.append(cartitem)
                             Swal.fire({
                                 timer: 1000,
-                                timerProgressBar: true,
                                 title: 'Added to basket!',
                                 text: `${response.data.name}`,
                                 imageUrl: `/images/products/${response.data.image}`,
@@ -306,6 +305,7 @@
 
         add.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
+            
             axios.post("/wishlist/add?id=" + dataId)
                 .then(function (response) {
                     if (response.data.online) {
@@ -363,8 +363,9 @@
     cardHeartAddBtn.forEach(add =>
 
         add.addEventListener("click", function () {
-            let dataId = this.getAttribute("data-id")
-            let icon = document.createElement("i")
+            let dataId = this.getAttribute("data-id");
+            let icon = document.createElement("i");
+            let parent = this.parentElement;
             axios.post("/wishlist/add?id=" + dataId)
                 .then(function (response) {
                     add.innerHTML = "";
@@ -374,6 +375,18 @@
                     icon.classList.add("text-danger");
                     //console.log(icon)
                     add.append(icon);
+                    Swal.fire({
+                        position: 'bottom-end',
+                        icon: 'success',
+                        title: 'Succesfully added to your wishlist',
+                        showConfirmButton: false,
+                        timer: 1000
+                    })
+
+                    setTimeout(
+                        function () {
+                            parent.remove();
+                        }, 1000);
 
                 })
                 .catch(function (error) {

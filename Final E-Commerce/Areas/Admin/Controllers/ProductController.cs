@@ -34,22 +34,22 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page = 1, int take = 5)
         {
 
-            List<Product>? product = _context?.Products?
+            List<Products>? product = _context?.Products?
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p => p.Id)
                 .Include(p => p.Category).Include(pi => pi.ProductImages)
                 .Where(p => p.IsDeleted != true).Skip((page - 1) * take).Take(take).ToList();
-            List<Product>? awaiting = await _context?.Products?
+            List<Products>? awaiting = await _context?.Products?
                 .Where(p => !p.IsDeleted && p.Status == ProductConfirmationStatus.Pending).ToListAsync();
             ViewBag.Pending = awaiting.Count;
-            PaginationVM<Product> paginationVM = new PaginationVM<Product>(product, PageCount(take), page);
+            PaginationVM<Products> paginationVM = new PaginationVM<Products>(product, PageCount(take), page);
 
             return View(paginationVM);
         }
 
         private int PageCount(int take)
         {
-            List<Product>? products = _context?.Products?
+            List<Products>? products = _context?.Products?
                 .Where(p => p.IsDeleted != true&& p.Status == ProductConfirmationStatus.Approved).ToList();
             return (int)Math.Ceiling((decimal)products.Count() / take);
         }
@@ -109,7 +109,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             }
 
 
-            Product? NewProduct = new Product
+            Products? NewProduct = new Products
             {
                 Price = product.Price,
                 Name = product.Name,
@@ -186,7 +186,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
             ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (id == null) return RedirectToAction("error", "home");
-            Product? product = await _context?.Products
+            Products? product = await _context?.Products
                 ?.Include(i => i.ProductImages)
                 ?.Include(c => c.Category)
                 ?.Include(b => b.Brand)
@@ -237,7 +237,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             {
                 return View();
             }
-            Product? dbProduct = await _context?.Products
+            Products? dbProduct = await _context?.Products
                 ?.Include(p => p.ProductImages)
                 ?.Include(p => p.ProductTags)
                 .ThenInclude(t => t.Tags)
@@ -421,7 +421,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Detail(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Product? dbProduct = await _context?.Products?.Include(c => c.Category)
+            Products? dbProduct = await _context?.Products?.Include(c => c.Category)
                 ?.Include(c => c.ProductTags)
                 .ThenInclude(t => t.Tags)
                 .Include(p=>p.Brand)
@@ -441,7 +441,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Product? product = await _context.Products.FindAsync(id);
+            Products? product = await _context.Products.FindAsync(id);
             if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
@@ -456,7 +456,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> EditPictures(int id)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -469,7 +469,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 }
             }
             
-            Product? p = await _context?.Products?
+            Products? p = await _context?.Products?
                 .Include(i => i.ProductImages)?
                 .Include(c => c.Category)?
                 .Include(t => t.ProductTags)?
@@ -484,7 +484,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string? Returnurl)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -515,7 +515,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
         {
-            List<Product>? AllProducts = await _context?.Products?
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -535,7 +535,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             Helper.Helper.DeleteImage(path);
 
             _context.ProductImages.Remove(image);
-            Product? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
+            Products? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
             product.LastUpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
@@ -584,7 +584,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Confirm(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Product? product= await _context?.Products?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            Products? product= await _context?.Products?.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (product == null) return RedirectToAction("error", "home");
             product.Status = ProductConfirmationStatus.Approved;
             await _context.SaveChangesAsync();
@@ -612,7 +612,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Decline(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Product? product = await _context?.Products?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            Products? product = await _context?.Products?.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (product == null) return RedirectToAction("error", "home");
             product.Status = ProductConfirmationStatus.Refused;
             await _context.SaveChangesAsync();

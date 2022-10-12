@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Final_E_Commerce.Entities
 {
-    public class Product:BaseEntity
+    public class Products:BaseEntity
     {
         public double? Price { get; set; }   
         public string? Description { get; set; }

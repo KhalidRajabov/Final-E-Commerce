@@ -17,7 +17,6 @@ namespace Final_E_Commerce.Hubs
         {
             var products = ProductRepository.GetProducts();
             await Clients.All.SendAsync("ReceivedProducts", products);
-
         }
     }
 }
