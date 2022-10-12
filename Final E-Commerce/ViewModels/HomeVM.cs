@@ -10,5 +10,6 @@ namespace Final_E_Commerce.ViewModels
         public Product? MostPopularProduct { get; set; }
         public List<Product>? BestSellerProducts { get; set; }
         public List<Slider>? Sliders { get; set; }
+        public AppUser? User { get; set; }
     }
 }

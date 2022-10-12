@@ -27,8 +27,11 @@ namespace Final_E_Commerce.Controllers
         {
             List<Product>? AllProducts = await _context.Products?
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
+
+            
             foreach (var product in AllProducts)
             {
+
                 if (product.DiscountUntil<DateTime.Now)
                 {
                     product.DiscountUntil = null;
@@ -37,7 +40,22 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
+            
             HomeVM? homeVM = new HomeVM();
+            List<Product> Bestsellers = _context.Products
+                .OrderByDescending(p => p.Sold).Take(8)
+                .Where(p => p.Status == ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToList();
+            if (User.Identity.IsAuthenticated)
+            {
+                
+                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+                homeVM.User = user;
+                foreach (var item in Bestsellers)
+                {
+                    bool IsExist = _context.Wishlists
+                        .Where(w => w.AppUserId == user.Id && w.ProductId == item.Id).Any();
+                }
+            }
             homeVM.Bio = _context?.Bios?.FirstOrDefault();
             homeVM.Category = _context.Categories?.FirstOrDefault(c=>c.Id==1);
             homeVM.MostPopularProduct = _context.Products
@@ -46,9 +64,7 @@ namespace Final_E_Commerce.Controllers
             homeVM.PopularProducts = _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToList();
-            homeVM.BestSellerProducts = _context.Products
-                .OrderByDescending(p => p.Sold).Take(8)
-                .Where(p=>p.Status==ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToList();
+            homeVM.BestSellerProducts = Bestsellers;
             homeVM.Sliders = await _context?.Sliders?.ToListAsync();
             return View(homeVM);
         }
@@ -128,7 +144,16 @@ namespace Final_E_Commerce.Controllers
             await _context.SaveChangesAsync();
             var UsersWantThis = _context.Wishlists?.Where(p=>p.ProductId==id).ToList();
             detailVM.Product = product;
+
+            List<Product> related = await _context.Products
+                .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
+                .Include(p => p.ProductImages)
+                .Take(4)
+                .ToListAsync();
+
+            detailVM.RelatedProducts = related;
             
+
             detailVM.UsersWantIt = UsersWantThis.Count;
             
             detailVM.Comments= _context.ProductComments

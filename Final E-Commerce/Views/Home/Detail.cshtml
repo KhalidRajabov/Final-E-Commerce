@@ -490,146 +490,82 @@
     <!-- related products -->
     <section class="section">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h2 class="mb-4">Related Products</h2>
-                </div>
-                <!-- product -->
-                <div class="col-lg-3 col-sm-6 mb-5 mb-lg-0">
+            <div class="row justify-content-around">
+                @if (Model.RelatedProducts.Count>0)
+                {
+                    <div class="col-lg-12">
+                        <h2 class="mb-4">Related Products</h2>
+                    </div>
+                    @foreach (var product in Model.RelatedProducts)
+                {
+                    <div class="col-lg-3 col-sm-6 mb-5 mb-lg-0">
                     <div class="product text-center">
                         <div class="product-thumb">
                             <div class="overflow-hidden position-relative">
-                                <a href="product-single.html">
-                                    <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-2.jpg" alt="product-img">
-                                    <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-5.jpg" alt="product-img">
+                                        <a asp-action="detail" asp-controller="home" asp-route-id="@product.Id">
+                                    @foreach (var image in product.ProductImages)
+                                    {
+                                        if (image.IsMain)
+                                            {
+                                                <img style="width:200px; height:210px;" class="img-fluid w-100 mb-3 img-first" src="~/images/products/@image.ImageUrl" alt="product-img">
+                                            }
+                                    }
+                                    @foreach (var image in product.ProductImages)
+                                    {
+                                        if (!image.IsMain)
+                                            {
+                                                    <img style="width:200px; height:210px;" class="img-fluid w-100 mb-3 img-second" src="~/images/products/@image.ImageUrl" alt="product-img">
+                                                    break;
+                                            }
+                                        }
+                                    
                                 </a>
                                 <div class="btn-cart">
-                                    <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
+                                            <a class="btn btn-primary text-light btn-sm add" data-id="@product.Id">Add To Cart</a>
                                 </div>
                             </div>
                             <div class="product-hover-overlay">
-                                <a href="#" class="product-icon favorite" data-toggle="tooltip" data-placement="left" title="Wishlist">
-                                    <i class="ti-heart"></i>
-                                </a>
-                                <a href="#" class="product-icon cart" data-toggle="tooltip" data-placement="left" title="Compare">
-                                    <i class="ti-direction-alt"></i>
-                                </a>
-                                <a data-vbtype="inline" href="#quickView" class="product-icon view venobox" data-toggle="tooltip"
-                                   data-placement="left" title="Quick View"><i class="ti-search"></i></a>
+                                        <a class="product-icon favorite add-to-wishlist-from-card" data-id="@product.Id" data-toggle="tooltip" data-placement="left" title="Wishlist">
+                                            <i class="fa-regular fa-heart text-danger"></i>
+                                        </a>
                             </div>
                         </div>
                         <div class="product-info">
-                            <h3 class="h5"><a class="text-color" href="product-single.html">Box Leather Shoulder Bag</a></h3>
-                            <span class="h5">$520.79</span>
+                            <h3 class="h5"><a class="text-color" href="product-single.html">@product.Name</a></h3>
+                                    @if (product.DiscountPercent > 0)
+                                    {
+                                        <span class="h5">$@product.DiscountPrice</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="h5">$@product.Price</span>
+                                    }
                         </div>
                         <!-- product label badge -->
-                        <div class="product-label new">
-                            new
-                        </div>
-                    </div>
-                </div>
-                <!-- //end of product -->
-                <!-- product -->
-                <div class="col-lg-3 col-sm-6 mb-5 mb-lg-0">
-                    <div class="product text-center">
-                        <div class="product-thumb">
-                            <div class="overflow-hidden position-relative">
-                                <a href="product-single.html">
-                                    <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-3.jpg" alt="product-img">
-                                    <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-6.jpg" alt="product-img">
-                                </a>
-                                <div class="btn-cart">
-                                    <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
+                        @if (product.DiscountPercent > 0)
+                            {
+                                <div class="product-label sale" >
+                                    @(product.DiscountPercent)%
                                 </div>
-                            </div>
-                            <div class="product-hover-overlay">
-                                <a href="#" class="product-icon favorite" data-toggle="tooltip" data-placement="left" title="Wishlist">
-                                    <i class="ti-heart"></i>
-                                </a>
-                                <a href="#" class="product-icon cart" data-toggle="tooltip" data-placement="left" title="Compare">
-                                    <i class="ti-direction-alt"></i>
-                                </a>
-                                <a data-vbtype="inline" href="#quickView" class="product-icon view venobox" data-toggle="tooltip"
-                                   data-placement="left" title="Quick View"><i class="ti-search"></i></a>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="h5"><a class="text-color" href="product-single.html">Sneaky Leather Sneakers</a></h3>
-                            <span class="h5">$270.79</span>
-                        </div>
-                        <!-- product label badge -->
-                        <div class="product-label sale">
-                            -10%
-                        </div>
-                    </div>
-                </div>
-                <!-- //end of product -->
-                <!-- product -->
-                <div class="col-lg-3 col-sm-6 mb-5 mb-lg-0">
-                    <div class="product text-center">
-                        <div class="product-thumb">
-                            <div class="overflow-hidden position-relative">
-                                <a href="product-single.html">
-                                    <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-4.jpg" alt="product-img">
-                                    <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-2.jpg" alt="product-img">
-                                </a>
-                                <div class="btn-cart">
-                                    <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
+                            }
+                            @{
+                                TimeSpan? difference = DateTime.Now - product?.CreatedTime;
+                            }
+                            @if (difference?.Days < 5)
+                            {
+                                <div class="product-label new">
+                                    new
                                 </div>
-                            </div>
-                            <div class="product-hover-overlay">
-                                <a href="#" class="product-icon favorite" data-toggle="tooltip" data-placement="left" title="Wishlist">
-                                    <i class="ti-heart"></i>
-                                </a>
-                                <a href="#" class="product-icon cart" data-toggle="tooltip" data-placement="left" title="Compare">
-                                    <i class="ti-direction-alt"></i>
-                                </a>
-                                <a data-vbtype="inline" href="#quickView" class="product-icon view venobox" data-toggle="tooltip"
-                                   data-placement="left" title="Quick View"><i class="ti-search"></i></a>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="h5"><a class="text-color" href="product-single.html">Puzzle leather shoulder bag</a></h3>
-                            <span class="h5">$400.79</span>
-                        </div>
-                        <!-- product label badge -->
-                        <div class="product-label new">
-                            new
-                        </div>
+                            }
                     </div>
                 </div>
-                <!-- //end of product -->
-                <!-- product -->
-                <div class="col-lg-3 col-sm-6 mb-5 mb-lg-0">
-                    <div class="product text-center">
-                        <div class="product-thumb">
-                            <div class="overflow-hidden position-relative">
-                                <a href="product-single.html">
-                                    <img class="img-fluid w-100 mb-3 img-first" src="~/images/collection/product-6.jpg" alt="product-img">
-                                    <img class="img-fluid w-100 mb-3 img-second" src="~/images/collection/product-1.jpg" alt="product-img">
-                                </a>
-                                <div class="btn-cart">
-                                    <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>
-                                </div>
-                            </div>
-                            <div class="product-hover-overlay">
-                                <a href="#" class="product-icon favorite" data-toggle="tooltip" data-placement="left" title="Wishlist">
-                                    <i class="ti-heart"></i>
-                                </a>
-                                <a href="#" class="product-icon cart" data-toggle="tooltip" data-placement="left" title="Compare">
-                                    <i class="ti-direction-alt"></i>
-                                </a>
-                                <a data-vbtype="inline" href="#quickView" class="product-icon view venobox" data-toggle="tooltip"
-                                   data-placement="left" title="Quick View"><i class="ti-search"></i></a>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="h5"><a class="text-color" href="product-single.html">Puzzle leather shoulder bag</a></h3>
-                            <span class="h5">$400.79</span>
-                        </div>
+                }
+                }
+                else{
+                    <div class="col-lg-12">
+                        <h2 class="mb-4">No Related Products Found</h2>
                     </div>
-                </div>
-                <!-- //end of product -->
+                }
             </div>
         </div>
         </section>

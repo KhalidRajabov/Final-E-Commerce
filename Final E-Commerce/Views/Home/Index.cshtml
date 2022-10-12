@@ -194,24 +194,21 @@
                                             <a class="btn btn-primary btn-sm add" data-id="@item.Id">Add To Cart</a>
                                         </div>
                                     </div>
-                                    <div class="product-hover-overlay">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                            <div class="product-hover-overlay">
                                         
-                                            <a class="product-icon favorite add-to-wishlist-from-card" data-id="@item.Id" data-toggle="tooltip" data-placement="left" title="Wishlist">
-                                                <i class="fa-regular fa-heart text-danger"></i>
-                                            </a>
-
-                                        
-                                        <a href="#" class="product-icon cart" data-toggle="tooltip" data-placement="left" title="Compare">
-                                            <i class="ti-direction-alt"></i>
-                                        </a>
-                                        <a data-vbtype="inline" href="#quickView" class="modal-open-btn product-icon view venobox" data-toggle="tooltip"
-                                       data-placement="left" title="Quick View" data-id="@item.Id"><i class="ti-search"></i></a>
-                                    </div>
+                                                    <a class="product-icon favorite add-to-wishlist-from-card" data-id="@item.Id" data-toggle="tooltip" data-placement="left" title="Wishlist">
+                                                        <i class="fa-regular fa-heart text-danger"></i>
+                                                    </a>
+                                            </div>
+                                    }
                                 </div>
                                 <div class="product-info">
                                     <h3 class="h5"><a class="text-color" href="product-single.html">@item.Name</a></h3>
                                     @if (item.DiscountPercent>0)
                                     {
+                                        
                                         <span class="h5">$@item.DiscountPrice</span>
                                     }
                                     else{
@@ -244,104 +241,13 @@
     </div>
   </div>
 </section>
-<!-- /collection -->
 
-<!-- deal -->
-@*<section class="section bg-cover" data-background="images/backgrounds/deal.jpg">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
-        <h1>Deal of the day</h1>
-        <h4 class="mb-40">Get at discounted price!</h4>
-        <!-- syo-timer -->
-        <div class="syotimer large">
-          <div id="simple-timer" data-year="2019" data-month="12" data-day="1" data-hour="1"></div>
-        </div>
-        <a href="shop.html" class="btn btn-primary">shop now</a>
-      </div>
-      <div class="col-md-6 text-center text-md-left align-self-center">
-        <img src="~/images/deal/product.png" alt="product-img" class="img-fluid up-down">
-      </div>
-    </div>
-  </div>
-</section>
-<!-- /deal -->
 
-<!-- instagram -->
-<section class="section">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 text-center">
-        <h2 class="mb-2">Follow Us On Instagram</h2>
-        <p class="mb-5"> Occaecat Cupidatat</p>
-      </div>
-    </div>
-      <!-- instafeed -->
-      <!-- <div class="row" id="instafeed" data-userId="4044026246" data-accessToken="4044026246.1677ed0.8896752506ed4402a0519d23b8f50a17"></div> -->
-      <!-- for linking to instagram, just uncomment this line and change data-userid with your instagram user id andata-accesstoken with your instagram access token -->
 
-      <!-- without instagram image -->
-      <!-- remove this section after link with your instagram account -->
-      <div class="row">
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-1.png" alt="instagram-image">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>40</a></li>
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>24</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-2.png" alt="instagram-image">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>65</a></li>
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>11</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-3.png" alt="instagram-image">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>33</a></li>
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>78</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-4.png" alt="instagram-image">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>32</a></li>
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>77</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-5.png" alt="instagram-image">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>80</a></li>
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>38</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-0 mb-4">
-          <div class="instagram-post mx-2"><img class="img-fluid w-100" src="~/images/instagram/item-6.png" alt="instagram-image">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-heart mr-2"></i>22</a></li>
-              <li class="list-inline-item"><a href="%7b%7blink%7d%7d.html" target="_blank" class="text-white"><i class="ti-comments mr-2"></i>57</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <!-- /without instagram image -->
-  </div>
-</section>
-<!-- /instagram -->*@
 
-<!-- service -->
 <section class="section-sm border-top">
   <div class="container">
     <div class="row">
-      <!-- service item -->
       <div class="col-lg-3 col-sm-6 mb-4 mb-lg-0">
         <div class="d-flex flex-sm-row flex-column align-items-center align-items-sm-start">
           <i class="ti-truck icon-lg mr-4 mb-3 mb-sm-0"></i>
@@ -351,7 +257,6 @@
           </div>
         </div>
       </div>
-      <!-- service item -->
       <div class="col-lg-3 col-sm-6 mb-4 mb-lg-0">
         <div class="d-flex flex-sm-row flex-column align-items-center align-items-sm-start">
           <i class="ti-shield icon-lg mr-4 mb-3 mb-sm-0"></i>
@@ -371,7 +276,6 @@
           </div>
         </div>
       </div>
-      <!-- service item -->
       <div class="col-lg-3 col-sm-6 mb-4 mb-lg-0">
         <div class="d-flex flex-sm-row flex-column align-items-center align-items-sm-start">
           <i class="ti-reload icon-lg mr-4 mb-3 mb-sm-0"></i>
@@ -384,5 +288,3 @@
     </div>
   </div>
 </section>
-<!-- /service -->
-
