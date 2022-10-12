@@ -111,6 +111,18 @@ namespace Final_E_Commerce.Controllers
             return View(userVM);
         }
 
+        public async Task<IActionResult> ProfileProducts(string id)
+        {
+            ViewBag.UserId = await _usermanager.FindByIdAsync(id);
+            UserProductsVM userProductsVM = new UserProductsVM
+            {
+                Products = await _context?.Products?.Where(p => p.AppUserId == id)
+                .Include(p => p.ProductImages).ToListAsync()
+            };
+
+            return View(userProductsVM);
+        }
+
         [Authorize]
         public async Task<IActionResult> UpdateProfile()
         {

@@ -109,7 +109,7 @@
                     {
                         <span class="text-success">@Model.UsersWantIt users want this</span>
                     }
-                    <ul class="list-inline mb-4">
+                    <ul class="list-inline mb-2">
                         @if (Model.Product.Rating>0)
                         {
                             @for (int i = 0; i < Math.Floor(Model.Product.Rating); i++)
@@ -129,6 +129,10 @@
                             <li class="list-inline-item" style="font-size: 120%"><a href="#comment-section" class="text-gray ml-3">( 0 Comments)</a></li>
                         }
                     </ul>
+                    @if (User.Identity.IsAuthenticated && ViewBag.IsRated)
+                    {
+                        <a asp-action="removerating" asp-controller="home" asp-route-id="@Model.Product.Id" asp-route-ReturnUrl="@Context.Request.Path" class="text-danger mb-2" style="font-weight: 700">Remove rating</a>
+                    }
                     @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.Now)
                     {
                         <h4 class="text-primary h3">$@Model.Product.DiscountPrice <s class="text-color ml-2">$@Model.Product.Price</s></h4>
@@ -152,6 +156,7 @@
                             <button id="rate-btn" class="btn btn-warning text-light col-5 mt-2"  data-id="@Model.Product.Id">Rate!</button>
                         </div>
                     }
+                    
 
                     <h2 class="mb-3">Description  </h2>
                         <p class="text-gray mb-4">

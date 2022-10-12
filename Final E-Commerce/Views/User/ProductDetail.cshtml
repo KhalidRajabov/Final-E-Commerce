@@ -115,15 +115,20 @@
                     @Model.Product.ReleaseDate
                 </div>
             </div>
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                <b style="max-height:400px" class="col-2">
-                    OS:
-                </b>
-                <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @Model.Product.OperationSystem
+            @if (Model.Product.OperationSystem!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    <b style="max-height:400px" class="col-2">
+                        OS:
+                    </b>
+                    <div style="max-height:400px" class="col-9 flex-nowrap">
+                        @Model.Product.OperationSystem
+                    </div>
                 </div>
-            </div>
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            }
+            @if (Model.Product.GPU!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     GPU:
                 </b>
@@ -131,7 +136,10 @@
                     @Model.Product.GPU
                 </div>
             </div>
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            }
+            @if (Model.Product.Chipset!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Chipset:
                 </b>
@@ -139,30 +147,40 @@
                     @Model.Product.Chipset
                 </div>
             </div>
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                <b style="max-height:400px" class="col-2">
-                    Memory:
-                </b>
-                <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @Model.Product.Memory
+            }
+            @if (Model.Product.Memory!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    <b style="max-height:400px" class="col-2">
+                        Memory:
+                    </b>
+                    <div style="max-height:400px" class="col-9 flex-nowrap">
+                        @Model.Product.Memory
+                    </div>
                 </div>
-            </div>
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                <b style="max-height:400px" class="col-2">
-                    Body:
-                </b>
-                <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @Model.Product.Body
+            }
+            @if (Model.Product.Body!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    <b style="max-height:400px" class="col-2">
+                        Body:
+                    </b>
+                    <div style="max-height:400px" class="col-9 flex-nowrap">
+                        @Model.Product.Body
+                    </div>
                 </div>
-            </div>
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                <b style="max-height:400px" class="col-2">
-                    Display:
-                </b>
-                <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @Model.Product.Display
+            }
+            @if (Model.Product.Display!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                    <b style="max-height:400px" class="col-2">
+                        Display:
+                    </b>
+                    <div style="max-height:400px" class="col-9 flex-nowrap">
+                        @Model.Product.Display
+                    </div>
                 </div>
-            </div>
+            }
             @if (Model.Product.FrontCamera != null)
             {
                 <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -186,7 +204,9 @@
                     </div>
                 </div>
             }
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            @if (Model.Product.Battery!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Battery:
                 </b>
@@ -194,7 +214,10 @@
                     @Model.Product.Battery
                 </div>
             </div>
-            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            }
+            @if (Model.Product.Weight!=null)
+            {
+                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Weight:
                 </b>
@@ -202,7 +225,7 @@
                     @Model.Product.Weight
                 </div>
             </div>
-            
+            }
         </div>
      </div>
 

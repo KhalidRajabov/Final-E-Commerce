@@ -5,6 +5,11 @@
 }
 
 <div class="container">
+	<ul class="list-inline dashboard-menu text-center">
+					<li class="list-inline-item user-menu"><a class="active" asp-action="profilepage" asp-controller="user">Dashboard</a></li>
+					<li class="list-inline-item user-menu"><a  asp-action="profileproducts" asp-controller="user" asp-route-id="@Model.User.Id">Products</a></li>
+	</ul>
+
     <div class="dashboard-wrapper user-dashboard">
 					<div class="media">
 						<div class="pull-left mr-3 d-flex flex-column">

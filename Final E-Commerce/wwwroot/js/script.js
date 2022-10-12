@@ -26,7 +26,7 @@
                             bTotal.innerHTML = response.data.count
                             tPrice.innerHTML = ` $${response.data.price}`
                             let cartitem = `<li id="cart-item${dataId}"  class="d-flex border-bottom">
-                                            <img width="70" src="images/products/${response.data.image}" alt="product-img">
+                                            <img width="70px" src="/images/products/${response.data.image}" alt="product-img">
                                             <div class="mx-3">
                                                 <h6>${response.data.name}</h6>
                                                 <span id="oneproductCount${response.data.id}">${response.data.productcount} X</span> 
@@ -39,7 +39,7 @@
                                 timerProgressBar: true,
                                 title: 'Added to basket!',
                                 text: `${response.data.name}`,
-                                imageUrl: `images/products/${response.data.image}`,
+                                imageUrl: `/images/products/${response.data.image}`,
                                 imageWidth: 400,
                                 imageHeight: 200,
                                 imageAlt: 'Custom image',
@@ -650,7 +650,7 @@
                             timerProgressBar: true,
                             title: 'Thanks for rating!',
                             text: `${response.data.name}`,
-                            imageUrl: `images/products/${response.data.image}`,
+                            imageUrl: `/images/products/${response.data.image}`,
                             imageWidth: 400,
                             imageHeight: 200,
                             imageAlt: 'Custom image',

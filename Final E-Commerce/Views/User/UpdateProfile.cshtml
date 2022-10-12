@@ -64,11 +64,6 @@
                 <textarea asp-for="AboutMe" class="form-control" placeholder="About"></textarea>
                 <span class="text-danger" asp-validation-for="AboutMe"></span>
             </div>
-            <div class="col-10 form-group d-flex flex-column">
-                <label asp-for="Photo"></label>
-                <input class="form-control" asp-for="Photo" placeholder="Photo" />
-                <span class="text-danger" asp-validation-for="Photo"></span>
-            </div>
             <div class="col-10 form-group d-flex flex-row justify-content-center">
                 <button asp-action="UpdateProfile" type="submit" class="w-25 btn btn-success text-light">Done</button>
             </div>

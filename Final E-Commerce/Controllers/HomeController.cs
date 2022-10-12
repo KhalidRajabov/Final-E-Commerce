@@ -183,6 +183,15 @@ namespace Final_E_Commerce.Controllers
             };
             return Ok(obj);
         }
+        [Authorize]
+        public async Task<IActionResult> RemoveRating(int id, string ReturnUrl)
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            UserProductRatings? rating = await _context?.UserProductRatings?.Where(r => r.AppUserId == user.Id && r.ProductId == id).FirstOrDefaultAsync();
+            _context.UserProductRatings.Remove(rating);
+            await _context?.SaveChangesAsync();
+            return Redirect(ReturnUrl);
+        }
 
 
         public IActionResult Error()

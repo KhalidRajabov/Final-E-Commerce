@@ -1,0 +1,63 @@
+﻿@model UserProductsVM
+@{
+    ViewData["Title"] = "ProfileProducts";
+}
+
+<div class="container">
+	<ul class="list-inline dashboard-menu text-center">
+		<li class="list-inline-item user-menu"><a asp-action="profilepage" asp-controller="user">Dashboard</a></li>
+        <li class="list-inline-item user-menu"><a class="active" asp-action="profileproducts" asp-controller="user" asp-route-id="@ViewBag.UserId">Products</a></li>
+	</ul>
+
+	<div class="col-md-12">
+	@if (Model.Products.Count>0)
+                {
+                    <div class="dashboard-wrapper user-dashboard">
+                    <div class="table-responsive">
+                        <table id="user-table" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Rating</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Products)
+                                {
+                                    
+                                    <tr class="product-table">
+                                        <td>
+                                            @foreach (var images in item.ProductImages)
+                                            {
+                                                if (images.IsMain)
+                                                {
+                                                    <img width="100" src="~/images/products/@images.ImageUrl" />
+                                                }
+                                            }
+                                        </td>
+                                    <td><a asp-action="detail" asp-controller="home" asp-route-id="@item.Id">@item.Name</a></td>
+                                        <td>$@item.Price</td>
+                                        <td>@item.Rating</td>
+                                        <td>
+                                            <a  asp-action="detail" asp-controller="home" asp-route-id="@item.Id"><i style="font-size:200%; color:green" class=" fa-solid fa-circle-info"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                }
+                else{
+                <div class="mt-5 col-12 d-flex flex-row justify-content-center"><h1 class="text-primary">
+                    This person does not have any products
+                </h1></div>
+                }
+	</div>
+</div>
+
+
+
