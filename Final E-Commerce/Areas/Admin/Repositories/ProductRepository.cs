@@ -26,7 +26,10 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
                 {
                     Id = Convert.ToInt32(row["Id"]),
                     Name = row["Name"].ToString(),
-                    Price = Convert.ToDouble(row["Price"])
+                    Price = Convert.ToDouble(row["Price"]),
+                    Sold = Convert.ToInt32(row["Sold"]),
+                    Profit = Convert.ToDouble(row["Profit"]),
+                    Count = Convert.ToInt32(row["Count"])
                 };
                 products.Add(product);
             }
@@ -35,7 +38,7 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
 
         public DataTable GetProductDetailsFromDb()
         {
-            var query = "SELECT Id, Name, Price FROM Products";
+            var query = "SELECT Id, Name, Price, Sold, Count, Profit FROM Products";
             DataTable dataTable = new DataTable();
 
             using (SqlConnection connection = new SqlConnection(connectionString))

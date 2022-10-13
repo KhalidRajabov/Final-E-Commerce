@@ -17,17 +17,31 @@ namespace Final_E_Commerce.Controllers
     {
         private readonly AppDbContext? _context;
         private readonly UserManager<AppUser>? _usermanager;
-        public HomeController(AppDbContext? context, UserManager<AppUser>? usermanager)
+        private readonly SignInManager<AppUser>? _signInManager;
+        public HomeController(AppDbContext? context, UserManager<AppUser>? usermanager, SignInManager<AppUser>? signInManager)
         {
             _context = context;
             _usermanager = usermanager;
+            _signInManager = signInManager;
         }
         public async Task<IActionResult> Index()
         {
             List<Products>? AllProducts = await _context.Products?
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
 
-            
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             foreach (var product in AllProducts)
             {
 
@@ -49,7 +63,7 @@ namespace Final_E_Commerce.Controllers
                 
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 homeVM.User = user;
-                homeVM.Wishlists = await _context.Wishlists.Where(w => w.AppUserId == user.Id).ToListAsync(); ;
+                homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync(); ;
 
             }
             homeVM.Bio = await _context?.Bios?.FirstOrDefaultAsync();
@@ -76,6 +90,19 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
                     await _context.SaveChangesAsync();
+                }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
                 }
             }
             DetailVM? detailVM = new DetailVM();
@@ -170,6 +197,19 @@ namespace Final_E_Commerce.Controllers
             string? ProductImage = "";
             if (User.Identity.IsAuthenticated)
             {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 Products? product = await _context?.Products?
                     .Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id == ProductId);
@@ -207,6 +247,19 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> RemoveRating(int id, string ReturnUrl)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserProductRatings? rating = await _context?.UserProductRatings?.Where(r => r.AppUserId == user.Id && r.ProductId == id).FirstOrDefaultAsync();
             _context.UserProductRatings.Remove(rating);
@@ -222,6 +275,19 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> PostComment(int ProductId, string comment, string? author)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             Products? product = await _context?.Products?
                 .FirstOrDefaultAsync(p=>p.Id == ProductId);
             ProductComment NewComment = new ProductComment();
@@ -249,6 +315,19 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             ProductComment? comment = await _context?.ProductComments?.FirstOrDefaultAsync(bc => bc.Id == id);
             if (comment.AppUserId == user.Id)
@@ -279,6 +358,19 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> LoadComments(int skip, int? BlogId)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
 
             List<ProductComment>? comments = await _context?.ProductComments?
                 .Include(b => b.User)
@@ -315,6 +407,19 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Brands(int id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             List<Products>? products = await _context?.Products?
                 .Where(p=>p.BrandId==id)
                 .Include(p => p.ProductImages)

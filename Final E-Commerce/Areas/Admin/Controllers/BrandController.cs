@@ -6,6 +6,7 @@ using Final_E_Commerce.Migrations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Areas.Admin.Controllers
 {
@@ -24,7 +25,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         {
             ListBrandVM brandVM = new ListBrandVM
             {
-                Brands = _context.Brands.Where(b => b.IsDeleted != true).ToList()
+                Brands = _context?.Brands?.Where(b => b.IsDeleted != true).ToList()
             };
             
             return View(brandVM);
@@ -61,7 +62,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 return View();
             }
 
-            bool isValid = _context.Brands.Where(b => b.IsDeleted != true).Any(c => c.Name.ToLower() == brand.Name.ToLower());
+            bool isValid = await _context?.Brands?.Where(b => b.IsDeleted != true).AnyAsync(c => c.Name.ToLower() == brand.Name.ToLower());
             if (isValid)
             {
                 ModelState.AddModelError("Name", "This brand name already exists");
@@ -98,7 +99,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
             if (!ModelState.IsValid) return View();
             if (id == null) return RedirectToAction("error", "home");
-            Brand dbBrand = await _context.Brands.FindAsync(id);
+            Brand? dbBrand = await _context.Brands.FindAsync(id);
             if (dbBrand == null) return RedirectToAction("error", "home");
 
             if (brand.Photo == null)
@@ -117,7 +118,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     ModelState.AddModelError("Photo", "Image size can not be large");
                     return View();
                 }
-                string oldImg = dbBrand.ImageUrl;
+                string? oldImg = dbBrand.ImageUrl;
                 string path = Path.Combine(_env.WebRootPath, "img", oldImg);
                 dbBrand.ImageUrl = brand.Photo.SaveImage(_env, "images/brands");
                 Helper.Helper.DeleteImage(path);
@@ -146,7 +147,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Brand brands = await _context.Brands.FindAsync(id);
+            Brand? brands = await _context.Brands.FindAsync(id);
             if (brands == null) return RedirectToAction("error", "home");
             brands.IsDeleted = true;
             brands.DeletedAt = DateTime.Now;

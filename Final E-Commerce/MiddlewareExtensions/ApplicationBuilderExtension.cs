@@ -1,5 +1,4 @@
 ﻿using Final_E_Commerce.SubscribeTableDependency;
-
 namespace Final_E_Commerce.MiddlewareExtensions
 {
     public static class ApplicationBuilderExtension

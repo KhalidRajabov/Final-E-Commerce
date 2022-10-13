@@ -12,11 +12,13 @@ namespace Final_E_Commerce.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _usermanager;
+        private readonly SignInManager<AppUser>? _signInManager;
 
-        public SearchController(AppDbContext context, UserManager<AppUser> usermanager)
+        public SearchController(AppDbContext context, UserManager<AppUser> usermanager, SignInManager<AppUser>? signInManager)
         {
             _context = context;
             _usermanager = usermanager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -31,6 +33,19 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
                     _context?.SaveChangesAsync();
+                }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
                 }
             }
             return View();
@@ -48,6 +63,19 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
                     _context?.SaveChangesAsync();
+                }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
                 }
             }
             List<Products> products = _context.Products
@@ -92,6 +120,19 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
                     _context?.SaveChangesAsync();
+                }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
                 }
             }
             List<Products> PopularProducts = _context.Products

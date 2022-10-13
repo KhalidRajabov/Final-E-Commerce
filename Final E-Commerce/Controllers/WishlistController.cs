@@ -14,16 +14,28 @@ namespace Final_E_Commerce.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _usermanager;
+        private readonly SignInManager<AppUser>? _signInManager;
 
-        public WishlistController(UserManager<AppUser> usermanager, AppDbContext context)
+        public WishlistController(UserManager<AppUser> usermanager, AppDbContext context, SignInManager<AppUser>? signInManager)
         {
             _usermanager = usermanager;
             _context = context;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            List<Products>? AllProducts = await _context.Products
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
+            List<Products>? AllProducts = await _context?.Products?
                    .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -32,16 +44,16 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             WishlistVM wishlistVM = new WishlistVM();
-            List<Wishlist> wihlist= _context.Wishlists.Where(w => w.AppUserId == user.Id).ToList();
+            List<Wishlist>? wihlist= _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToList();
             List<Products> listproduct = new List<Products>();
             foreach (var item in wihlist)
             {
-                Products product = _context?.Products?.Include(p=>p.ProductImages).FirstOrDefault(p => p.Id == item.ProductId);
+                Products? product = await _context?.Products?.Include(p=>p.ProductImages).FirstOrDefaultAsync(p => p.Id == item.ProductId);
                 listproduct.Add(product);
             }
             wishlistVM.Products = listproduct;
@@ -50,7 +62,8 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Add(int id)
         {
-            List<Products>? AllProducts = await _context.Products
+
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -59,7 +72,17 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
+            }
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
                 }
             }
             bool online = false;
@@ -68,11 +91,11 @@ namespace Final_E_Commerce.Controllers
                 online = true;
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Products product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
+            Products? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
             Wishlist wishlist = new Wishlist();
             wishlist.ProductId = product.Id;
             wishlist.AppUserId = user.Id;
-            bool IsExist = _context.Wishlists.Where(w=>w.AppUserId == user.Id&&w.ProductId==id).Any();
+            bool IsExist = await _context?.Wishlists?.Where(w=>w.AppUserId == user.Id&&w.ProductId==id).AnyAsync();
             var obj = new
             {
                 exist = true,
@@ -95,7 +118,8 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> Remove(int id)
         {
-            List<Products>? AllProducts = await _context.Products
+
+            List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
@@ -104,18 +128,28 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
+            }
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Products product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
-            Wishlist IsExist = _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).FirstOrDefault();
+            Products? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == id);
+            Wishlist? IsExist = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id && w.ProductId == id).FirstOrDefaultAsync();
             if (IsExist==null)
             {
                 return Ok($"{product.Name} doesn't exist in your wishlist");
             }
             _context.Wishlists.Remove(IsExist);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok($"{product.Name} deleted from your wishlist");
         }
     }

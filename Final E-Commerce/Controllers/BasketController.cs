@@ -25,7 +25,7 @@ namespace Final_E_Commerce.Controllers
             _usermanager = userManager;
         }
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             List<Products>? AllProducts =  _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToList();
@@ -36,7 +36,7 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
             string? username = "";
@@ -47,6 +47,17 @@ namespace Final_E_Commerce.Controllers
             else
             {
                 username = User.Identity.Name;
+
+                AppUser user = await _usermanager.FindByNameAsync(username);
+                var roles = await _usermanager.GetRolesAsync(user);
+                foreach (var item in roles)
+                {
+                    if (item.ToLower() == "ban" || roles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
             }
             string? basket = Request.Cookies[$"basket{username}"];
             List<BasketVM>? basketVM;
@@ -96,12 +107,21 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var roles = await _usermanager.GetRolesAsync(user);
+            foreach (var item in roles)
+            {
+                if (item.ToLower() == "ban" || roles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             string? username = "";
             bool? online = false;
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("login", "account");
-                online = false;
             }
             else
             {
@@ -204,6 +224,16 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var roles = await _usermanager.GetRolesAsync(user);
+            foreach (var item in roles)
+            {
+                if (item.ToLower() == "ban" || roles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             string? username = "";
             if (!User.Identity.IsAuthenticated)
             {
@@ -262,6 +292,16 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
                     _context?.SaveChangesAsync();
+                }
+            }
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var roles = await _usermanager.GetRolesAsync(user);
+            foreach (var item in roles)
+            {
+                if (item.ToLower() == "ban" || roles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
                 }
             }
             string? username = "";
@@ -354,6 +394,16 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var roles = await _usermanager.GetRolesAsync(user);
+            foreach (var item in roles)
+            {
+                if (item.ToLower() == "ban" || roles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             string? username = "";
             if (!User.Identity.IsAuthenticated)
             {
@@ -411,6 +461,16 @@ namespace Final_E_Commerce.Controllers
                     item.DiscountPercent = 0;
                     item.DiscountPrice = 0;
                     _context?.SaveChangesAsync();
+                }
+            }
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var roles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in roles)
+            {
+                if (item.ToLower() == "ban" || roles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
                 }
             }
             string? username = "";
@@ -493,6 +553,16 @@ namespace Final_E_Commerce.Controllers
                     _context?.SaveChangesAsync();
                 }
             }
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Fill all forms");
@@ -545,16 +615,13 @@ namespace Final_E_Commerce.Controllers
                         orderItem.Price = dbProduct.DiscountPrice;
                         orderItem.TotalPrice = dbProduct.DiscountPrice * basketProduct.ProductCount;
                         total += basketProduct.ProductCount * dbProduct.DiscountPrice;
-                        dbProduct.Profit += dbProduct.DiscountPrice * basketProduct.ProductCount;
                     }
                     else
                     {
                         orderItem.Price = dbProduct.Price;
                         orderItem.TotalPrice = dbProduct.Price * basketProduct.ProductCount;
-                        dbProduct.Profit += dbProduct.Price * basketProduct.ProductCount;
                         total += basketProduct.ProductCount * dbProduct.Price;
                     }
-                    dbProduct.Sold += basketProduct.ProductCount;
                     orderItems.Add(orderItem);
                     dbProduct.Count = dbProduct.Count - basketProduct.ProductCount;
                 }

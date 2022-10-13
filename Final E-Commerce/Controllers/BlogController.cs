@@ -16,17 +16,19 @@ namespace Final_E_Commerce.Controllers
         private IConfiguration _config { get; }
         private readonly UserManager<AppUser> _usermanager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public BlogController(AppDbContext context, IWebHostEnvironment env, IConfiguration config, UserManager<AppUser> usermanager, RoleManager<IdentityRole> roleManager)
+        private readonly SignInManager<AppUser>? _signInManager;
+        public BlogController(AppDbContext context, IWebHostEnvironment env, IConfiguration config, UserManager<AppUser> usermanager, RoleManager<IdentityRole> roleManager, SignInManager<AppUser>? signInManager)
         {
             _context = context;
             _env = env;
             _config = config;
             _usermanager = usermanager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             List<Blogs>? blogs = _context?.Blogs?.Where(b => !b.IsDeleted).ToList();
             foreach (var item in blogs)
@@ -38,7 +40,21 @@ namespace Final_E_Commerce.Controllers
             {
                 Blogs=_context?.Blogs?.Where(b=>!b.IsDeleted)?.OrderByDescending(b=>b.Id)?.Include(b=>b.BlogSubjects).ThenInclude(bs=>bs.Subjects).ToList(),
             };
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             return View(blog);
+
         }
 
 
@@ -57,6 +73,19 @@ namespace Final_E_Commerce.Controllers
             
             if (User.Identity.IsAuthenticated)
             {
+                if (User.Identity.IsAuthenticated)
+                {
+                    AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                    var userroles = await _usermanager.GetRolesAsync(AppUser);
+                    foreach (var item in userroles)
+                    {
+                        if (item.ToLower() == "ban" || userroles == null)
+                        {
+                            await _signInManager.SignOutAsync();
+                            return RedirectToAction("error", "home");
+                        }
+                    }
+                }
                 AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
                 ViewBag.AppUserId = user.Id;
                 int RightCounter = 0;
@@ -102,6 +131,19 @@ namespace Final_E_Commerce.Controllers
             };
             if (User.Identity.IsAuthenticated)
             {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 ViewBag.AppUserId = user.Id;
                 int RightCounter = 0;
@@ -131,6 +173,19 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> PostComment(int id, string comment, string? author)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             Blogs? blog =await _context?.Blogs?
                 .FirstOrDefaultAsync(b => b.Id == id);
             BlogComment NewComment = new BlogComment();
@@ -159,6 +214,19 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
             BlogComment? comment = await _context?.BlogComments?.FirstOrDefaultAsync(bc => bc.Id == id);
             if (comment.AppUserId == user.Id)

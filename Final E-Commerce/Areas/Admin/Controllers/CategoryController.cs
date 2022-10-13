@@ -39,7 +39,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         private int PageCount(int take)
         {
             ListCategory categories = new ListCategory();
-            categories.Categories = _context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList();
+            categories.Categories = _context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList();
 
             return (int)Math.Ceiling((decimal)categories.Categories.Count() / take);
         }
@@ -75,7 +75,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             }
 
 
-            bool isValid = await _context.Categories.Where(c => c.IsDeleted != true).AnyAsync(c => c.Name.ToLower() == category.Name.ToLower());
+            bool isValid = await _context?.Categories?.Where(c => c.IsDeleted != true).AnyAsync(c => c.Name.ToLower() == category.Name.ToLower());
             if (isValid)
             {
                 ModelState.AddModelError("Name", "This category name already exists");
@@ -95,25 +95,25 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public IActionResult CreateSubCategory()
         {
-            ViewBag.MainCategories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            ViewBag.MainCategories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubCategory(CategoryVM subcategory)
         {
-            ViewBag.MainCategories = new SelectList(_context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
+            ViewBag.MainCategories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-            if (subcategory.ParentId == null)
+            if (subcategory?.ParentId == null)
             {
                 ModelState.AddModelError("ParentId", "Select a category");
                 return View();
             }
-            bool isValid = _context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId != null).Any(c => c.Name.ToLower() == subcategory.Name.ToLower());
+            bool isValid = await _context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId != null).AnyAsync(c => c.Name.ToLower() == subcategory.Name.ToLower());
             if (isValid)
             {
                 ModelState.AddModelError("Name", "This category name already exists");
@@ -136,7 +136,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteCategory(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Category category = await _context.Categories.FindAsync(id);
+            Category? category = await _context.Categories.FindAsync(id);
             if (category == null) return RedirectToAction("error", "home");
             category.IsDeleted = true;
             category.DeletedAt = DateTime.Now;
@@ -147,7 +147,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Update(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Category category = await _context.Categories.FindAsync(id);
+            Category? category = await _context.Categories.FindAsync(id);
             if (category == null) return RedirectToAction("error", "home");
             CategoryVM categoryVM = new CategoryVM();
             categoryVM.Category = category;
@@ -160,9 +160,9 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return View();
             if (id == null) return RedirectToAction("error", "home");
-            Category dbCategory = await _context.Categories.FindAsync(id);
+            Category? dbCategory = await _context.Categories.FindAsync(id);
             if (dbCategory == null) return RedirectToAction("error", "home");
-            Category checkCategory = _context.Categories.FirstOrDefault(c => c.Name.ToLower() == category.Name.ToLower());
+            Category? checkCategory = _context.Categories.FirstOrDefault(c => c.Name.ToLower() == category.Name.ToLower());
             if (checkCategory != null)
             {
                 if (dbCategory.Name != checkCategory.Name)
@@ -187,7 +187,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     ModelState.AddModelError("Photo", "Image size can not be large");
                     return View();
                 }
-                string oldImg = dbCategory.ImageUrl;
+                string? oldImg = dbCategory.ImageUrl;
                 string path = Path.Combine(_env.WebRootPath, "images", oldImg);
                 Helper.Helper.DeleteImage(path);
                 dbCategory.ImageUrl = category.Images.SaveImage(_env, "images");
@@ -203,12 +203,12 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Detail(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Category dbCategory = await _context.Categories.FindAsync(id);
+            Category? dbCategory = await _context.Categories.FindAsync(id);
             if (dbCategory == null) return RedirectToAction("error", "home");
             CategoryVM category = new CategoryVM();
             category.Category = dbCategory;
-            List<Products> products = _context?.Products?.Where(c => c.Category.ParentId == dbCategory.Id).ToList();
-            ViewBag.ProductCount=products.Count();
+            List<Products>? products = _context?.Products?.Where(c => c.Category.ParentId == dbCategory.Id).ToList();
+            ViewBag.ProductCount=products?.Count();
             return View(category);
         }
     }

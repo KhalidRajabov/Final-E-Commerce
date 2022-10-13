@@ -23,7 +23,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public IActionResult DeletedProducts(int page = 1, int take = 5)
         {
 
-            List<Products> product = _context?.Products?.Include(p => p.Category).Include(pi => pi.ProductImages)
+            List<Products>? product = _context?.Products?.Include(p => p.Category).Include(pi => pi.ProductImages)
                 .Where(p => p.IsDeleted == true).Skip((page - 1) * take).Take(take).ToList();
             PaginationVM<Products> paginationVM = new PaginationVM<Products>(product, PageCount(take), page);
 
@@ -32,21 +32,21 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         private int PageCount(int take)
         {
-            List<Products> products = _context?.Products?.Where(p => p.IsDeleted == true).ToList();
+            List<Products>? products = _context?.Products?.Where(p => p.IsDeleted == true).ToList();
             return (int)Math.Ceiling((decimal)products.Count() / take);
         }
-        public IActionResult ProductDetails(int? id)
+        public async Task<IActionResult> ProductDetails(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Products product = _context?.Products?.Include(pi => pi.ProductImages)
-            .Include(t => t.ProductTags).ThenInclude(t => t.Tags).FirstOrDefault(p => p.Id == id);
+            Products? product = await _context?.Products?.Include(pi => pi.ProductImages)?
+            .Include(t => t.ProductTags).ThenInclude(t => t.Tags).FirstOrDefaultAsync(p => p.Id == id);
             if (product == null) return RedirectToAction("error", "home");
             return View(product);
         }
         public async Task<IActionResult> RecoverProduct(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Products product = _context?.Products?.Find(id);
+            Products? product = _context?.Products?.Find(id);
             if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = false;
             await _context.SaveChangesAsync();

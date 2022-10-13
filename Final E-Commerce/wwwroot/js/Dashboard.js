@@ -34,6 +34,9 @@ function BindProductsToGrid(products) {
         tr.append(`<td>${product.price}</td>`);
         tr.append(`<td>${product.sold}</td>`);
         tr.append(`<td>${product.profit}</td>`);
+        tr.append(`<td>${product.count}</td>`);
         $('#user-table').append(tr);
     });
+
+    console.log(product.profit,  product.sold)
 }

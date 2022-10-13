@@ -149,7 +149,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 NewProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent) / 100;
             }
             NewProduct.ProductImages[0].IsMain = true;
-            if (product.SubCategory == null)
+            if (product?.SubCategory == null)
             {
                 NewProduct.CategoryId = product.CategoryId;
             }
@@ -231,7 +231,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             var altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
             ViewBag.Brands = new SelectList(_context?.Brands?.ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
-            ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
+            ViewBag.altCategories = new SelectList(altCategories?.ToList(), "Id", "Name");
             ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (!ModelState.IsValid)
             {
@@ -250,7 +250,6 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 return View();
             }
             List<ProductImage> images = new List<ProductImage>();
-            string? path = "";
             if (product.Photos == null)
             {
                 foreach (var item in dbProduct.ProductImages)
@@ -369,7 +368,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.Battery = product.Battery;
             dbProduct.Weight = product.Weight;
             dbProduct.Status = ProductConfirmationStatus.Approved;
-            if (product.SubCategory == null)
+            if (product?.SubCategory == null)
             {
                 dbProduct.CategoryId = product.CategoryId;
             }

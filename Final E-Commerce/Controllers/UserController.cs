@@ -17,36 +17,61 @@ namespace Final_E_Commerce.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _usermanager;
+        private readonly SignInManager<AppUser>? _signInManager;
         private readonly IWebHostEnvironment _env;
         private IConfiguration _config { get; }
 
         public UserController(AppDbContext context,
         UserManager<AppUser> userManager,
         IWebHostEnvironment env,
-        IConfiguration config)
+        IConfiguration config,
+        SignInManager<AppUser>? signInManager)
         {
             _context = context;
             _usermanager = userManager;
             _env = env;
             _config = config;
+            _signInManager = signInManager;
         }
 
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserVM? userVM = new UserVM();
             
             userVM.User = user;
             userVM.UserProfile = await _context?.UserProfiles?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             return View(userVM);
+            
+            
         }
 
 
         [Authorize]
         public async Task<IActionResult> UserDetail()
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetailsVM? userVM = new UserDetailsVM();
             UserDetails? detail = await _context?.UserDetails?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
@@ -63,9 +88,18 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        //not working yet
-        public IActionResult ChangeImage()
+        public async Task<IActionResult> ChangeImage()
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             return View();
         }
 
@@ -73,6 +107,16 @@ namespace Final_E_Commerce.Controllers
         [Authorize,HttpPost]
         public async Task<IActionResult> ChangeImage(UserPhotoVM image)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             if (image.Photo == null)
             {
                 ModelState.AddModelError("Photo", "Do not leave it empty");
@@ -99,6 +143,19 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> ProfilePage(string id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             if (id==null) return RedirectToAction("error", "home");
             AppUser user =await _usermanager.FindByIdAsync(id);
             if (user == null) return RedirectToAction("error", "home");
@@ -113,6 +170,19 @@ namespace Final_E_Commerce.Controllers
 
         public async Task<IActionResult> ProfileProducts(string id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             ViewBag.UserId = await _usermanager.FindByIdAsync(id);
             UserProductsVM userProductsVM = new UserProductsVM
             {
@@ -126,6 +196,19 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateProfile()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
             UserProfile? profile = await _context?.UserProfiles?.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
             UserProfileVM vM = new UserProfileVM
@@ -144,10 +227,22 @@ namespace Final_E_Commerce.Controllers
             };
             return View(vM);
         }
+
         [Authorize, HttpPost]
-        
         public async Task<IActionResult> UpdateProfile(UserProfileVM? userProfile)
         {
+            
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
+        
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             if (userProfile.Photo != null)
             {
@@ -181,8 +276,23 @@ namespace Final_E_Commerce.Controllers
             return RedirectToAction("index");
         }
 
-            public async Task<IActionResult> UpdateProfileDetail()
+
+        [Authorize]
+        public async Task<IActionResult> UpdateProfileDetail()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetailsVM? userVM = new UserDetailsVM();
             UserDetails? detail = await _context?.UserDetails?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
@@ -200,6 +310,19 @@ namespace Final_E_Commerce.Controllers
         [Authorize,HttpPost]
         public async Task<IActionResult> UpdateProfileDetail(UserDetailsVM detail)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
             AppUser? user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserDetails? userDetails = await _context?.UserDetails?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             userDetails.Firstname = detail.Firstname;
@@ -217,6 +340,18 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> Orders()
         {
+         
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            
             List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
@@ -238,6 +373,17 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> Detail(int id)
         {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            
             List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
@@ -262,6 +408,17 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> Products()
         {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            
             List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
@@ -287,6 +444,18 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> CreateProduct()
         {
+            
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            
             var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
             var altCategories = await _context.Categories.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
@@ -300,6 +469,17 @@ namespace Final_E_Commerce.Controllers
         [Authorize,HttpPost]
         public async Task<IActionResult> CreateProduct(ProductCreateVM? vm)
         {
+
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             var mainCategories = await _context?.Categories?.Where(p => p.ParentId == null).Where(p => p.IsDeleted != true).ToListAsync();
             var altCategories = await _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToListAsync();
             ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
@@ -418,6 +598,16 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> ProductDetail(int id)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             AppUser? CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
             Products? p = await _context?.Products?
                 .Where(p => p.AppUserId == CurrentUser.Id)?
@@ -438,6 +628,16 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteProduct(int id)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             Products? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
@@ -449,6 +649,16 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> EditProduct(int? id)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
@@ -508,6 +718,16 @@ namespace Final_E_Commerce.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(int id, ProductUpdateVM? product)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             var altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
             ViewBag.Brands = new SelectList(_context?.Brands?.ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
@@ -699,6 +919,16 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> EditPictures(int id)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
@@ -730,6 +960,16 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string? Returnurl)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
@@ -765,6 +1005,16 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
         {
+            AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var userroles = await _usermanager.GetRolesAsync(AppUser);
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return RedirectToAction("error", "home");
+                }
+            }
             List<Products>? AllProducts = await _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
