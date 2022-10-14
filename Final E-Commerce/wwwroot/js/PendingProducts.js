@@ -1,7 +1,8 @@
 ﻿"use strict";
 var connection = new signalR.HubConnectionBuilder().withUrl(`/dashboardHub`, {
     skipNegotiation: true,
-    transport: signalR.HttpTransportType.WebSockets}).build();
+    transport: signalR.HttpTransportType.WebSockets
+}).build();
 
 $(function () {
     connection.start().then(function () {
@@ -13,25 +14,20 @@ $(function () {
 
 
 function InvokeProducts() {
-    connection.invoke("SendProducts").catch(function (err) {
+    connection.invoke("SendPendings").catch(function (err) {
         return console.error(err.toString());
     });
 }
 
-connection.on("ReceivedProducts", function (products) {
+connection.on("ReceivedPending", function (products) {
     BindProductsToGrid(products);
 });
-
-
 
 function BindProductsToGrid(products) {
     $('#user-table tbody').empty();
 
-    var totalProfit = 0;
-    var totalViews = 0;
-    var totalSold = 0;
     var tr;
-    
+
     $.each(products, function (index, product) {
         tr = $('<tr/>');
         tr.append(`<td>${index + 1}</td>`);
@@ -40,21 +36,8 @@ function BindProductsToGrid(products) {
         tr.append(`<td>${product.sold}</td>`);
         tr.append(`<td>${product.profit}</td>`);
         tr.append(`<td>${product.count}</td>`);
-        tr.append(`<td>${product.rating}</td>`);
         $('#user-table').append(tr);
-        totalProfit += product.profit;
-        totalSold += product.sold;
-        totalViews += product.views;
-
-
-        $('#span1').text("$"+totalProfit);
-        $('#span2').text(totalSold);
-        $('#span3').text(totalViews);
-        console.log(product.id);
+        console.log(product.id)
     });
-    console.log("profit: ", totalProfit);
-    console.log("sold: ", totalSold);
-    console.log("views: ", totalViews);
+
 }
-
-

@@ -2,6 +2,7 @@
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
@@ -209,6 +210,26 @@ namespace Final_E_Commerce.Controllers
             }
         }
 
+        /*[AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword()
+        {
+            return View();
+        }
+        [AllowAnonymous, HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVM forgotPasswordVM)
+        {
+            AppUser user = await _usermanager.FindByEmailAsync(forgotPasswordVM.Email);
+            string token = await _usermanager.GeneratePasswordResetTokenAsync(user);
+            string? ConfirmationLink = Url.Action("ResetPassword", "EmailConfirmation", new 
+            {
+                token, Email = forgotPasswordVM.Email 
+            }, Request.Scheme);
+
+            EmailHelper emailHelper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+            var emailResult = emailHelper.SendEmail(forgotPasswordVM.Email, ConfirmationLink);
+
+            return RedirectToAction("Login");
+        }*/
         /*[HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginVM model, string? returnurl = null)

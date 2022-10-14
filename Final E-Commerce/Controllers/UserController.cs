@@ -1041,11 +1041,41 @@ namespace Final_E_Commerce.Controllers
 
             return Redirect(Returnurl);
         }
+
+        [Authorize, HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [Authorize,HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM password)
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var token =await _usermanager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult result = await _usermanager.ResetPasswordAsync(user, token, password.NewPassword);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View();
+            }
+            return RedirectToAction("index");
+        }
         public IActionResult GetSubCategory(int cid)
         {
             var SubCategory_List = _context?.Categories?.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).ToList();
             var subs = SubCategory_List.Select(c => new { Id = c.Id, Name = c.Name }).ToList();
             return Json(SubCategory_List);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> MessageBox()
+        {
+            AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
+            ViewBag.CurrentUser = user;
+            return View();
         }
     }
 }

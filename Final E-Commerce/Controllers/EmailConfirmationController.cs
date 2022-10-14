@@ -22,5 +22,12 @@ namespace Final_E_Commerce.Controllers
 
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
+        /*public async Task<IActionResult> ResetPassword(string token, string email)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(email);
+            var result = await _userManager.res(user, token);
+
+            return View(result.Succeeded ? "NewPassword" : "Error");
+        }*/
     }
 }

@@ -1,25 +1,50 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+@section Styles {
+    <style>
+        #stats div{
+            border-radius: 10px;
+        }
 
+        #stats span{
+            padding: 6px;
+            font-weight: 700;
+        }
+    </style>
+}
 
 <div class="row">
+        <div id="stats" class="row d-flex flex-row justify-content-around mt-3">
+            <div id="profit" class="bg-success text-light text-center d-flex flex-column col-3">
+                <span>Total earnings</span>
+                <span id="span1"></span>
+            </div>
+            <div id="sold" class="bg-primary text-light text-center  d-flex flex-column col-3">
+                <span>Total products sold</span>
+                <span id="span2"></span>
+            </div>
+            <div id="views" class="bg-info text-light text-center  d-flex flex-column col-3">
+                <span>Total views</span>
+                <span id="span3"></span>
+            </div>
+        </div>
 
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="col-lg-12 grid-margin stretch-card mt-3">
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="user-table" class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Id</th>
+                                <th>Index</th>
                                 <th>Name</th>
                                 <th>Price</th>
                                 <th>Sold</th>
-                                <th>Profit</th>
+                                <th>User earnings</th>
                                 <th>Count</th>
+                                <th>Rating</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,7 +54,7 @@
             </div>
         </div>
     </div>
-
+    
 </div>
 
 

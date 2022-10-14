@@ -67,6 +67,7 @@ app.UseAuthorization();
 
 
 app.MapHub<DashboardHub>("/dashboardHub");
+app.MapHub<ChatHub>("/chatHub");
 
 app.UseEndpoints(endpoints =>
 {

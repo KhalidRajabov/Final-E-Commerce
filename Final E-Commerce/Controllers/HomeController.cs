@@ -156,7 +156,7 @@ namespace Final_E_Commerce.Controllers
                 var roles = await _usermanager.GetRolesAsync(user);
                 foreach (var item in roles)
                 {
-                    if (item.ToLower().Contains("admin") || item.ToLower().Contains("editor") || item.ToLower().Contains("moderator"))
+                    if (item.ToLower().Contains("admin") || item.ToLower().Contains("moderator"))
                     {
                         RightCounter++;
                     }
