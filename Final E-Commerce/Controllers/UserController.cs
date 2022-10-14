@@ -146,6 +146,7 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                
                 var userroles = await _usermanager.GetRolesAsync(AppUser);
                 foreach (var item in userroles)
                 {
@@ -155,6 +156,15 @@ namespace Final_E_Commerce.Controllers
                         return RedirectToAction("error", "home");
                     }
                 }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                AppUser Profile =await _usermanager.FindByIdAsync(id);
+                ViewBag.IsSubscribed = false;
+                bool subscription =await _context.Subscription
+                    .AnyAsync(s=>s.SubscriberId==AppUser.Id&&s.ProfileId==id);
+                ViewBag.IsSubscribed = subscription;
             }
             if (id==null) return RedirectToAction("error", "home");
             AppUser user =await _usermanager.FindByIdAsync(id);
@@ -187,8 +197,11 @@ namespace Final_E_Commerce.Controllers
             UserProductsVM userProductsVM = new UserProductsVM
             {
                 Products = await _context?.Products?.Where(p => p.AppUserId == id)
-                .Include(p => p.ProductImages).ToListAsync()
+                .Include(p => p.ProductImages).ToListAsync(),
+                User = await _usermanager.FindByIdAsync(id)
+                
             };
+
 
             return View(userProductsVM);
         }
@@ -1068,6 +1081,41 @@ namespace Final_E_Commerce.Controllers
             var SubCategory_List = _context?.Categories?.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).ToList();
             var subs = SubCategory_List.Select(c => new { Id = c.Id, Name = c.Name }).ToList();
             return Json(SubCategory_List);
+        }
+
+
+        [Authorize]
+        public async Task<IActionResult> SubscribeToUser(string? id,string ReturnUrl)
+        {
+            AppUser Profile = await _usermanager.FindByIdAsync(id);
+            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            
+            bool IsSubscribed = await _context?.Subscription?
+                .AnyAsync(s => s.SubscriberId == CurrentUser.Id && s.ProfileId == id);
+            if (!IsSubscribed)
+            {
+                UserSubscription subscription = new UserSubscription
+                {
+                    SubscriberId = CurrentUser.Id,
+                    ProfileId = Profile.Id
+                };
+                await _context.AddAsync(subscription);
+                await _context.SaveChangesAsync();
+            }
+            var token = "";
+            string? subject = "Subscription!";
+            EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+            token = $"Hi {CurrentUser.Fullname}. You have subscribed to hear about {Profile.Fullname}'s new blogs and products. <br> \n" +
+                $"Anything they share will be notified to you by email :)";
+            var emailResult = helper.SendNews(CurrentUser.Email, token, subject);
+
+
+            string? discountemail = Url.Action("ConfirmEmail", "Account", new
+            {
+                token
+            }, Request.Scheme);
+            return Redirect(ReturnUrl);
         }
 
         [Authorize]

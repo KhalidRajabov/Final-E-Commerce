@@ -33,6 +33,7 @@ namespace Final_E_Commerce.DAL
         public DbSet<ProductComment>? ProductComments{ get; set; }
         public DbSet<UserProductRatings>? UserProductRatings { get; set; }
         public DbSet<Message>? Messages { get; set; }
+        public DbSet<UserSubscription>? Subscription { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

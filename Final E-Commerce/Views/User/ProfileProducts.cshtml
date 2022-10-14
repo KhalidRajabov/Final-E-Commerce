@@ -5,7 +5,7 @@
 
 <div class="container">
 	<ul class="list-inline dashboard-menu text-center">
-		<li class="list-inline-item user-menu"><a asp-action="profilepage" asp-controller="user">Dashboard</a></li>
+		<li class="list-inline-item user-menu"><a asp-action="profilepage" asp-controller="user" asp-route-id="@Model.User.Id">Dashboard</a></li>
         <li class="list-inline-item user-menu"><a class="active" asp-action="profileproducts" asp-controller="user" asp-route-id="@ViewBag.UserId">Products</a></li>
 	</ul>
 

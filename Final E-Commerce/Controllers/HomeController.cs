@@ -63,8 +63,7 @@ namespace Final_E_Commerce.Controllers
                 
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 homeVM.User = user;
-                homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync(); ;
-
+                homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync(); 
             }
             homeVM.Bio = await _context?.Bios?.FirstOrDefaultAsync();
             homeVM.Category =await _context.Categories?.FirstOrDefaultAsync(c=>c.Id==1);
@@ -76,6 +75,7 @@ namespace Final_E_Commerce.Controllers
                 .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToListAsync();
             homeVM.BestSellerProducts = Bestsellers;
             homeVM.Sliders = await _context?.Sliders?.ToListAsync();
+            
             return View(homeVM);
         }
         public async Task<IActionResult> Detail(int? id)

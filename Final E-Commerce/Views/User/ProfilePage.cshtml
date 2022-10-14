@@ -6,7 +6,7 @@
 
 <div class="container">
 	<ul class="list-inline dashboard-menu text-center">
-					<li class="list-inline-item user-menu"><a class="active" asp-action="profilepage" asp-controller="user">Dashboard</a></li>
+					<li class="list-inline-item user-menu"><a class="active" asp-action="profilepage" asp-controller="user" >Dashboard</a></li>
 					<li class="list-inline-item user-menu"><a  asp-action="profileproducts" asp-controller="user" asp-route-id="@Model.User.Id">Products</a></li>
 	</ul>
 
@@ -111,7 +111,13 @@
 								</div>
 							</div>
 						}
-						
+						@if (User.Identity.IsAuthenticated&&!ViewBag.IsSubscribed)
+						{
+							<a class="col-6 col-sm-3 col-md-3 text-center text-info p-2 bg-dark" style="font-size: 120%; font-weight:700;" asp-action="SubscribeToUser" asp-controller="user" asp-route-ReturnUrl="@Context.Request.Path" asp-route-id="@Model.User.Id">Follow @Model.User.Fullname</a>
+						}
+						else{
+							<h3 class="col-6 col-sm-3 col-md-3 text-center text-info">You are following @Model.User.Fullname</h3>
+						}
 					</div>
 				</div>
 </div>

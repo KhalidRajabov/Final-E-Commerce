@@ -604,6 +604,26 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     token
                 }, Request.Scheme);
             }
+
+            List<UserSubscription> subscribers = await _context.Subscription.Where(s => s.ProfileId == product.AppUserId).ToListAsync();
+            foreach (var sub in subscribers)
+            {
+                AppUser follower = await _usermanager.FindByIdAsync(sub.SubscriberId);
+                var token = "";
+                string subject = $"New product by {user.Fullname}";
+                EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+                token = $"Hello {follower.Fullname}. {user.Fullname} Just added a new item. <br> \n" +
+                    $"{product.Name} for the price of {product.Price}. <a href='https://localhost:44393/User/productdetail/{product.Id}' style='color:red'>Check i </a>";
+                var emailResult = helper.SendNews(user.Email, token, subject);
+
+                string? discountemail = Url.Action("ConfirmEmail", "Account", new
+                {
+                    token
+                }, Request.Scheme);
+
+            }
+
             return RedirectToAction("Pendings");
         }
 
