@@ -121,6 +121,18 @@
 								</div>
 							</div>
 						}
+						@if (ViewBag.Subscribers>0)
+						{
+							<div style="max-height:400px" class="col-12 d-flex flex-row p-2 mt-5">
+								<b style="max-height:400px" class="col-2">
+									Subscribers:
+								</b>
+								<div style="max-height:400px" class="col-9 flex-nowrap">
+									@ViewBag.Subscribers  (<a asp-action="Subscribers" class="text-danger fw-bold">View</a>)
+								</div>
+							</div>
+						}
+						
 						<a class="align-self-center col-2 ml-3 text-decoration-underline" style="font-size:120%; color:rgb(30,90,154)" asp-action="UpdateProfile">
 							Update Profile
 						</a>

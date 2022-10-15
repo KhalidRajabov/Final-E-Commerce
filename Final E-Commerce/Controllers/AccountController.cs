@@ -67,7 +67,9 @@ namespace Final_E_Commerce.Controllers
                 return View(registerVM);
             }
             await _usermanager.AddToRoleAsync(appUser, "Member");
-            string token = await _usermanager.GenerateEmailConfirmationTokenAsync(appUser);
+            string token = $"Hello {appUser.Fullname}. <br> <br>  Thanks for registering. <br> \n" +
+                $" You need to activate your email by clicking the button below: <br> \n" +
+                $"<a style='background-color: black; color:aqua; padding: 3px 5px;' href='{await _usermanager.GenerateEmailConfirmationTokenAsync(appUser)}'>Activate your account</a>";
             string? ConfirmationLink = Url.Action("ConfirmEmail", "EmailConfirmation", new { token, Email = registerVM.Email }, Request.Scheme);
 
             EmailHelper emailHelper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);

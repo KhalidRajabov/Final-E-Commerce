@@ -63,7 +63,19 @@ namespace Final_E_Commerce.Controllers
                 
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 homeVM.User = user;
-                homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync(); 
+                homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync();
+                List<Products> Following = new List<Products>();
+                List<UserSubscription>? followings = _context?.Subscription?.Where(s=>s.SubscriberId==user.Id).ToList();
+                foreach (var item in followings)
+                {
+                    AppUser profile = await _usermanager.FindByIdAsync(item.ProfileId);
+                    List<Products>? ProfileProducts =await _context.Products.Where(p => p.AppUserId == profile.Id).ToListAsync();
+                    foreach (var products in ProfileProducts)
+                    {
+                        Following.Add(products);
+                    }
+                }
+                homeVM.Following = Following;
             }
             homeVM.Bio = await _context?.Bios?.FirstOrDefaultAsync();
             homeVM.Category =await _context.Categories?.FirstOrDefaultAsync(c=>c.Id==1);

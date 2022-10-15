@@ -50,15 +50,34 @@ namespace Final_E_Commerce.Controllers
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             UserVM? userVM = new UserVM();
-            
+
+            ViewBag.Subscribers = _context?.Subscription?.Where(s => s.ProfileId == user.Id).ToList().Count;
+
+
             userVM.User = user;
             userVM.UserProfile = await _context?.UserProfiles?.FirstOrDefaultAsync(up => up.AppUserId == user.Id);
             return View(userVM);
-            
-            
         }
 
-
+        [Authorize]
+        public async Task<IActionResult> Subscribers()
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            List<UserSubscription>? subscribers = await _context?.Subscription?.Where(s => s.ProfileId == user.Id).ToListAsync();
+            List<AppUser> users = new List<AppUser>();
+            foreach (var item in subscribers)
+            {
+                AppUser sub =await _usermanager.FindByIdAsync(item.SubscriberId);
+                users.Add(sub);
+            }
+            UserVM userVM = new UserVM
+            {
+                Users = users
+            };
+            return View(userVM);
+        }
+        
+        
         [Authorize]
         public async Task<IActionResult> UserDetail()
         {
@@ -160,6 +179,10 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                if (AppUser.Id==id)
+                {
+                    return RedirectToAction("index");
+                }
                 AppUser Profile =await _usermanager.FindByIdAsync(id);
                 ViewBag.IsSubscribed = false;
                 bool subscription =await _context.Subscription
@@ -594,7 +617,7 @@ namespace Final_E_Commerce.Controllers
             string subject = "Product added successfully";
             EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
-            token = $"Hello. You recently added {product.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
+            token = $"Hello {user.Firstname}.<br> <br> You recently added {product.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
                 $"It will be posted on site and you will get notified\n"+
                 $"You can still see details of your product: \n" +
                 $" <a href='https://localhost:44393/User/productdetail/{product.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
@@ -884,7 +907,7 @@ namespace Final_E_Commerce.Controllers
                     string subject = "Discount on an item you want!";
                     EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
                     
-                        token = $"Hello {CurrentUser.Fullname}. {dbProduct.Name} has a discount of {dbProduct.DiscountPercent}%. \n" +
+                        token = $"Hello {CurrentUser.Fullname}. <br> <br> {dbProduct.Name} has a discount of {dbProduct.DiscountPercent}%. \n" +
                             $"Now just {dbProduct.DiscountPrice}AZN instead if{dbProduct.Price} AZN\n" +
                             $"See it on <a style='color: red' href='http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}'>Store</a>";
                         var emailResult2 = helper.SendNews(appUser.Email, token, subject);
@@ -914,7 +937,7 @@ namespace Final_E_Commerce.Controllers
             string subject2 = "Product updated successfully";
             EmailHelper helper2 = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
-            token2 = $"Hello {CurrentUser.Fullname}. You recently updated {dbProduct.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
+            token2 = $"Hello {CurrentUser.Fullname}. <br> <br> You recently updated {dbProduct.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
                 $"It will be posted on site and you will get notified\n" +
                 $"You can still see details of your product: \n" +
                 $" <a href='https://localhost:44393/User/productdetail/{dbProduct.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
@@ -1089,6 +1112,10 @@ namespace Final_E_Commerce.Controllers
         {
             AppUser Profile = await _usermanager.FindByIdAsync(id);
             AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+            if (CurrentUser.Id==id)
+            {
+                return RedirectToAction("index");
+            }
             
             bool IsSubscribed = await _context?.Subscription?
                 .AnyAsync(s => s.SubscriberId == CurrentUser.Id && s.ProfileId == id);
@@ -1106,7 +1133,7 @@ namespace Final_E_Commerce.Controllers
             string? subject = "Subscription!";
             EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
-            token = $"Hi {CurrentUser.Fullname}. You have subscribed to hear about {Profile.Fullname}'s new blogs and products. <br> \n" +
+            token = $"Hi {CurrentUser.Fullname}. <br> <br> You have subscribed to hear about {Profile.Fullname}'s new blogs and products. <br> \n" +
                 $"Anything they share will be notified to you by email :)";
             var emailResult = helper.SendNews(CurrentUser.Email, token, subject);
 
@@ -1119,6 +1146,24 @@ namespace Final_E_Commerce.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> UnSubscribeFromUser(string? id, string ReturnUrl)
+        {
+            AppUser Profile = await _usermanager.FindByIdAsync(id);
+            AppUser CurrentUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+
+            bool IsSubscribed = await _context?.Subscription?
+                .AnyAsync(s => s.SubscriberId == CurrentUser.Id && s.ProfileId == id);
+            if (IsSubscribed)
+            {
+                UserSubscription? subscription = await _context?.Subscription?
+                .FirstOrDefaultAsync(s => s.SubscriberId == CurrentUser.Id && s.ProfileId == id);
+                _context?.Remove(subscription);
+                await _context.SaveChangesAsync();
+            }
+            return Redirect(ReturnUrl);
+        }
+
+            [Authorize]
         public async Task<IActionResult> MessageBox()
         {
             AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
