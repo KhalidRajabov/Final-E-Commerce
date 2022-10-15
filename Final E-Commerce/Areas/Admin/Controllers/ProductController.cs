@@ -623,8 +623,11 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 }, Request.Scheme);
 
             }
-
-            return RedirectToAction("Pendings");
+            var obj = new
+            {
+                status="successfull"
+            };
+            return Ok(obj);
         }
 
 

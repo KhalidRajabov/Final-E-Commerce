@@ -9,5 +9,12 @@ namespace Final_E_Commerce.MiddlewareExtensions
             var service = serviceProvider.GetService<SubscribeProductTableDependency>();
             service.SubscribeTableDependency();
         }
+
+        public static void UsePendingsTableDependency(this IApplicationBuilder applicationBuilder)
+        {
+            var serviceProvider = applicationBuilder.ApplicationServices;
+            var service = serviceProvider.GetService<SubscribePendingsTableDependency>();
+            service.SubscribeTableDependency();
+        }
     }
 }

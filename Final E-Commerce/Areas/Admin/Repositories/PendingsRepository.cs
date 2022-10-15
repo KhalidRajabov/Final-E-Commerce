@@ -4,11 +4,11 @@ using System.Data;
 
 namespace Final_E_Commerce.Areas.Admin.Repositories
 {
-    public class ProductRepository
+    public class PendingsRepository
     {
         string? connectionString;
 
-        public ProductRepository(string? connectionString)
+        public PendingsRepository(string? connectionString)
         {
             this.connectionString = connectionString;
         }
@@ -16,8 +16,6 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
         public List<Products> GetProducts()
         {
             List<Products> products = new List<Products>();
-            
-
             var data = GetProductDetailsFromDb();
 
             foreach (DataRow row in data.Rows)
@@ -41,7 +39,7 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
         
         public DataTable GetProductDetailsFromDb()
         {
-            var query = "SELECT Id, Name, Price, Sold, Count, Profit, Views, Rating FROM Products ";
+            var query = "SELECT Id, Name, Price, Sold, Count, Profit, Views, Rating FROM Products WHERE Status = 1";
             DataTable dataTable = new DataTable();
 
             using (SqlConnection connection = new SqlConnection(connectionString))

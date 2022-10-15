@@ -8,60 +8,19 @@
 <div class="row">
 
     <div class="col-lg-12 grid-margin stretch-card">
-        @if (Model.Products.Count>0)
-        {
                 <div class="table-responsive">
-                    <table id="user-table" class="table table-hover">
+                    <table id="pending-table" class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Id</th>
-
-                                <th>Image</th>
                                 <th>Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Sold</th>
                                 <th>Settings</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @*@foreach (var item in Model.Products)
-                            {
-
-                                <tr>
-                                    <td>@item.Id</td>
-                                    <td>
-                                        @foreach (var prodImg in item.ProductImages)
-                                        {
-                                            if (prodImg.IsMain)
-                                            {
-                                                <img style="border-radius:0; width:100px; height:100px" src="~/images/products/@prodImg.ImageUrl" />
-                                            }
-                                        }
-                                    </td>
-                                    <td>@item.Name</td>
-                                    <td> $@item.Price</td>
-                                    <td> @item.Category.Name</td>
-                                    <td> @item.Sold</td>
-                                    <td>
-                                    <a class="btn btn-warning" asp-action="confirm" asp-route-id="@item.Id">
-                                        <i class="mdi mdi-check"></i>
-                                    </a>
-                                        <a class="btn btn-success" asp-action="pendingdetail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a>
-                                        <a class="btn btn-danger" asp-action="decline" asp-route-id="@item.Id"><i class="mdi mdi-delete-forever"></i></a>
-                                    </td>
-                                </tr>
-                            }*@
                         </tbody>
                     </table>
                 </div>
-            
-        
-        }
-        else{
-            <h1 class="align-self-center text-success">No pending products</h1>
-        }
-            
     </div>
 
 </div>
@@ -69,5 +28,5 @@
 
 @section JqueryValidationScript{
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/PendingProducts.js"></script>
+    <script src="~/js/Pendings.js"></script>
 }

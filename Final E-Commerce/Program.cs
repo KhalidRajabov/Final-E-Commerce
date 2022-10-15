@@ -16,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<DashboardHub>();
 builder.Services.AddSingleton<SubscribeProductTableDependency>();
+builder.Services.AddSingleton<PendingsHub>();
+builder.Services.AddSingleton<SubscribePendingsTableDependency>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -67,7 +69,8 @@ app.UseAuthorization();
 
 
 app.MapHub<DashboardHub>("/dashboardHub");
-app.MapHub<ChatHub>("/chatHub");
+app.MapHub<PendingsHub>("/pendingsHub");
+//app.MapHub<ChatHub>("/chatHub");
 
 app.UseEndpoints(endpoints =>
 {
@@ -81,5 +84,6 @@ app.UseEndpoints(endpoints =>
 });
 
 app.UseProductTableDependency();
+app.UsePendingsTableDependency();
 
 app.Run();

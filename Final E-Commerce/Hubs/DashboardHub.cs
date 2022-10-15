@@ -19,10 +19,6 @@ namespace Final_E_Commerce.Hubs
             await Clients.All.SendAsync("ReceivedProducts", products);
         }
 
-        public async Task SendPendings()
-        {
-            var products = ProductRepository.GetPendingsProducts();
-            await Clients.All.SendAsync("ReceivedPending", products);
-        }
+       
     }
 }
