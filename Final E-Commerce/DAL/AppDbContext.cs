@@ -15,7 +15,7 @@ namespace Final_E_Commerce.DAL
         public DbSet<Bio>? Bios { get; set; }
         public DbSet<Brand>? Brands { get; set; }
         public DbSet<Category>? Categories { get; set; }
-        public DbSet<Order>? Orders { get; set; }
+        public DbSet<Orders>? Orders { get; set; }
         public DbSet<OrderItem>? OrderItems { get; set; }
         public DbSet<Products>? Products { get; set; }
         public DbSet<ProductImage>? ProductImages { get; set; }
@@ -44,42 +44,42 @@ namespace Final_E_Commerce.DAL
                 {
                     Id = 1,
                     Name = "Phones and Tablets",
-                    ImageUrl= "tabletsandphones.jpg"
+                    ImageUrl = "tabletsandphones.jpg"
                 },
                 new Category
                 {
-                    Id=2,
+                    Id = 2,
                     Name = "Watches"
                 },
                 new Category
                 {
-                    Id=3,
-                    Name="TV, Audio and Video",
-                    ImageUrl="tv.jpg"
+                    Id = 3,
+                    Name = "TV, Audio and Video",
+                    ImageUrl = "tv.jpg"
                 },
                 new Category
                 {
-                    Id=4,
-                    Name="Computers and accessories",
-                    ImageUrl= "computers.jpg"
+                    Id = 4,
+                    Name = "Computers and accessories",
+                    ImageUrl = "computers.jpg"
                 },
                 new Category
                 {
-                    Id=5,
-                    Name="Smartphones",
-                    ParentId=1
-                },
-                new Category
-                {
-                    Id=6,
-                    Name="Tablets",
+                    Id = 5,
+                    Name = "Smartphones",
                     ParentId = 1
                 },
                 new Category
                 {
-                    Id=7,
-                    Name="Mobile Accessories",
-                    ParentId=1
+                    Id = 6,
+                    Name = "Tablets",
+                    ParentId = 1
+                },
+                new Category
+                {
+                    Id = 7,
+                    Name = "Mobile Accessories",
+                    ParentId = 1
                 },
                 new Category
                 {
@@ -120,66 +120,66 @@ namespace Final_E_Commerce.DAL
             builder.Entity<Bio>().HasData(
                 new Bio
                 {
-                    Id=1,
-                    Logo="logo.png",
-                    Headertext= "Free shipping • Free 30 days return • Express delivery",
-                    Address="Bakı şəhəri, Səbayıl rayonu, G.Əliyev küç.54D",
-                    Phone="+994515186423",
-                    Email="khalidsr@code.edu.az",
-                    Author="Khalid Rajabov",
-                    Facebook= "https://www.facebook.com/khalid.radjabov.5",
-                    Linkedin= "https://www.linkedin.com/mwlite/in/khalid-racabov-867281243",
-                    Instagram= "https://www.instagram.com/mr.felix_666/",
-                    Twitter= "https://twitter.com/slayer_dante_?t=G-VmlfAok6IC_vxmQnYfLQ&s=08",
-                    NewsLetterHeader= "Our Newsletter",
-                    NewsLetterText= "Subscribe to our Newsletter to receive early discount offers"
+                    Id = 1,
+                    Logo = "logo.png",
+                    Headertext = "Free shipping • Free 30 days return • Express delivery",
+                    Address = "Bakı şəhəri, Səbayıl rayonu, G.Əliyev küç.54D",
+                    Phone = "+994515186423",
+                    Email = "khalidsr@code.edu.az",
+                    Author = "Khalid Rajabov",
+                    Facebook = "https://www.facebook.com/khalid.radjabov.5",
+                    Linkedin = "https://www.linkedin.com/mwlite/in/khalid-racabov-867281243",
+                    Instagram = "https://www.instagram.com/mr.felix_666/",
+                    Twitter = "https://twitter.com/slayer_dante_?t=G-VmlfAok6IC_vxmQnYfLQ&s=08",
+                    NewsLetterHeader = "Our Newsletter",
+                    NewsLetterText = "Subscribe to our Newsletter to receive early discount offers"
                 }
                 );
             builder.Entity<Brand>().HasData(
                 new Brand
                 {
-                    Id=1,
-                    Name="Android",
-                    ImageUrl="android.jpg"
+                    Id = 1,
+                    Name = "Android",
+                    ImageUrl = "android.jpg"
                 },
                 new Brand
                 {
-                    Id=2,
-                    Name="Apple",
-                    ImageUrl="apple.jpg"
+                    Id = 2,
+                    Name = "Apple",
+                    ImageUrl = "apple.jpg"
                 }
                 );
             builder.Entity<Products>().HasData(
                 new Products
                 {
-                    Id=1,
-                    BrandId=1,
-                    CategoryId=5,
-                    Price=750,
-                    Name="Xiaomi Pocophone F1",
-                    ReleaseDate=new DateTime(2018,8,8),
-                    Description= "POCO F1 (Rosso Red, 128 GB) (6 GB RAM) Meet the POCO F1 - the first flagship smartphone from POCO by Xiaomi. The POCO F1 sports Qualcomm flagship Snapdragon 845 processor, an octa-core CPU with a maximum clock speed of 2.8 GHz which is supported by 6 GB of LPDDR4X RAM.",
-                    Body= "155.5 x 75.3 x 8.8 mm (6.12 x 2.96 x 0.35 in)",
-                    Weight= "182 g (6.42 oz)",
-                    OperationSystem= "Android 8.1 (Oreo), upgradable to Android 10, MIUI 12",
-                    GPU= "Adreno 630",
+                    Id = 1,
+                    BrandId = 1,
+                    CategoryId = 5,
+                    Price = 750,
+                    Name = "Xiaomi Pocophone F1",
+                    ReleaseDate = new DateTime(2018, 8, 8),
+                    Description = "POCO F1 (Rosso Red, 128 GB) (6 GB RAM) Meet the POCO F1 - the first flagship smartphone from POCO by Xiaomi. The POCO F1 sports Qualcomm flagship Snapdragon 845 processor, an octa-core CPU with a maximum clock speed of 2.8 GHz which is supported by 6 GB of LPDDR4X RAM.",
+                    Body = "155.5 x 75.3 x 8.8 mm (6.12 x 2.96 x 0.35 in)",
+                    Weight = "182 g (6.42 oz)",
+                    OperationSystem = "Android 8.1 (Oreo), upgradable to Android 10, MIUI 12",
+                    GPU = "Adreno 630",
                     Chipset = "Qualcomm SDM845 Snapdragon 845 (10 nm)",
-                    Memory= "64GB 6GB RAM, 128GB 6GB RAM, 256GB 8GB RAM",
-                    Display= "6.18 inches, 96.2 cm2 (~82.2% screen-to-body ratio),1080 x 2246 pixels, 18.7:9 ratio (~403 ppi density)",
-                    RearCamera= "12 MP, f/1.9, 1/2.55, 1.4µm, dual pixel PDAF, 4K@30/60fps, 1080p@30fps (gyro-EIS), 1080p@240fps, 720p@960fps",
+                    Memory = "64GB 6GB RAM, 128GB 6GB RAM, 256GB 8GB RAM",
+                    Display = "6.18 inches, 96.2 cm2 (~82.2% screen-to-body ratio),1080 x 2246 pixels, 18.7:9 ratio (~403 ppi density)",
+                    RearCamera = "12 MP, f/1.9, 1/2.55, 1.4µm, dual pixel PDAF, 4K@30/60fps, 1080p@30fps (gyro-EIS), 1080p@240fps, 720p@960fps",
                     FrontCamera = "20 MP, f/2.0, (wide), 1/3, 0.9µm, 1080p@30fps",
-                    Battery= "Li-Po 4000 mAh, non-removable, quick charge 3.0",
+                    Battery = "Li-Po 4000 mAh, non-removable, quick charge 3.0",
                     Count = 50
                 },
                 new Products
                 {
                     Id = 2,
-                    BrandId=1,
+                    BrandId = 1,
                     CategoryId = 5,
                     Price = 2000,
-                    DiscountPercent= 5,
-                    DiscountPrice= 1900,
-                    DiscountUntil= new DateTime(2023,12,12),
+                    DiscountPercent = 5,
+                    DiscountPrice = 1900,
+                    DiscountUntil = new DateTime(2023, 12, 12),
                     Name = "Samsung Galaxy S22 Ultra",
                     ReleaseDate = new DateTime(2021, 8, 8),
                     Description = "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.",
@@ -198,7 +198,7 @@ namespace Final_E_Commerce.DAL
                 new Products
                 {
                     Id = 3,
-                    BrandId=2,
+                    BrandId = 2,
                     CategoryId = 5,
                     Price = 1500,
                     DiscountPercent = 25,
@@ -217,7 +217,7 @@ namespace Final_E_Commerce.DAL
                     RearCamera = "48 MP, (wide), dual pixel PDAF, sensor-shift OIS 12 MP, f/2.8, 77mm (telephoto), PDAF, OIS, 3x optical zoom 12 MP, f/1.8, 13mm, 120˚ (ultrawide), 1.4µm, PDAF TOF 3D LiDAR scanner (depth)",
                     FrontCamera = "12 MP, f/2.2, 23mm (wide), 1/3.6, 4K@24/25/30/60fps, 1080p@30/60/120fps, gyro-EIS",
                     Battery = "Li-Ion, non-removable",
-                    Count=50
+                    Count = 50
                 }
                 );
             builder.Entity<ProductImage>().HasData(
@@ -225,7 +225,7 @@ namespace Final_E_Commerce.DAL
                 {
                     Id = 1,
                     ProductId = 1,
-                    ImageUrl="poco-f1.jpg",
+                    ImageUrl = "poco-f1.jpg",
                     IsMain = true,
                 },
                 new ProductImage
@@ -240,7 +240,7 @@ namespace Final_E_Commerce.DAL
                     ProductId = 2,
                     ImageUrl = "s22.jpg",
                     IsMain = true,
-                }, 
+                },
                 new ProductImage
                 {
                     Id = 4,
@@ -253,13 +253,13 @@ namespace Final_E_Commerce.DAL
                     ProductId = 3,
                     ImageUrl = "14max.jpg",
                     IsMain = true,
-                }, 
+                },
                 new ProductImage
                 {
                     Id = 6,
                     ProductId = 3,
                     ImageUrl = "14max-2.jpg",
-                }, 
+                },
                 new ProductImage
                 {
                     Id = 7,
@@ -300,9 +300,9 @@ namespace Final_E_Commerce.DAL
             builder.Entity<Tag>().HasData(
                 new Tag
                 {
-                    Id=1,
-                    Name="flagman"
-                }, 
+                    Id = 1,
+                    Name = "flagman"
+                },
                 new Tag
                 {
                     Id = 2,
@@ -320,6 +320,6 @@ namespace Final_E_Commerce.DAL
                 }
                 );
         }
-        
+
     }
 }

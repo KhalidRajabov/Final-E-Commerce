@@ -13,7 +13,7 @@ namespace Final_E_Commerce.Entities
 
 
         public List<Products>? Products { get; set; }
-        public List<Order>? Orders { get; set; }
+        public List<Orders>? Orders { get; set; }
         public List<Wishlist>? Wishlist { get; set; }
         public UserDetails? UserDetails { get; set; }
         public UserProfile? UserProfile { get; set; }

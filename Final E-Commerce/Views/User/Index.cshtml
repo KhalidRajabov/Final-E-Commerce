@@ -121,9 +121,22 @@
 								</div>
 							</div>
 						}
+
+						@if (ViewBag.Following>0)
+						{
+							<div style="max-height:400px" class="col-12 d-flex flex-row p-2 mt-2">
+								<b style="max-height:400px" class="col-2">
+									Following:
+								</b>
+								<div style="max-height:400px" class="col-9 flex-nowrap">
+									@ViewBag.Following (<a asp-action="Following" class="text-danger fw-bold">View</a>)
+								</div>
+							</div>
+						}
+						
 						@if (ViewBag.Subscribers>0)
 						{
-							<div style="max-height:400px" class="col-12 d-flex flex-row p-2 mt-5">
+							<div style="max-height:400px" class="col-12 d-flex flex-row p-2 mt-2">
 								<b style="max-height:400px" class="col-2">
 									Subscribers:
 								</b>

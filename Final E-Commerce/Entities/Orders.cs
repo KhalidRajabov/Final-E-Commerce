@@ -2,7 +2,7 @@
 
 namespace Final_E_Commerce.Entities
 {
-    public class Order
+    public class Orders
     {
         public int Id { get; set; }
         public DateTime OrderedAt { get; set; }

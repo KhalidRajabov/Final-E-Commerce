@@ -291,13 +291,14 @@
                     <div style="max-height:400px" class="col-9 flex-nowrap">
                         <a asp-action="detail" asp-controller="home" asp-route-id="@Model.Product.Id">See how it looks on store</a>
                     </div>
+                    <br />
                 }
                 else if(Model.Product.Status==ProductConfirmationStatus.Pending){
-                    <h4>Awaiting confirmation</h4>
+                    <h4 class="m-3">Awaiting confirmation</h4>
                 }
                 else if (Model.Product.Status == ProductConfirmationStatus.Refused)
                 {
-                    <h3 class="text-danger">Refused</h3>
+                    <h3 class="text-danger m-3">Refused</h3>
                 }
                 
             </div>

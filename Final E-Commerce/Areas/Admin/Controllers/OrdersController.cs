@@ -31,7 +31,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         {
             List<AppUser>? users = await _userManager?.Users?.Include(o => o.Orders).ThenInclude(i => i.OrderItems).ToListAsync();
             OrderVM orderVM = new OrderVM();
-            List<Order>? orders = await _context?.Orders?.Include(u => u.AppUser).OrderByDescending(o => o.Id).Include(o => o.OrderItems).ToListAsync();
+            List<Orders>? orders = await _context?.Orders?.Include(u => u.AppUser).OrderByDescending(o => o.Id).Include(o => o.OrderItems).ToListAsync();
             orderVM.Orders = orders;
             orderVM.User = users;
             return View(orderVM);
@@ -39,7 +39,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-            Order? order = await _context?.Orders?.Where(o => o.Id == id)
+            Orders? order = await _context?.Orders?.Where(o => o.Id == id)
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null) return RedirectToAction("error", "home");
             AppUser? user = await _userManager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
@@ -57,7 +57,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Confirm(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Order? order = await _context?.Orders?
+            Orders? order = await _context?.Orders?
                 .Where(o => o.Id == id)
                 .Include(o=>o.OrderItems)
                 .FirstOrDefaultAsync();
@@ -93,7 +93,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Decline(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Order? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            Orders? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (order == null) return RedirectToAction("error", "home");
             order.OrderStatus = OrderStatus.Refused;
             List<OrderItem>? orderitem = await _context?.OrderItems?.Where(o => o.OrderId == order.Id).ToListAsync();

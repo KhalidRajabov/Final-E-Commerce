@@ -571,7 +571,7 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                Order order = new Order();
+                Orders order = new Orders();
                 order.Firstname = newOrder.Firstname;
                 order.Lastname = newOrder.Lastname;
                 order.City = newOrder.City;

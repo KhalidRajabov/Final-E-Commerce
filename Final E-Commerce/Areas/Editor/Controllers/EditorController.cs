@@ -35,7 +35,7 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
 
         public async Task<IActionResult> Index()
         {
-            EditorVM? editorVM = new EditorVM
+            UserBlogVM? editorVM = new UserBlogVM
             {
                 Blogs = await _context?.Blogs?.OrderByDescending(b=>b.Date).ToListAsync()
             };
@@ -115,7 +115,7 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
                 .ThenInclude(bs => bs.Subjects)
                 .Include(bs => bs.Comments)
                 .FirstOrDefaultAsync(b => b.Id == id);
-            BlogDetailVM blogDetailVM = new BlogDetailVM();
+            UserBlogDetailVM blogDetailVM = new UserBlogDetailVM();
             blogDetailVM.Blog = blog;
             return View(blogDetailVM); 
         }
@@ -212,7 +212,7 @@ namespace Final_E_Commerce.Areas.Editor.Controllers
             {
                 return RedirectToAction("error", "home");
             }
-            BlogDetailVM detailVM = new BlogDetailVM();
+            UserBlogDetailVM detailVM = new UserBlogDetailVM();
             detailVM.Blogs = blogs;
 
             return PartialView("_BlogSearch", detailVM);

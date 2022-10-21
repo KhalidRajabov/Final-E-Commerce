@@ -4,7 +4,7 @@ namespace Final_E_Commerce.ViewModels
 {
     public class CheckoutVM
     {
-        [Required, MaxLength(15, ErrorMessage ="Name can not be longer than 15"), MinLength(5, ErrorMessage = "Can not be shorter than 5")]
+        [Required, MaxLength(15, ErrorMessage ="Name can not be longer than 15"), MinLength(4, ErrorMessage = "Can not be shorter than 4")]
         public string? Firstname { get; set; }
         [Required, MaxLength(15, ErrorMessage = "Lastname can not be longer than 15"), MinLength(5, ErrorMessage = "Last name can not be shorter than 5")]
         public string? Lastname { get; set; }

@@ -14,7 +14,7 @@ namespace Final_E_Commerce.Areas.Admin.ViewModels
         public bool IsActivated { get; set; }
         public List<string>? Role { get; set; }
         public string? About { get; set; }
-        public List<Order>? Orders { get; set; }
+        public List<Orders>? Orders { get; set; }
 
     }
 }

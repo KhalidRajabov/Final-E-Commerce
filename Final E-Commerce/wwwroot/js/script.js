@@ -15,50 +15,103 @@
 
         add.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
-            //alert("clicked")
             let quantity = $("#quantity").val()
-            axios.post("/basket/additem?id=" + dataId + "&quantity=" + quantity)
-                .then(function (response) {
-                    // handle success
-                    //console.log(response.data.count)
-                    if (response.data.online) {
-                        if (response.data.productcount == 1) {
-                            bTotal.innerHTML = response.data.count
-                            tPrice.innerHTML = ` $${response.data.price}`
-                            let cartitem = `<li id="cart-item${dataId}"  class="d-flex border-bottom">
-                                            <img width="70px" src="/images/products/${response.data.image}" alt="product-img">
-                                            <div class="mx-3">
-                                                <h6>${response.data.name}</h6>
-                                                <span id="oneproductCount${response.data.id}">${response.data.productcount} X</span> 
-                                                <span>$${response.data.itemprice}</span>
-                                            </div>
-                                        </li>`
-                            cartlist.append(cartitem)
-                            Swal.fire({
-                                timer: 1000,
-                                title: 'Added to basket!',
-                                text: `${response.data.name}`,
-                                imageUrl: `/images/products/${response.data.image}`,
-                                imageWidth: 400,
-                                imageHeight: 200,
-                                imageAlt: 'Custom image',
-                            })
+            
+            if (quantity != undefined) {
+                if (quantity>0) {
+                    axios.post("/basket/additem?id=" + dataId + "&quantity=" + quantity)
+                        .then(function (response) {
+                            if (response.data.online) {
+                                if (response.data.productcount == 1) {
+                                    bTotal.innerHTML = response.data.count
+                                    tPrice.innerHTML = ` $${response.data.price}`
+                                    let cartitem = `<li id="cart-item${dataId}"  class="d-flex border-bottom">
+                                                    <img width="70px" src="/images/products/${response.data.image}" alt="product-img">
+                                                    <div class="mx-3">
+                                                        <h6>${response.data.name}</h6>
+                                                        <span id="oneproductCount${response.data.id}">${response.data.productcount} X</span> 
+                                                        <span>$${response.data.itemprice}</span>
+                                                    </div>
+                                                </li>`
+                                    cartlist.append(cartitem)
+                                    Swal.fire({
+                                        timer: 1000,
+                                        title: 'Added to basket!',
+                                        text: `${response.data.name}`,
+                                        imageUrl: `/images/products/${response.data.image}`,
+                                        imageWidth: 400,
+                                        imageHeight: 200,
+                                        imageAlt: 'Custom image',
+                                    })
+                                }
+                                else if (response.data.productcount > 1) {
+                                    bTotal.innerHTML = response.data.count
+                                    tPrice.innerHTML = ` $${response.data.price}`
+                                    $(`#oneproductCount${response.data.id}`).html(`${response.data.productcount} X`)
+                                }
+                            }
+                            else {
+                                window.location.href = "account/login"
+                            }
+                            //console.log(response);
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            //console.log("error "+error);
+                        })
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Quantity must be more than 0!',
+                    })
+                }
+            }
+            else if(quantity==undefined) {
+                axios.post("/basket/additem?id=" + dataId + "&quantity=" + quantity)
+                    .then(function (response) {
+                        // handle success
+                        //console.log(response.data.count)
+                        if (response.data.online) {
+                            if (response.data.productcount == 1) {
+                                bTotal.innerHTML = response.data.count
+                                tPrice.innerHTML = ` $${response.data.price}`
+                                let cartitem = `<li id="cart-item${dataId}"  class="d-flex border-bottom">
+                                                <img width="70px" src="/images/products/${response.data.image}" alt="product-img">
+                                                <div class="mx-3">
+                                                    <h6>${response.data.name}</h6>
+                                                    <span id="oneproductCount${response.data.id}">${response.data.productcount} X</span> 
+                                                    <span>$${response.data.itemprice}</span>
+                                                </div>
+                                            </li>`
+                                cartlist.append(cartitem)
+                                Swal.fire({
+                                    timer: 1000,
+                                    title: 'Added to basket!',
+                                    text: `${response.data.name}`,
+                                    imageUrl: `/images/products/${response.data.image}`,
+                                    imageWidth: 400,
+                                    imageHeight: 200,
+                                    imageAlt: 'Custom image',
+                                })
+                            }
+                            else if (response.data.productcount > 1) {
+                                bTotal.innerHTML = response.data.count
+                                tPrice.innerHTML = ` $${response.data.price}`
+                                $(`#oneproductCount${response.data.id}`).html(`${response.data.productcount} X`)
+                            }
                         }
-                        else if (response.data.productcount > 1) {
-                            bTotal.innerHTML = response.data.count
-                            tPrice.innerHTML = ` $${response.data.price}`
-                            $(`#oneproductCount${response.data.id}`).html(`${response.data.productcount} X`)
+                        else {
+                            window.location.href = "account/login"
                         }
-                    }
-                    else {
-                        window.location.href = "account/login"
-                    }
-                    //console.log(response);
-                })
-                .catch(function (error) {
-                    // handle error
-                    //console.log("error "+error);
-                })
+                        //console.log(response);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        //console.log("error "+error);
+                    })
+            }
         })
     )
 
@@ -236,8 +289,27 @@
             method: "get",
             success: function (res) {
                 commentSection.append(res)
+
+                let prodelComment = document.querySelectorAll(".pro-deleteComment")
+                let promainComments = $("#comCount")
+
+                prodelComment.forEach(del =>
+
+                    del.addEventListener("click", function () {
+                        let dataId = this.getAttribute("data-id")
+                        axios.post("/blog/DeleteComment?id=" + dataId)
+                            .then(function (response) {
+                                console.log(response)
+                                del.parentElement.parentElement.parentElement.parentElement.remove()
+                                promainComments.html(response.data.count)
+                            })
+                            .catch(function (error) {
+                                console.log("error " + error);
+                            })
+                    })
+                )
                 skip += 2;
-                console.log(skip)
+                
                 if (skip >= commentCount) {
                     $(`#loadmore`).remove();
                 }
@@ -496,12 +568,31 @@
                         .then(function (response) {
                             $("#comment-area").prepend(response.data)
                             let numb = document.getElementById("comment-area").childElementCount;
-                            console.log("lol: " + numb)
 
                             $("#comCount").text(numb)
-                            console.log(response)
                             $("#comment-input").val("")
                             $("#comment-name").val("")
+                            $("#comment-warning").text("")
+                            
+
+                            let prodelComment = document.querySelectorAll(".pro-deleteComment")
+                            let promainComments = $("#pro-comCount")
+
+                            prodelComment.forEach(del =>
+
+                                del.addEventListener("click", function () {
+                                    let dataId = this.getAttribute("data-id")
+                                    axios.post("/blog/DeleteComment?id=" + dataId)
+                                        .then(function (response) {
+                                            console.log(response)
+                                            del.parentElement.parentElement.parentElement.parentElement.remove()
+                                            promainComments.html(response.data.count)
+                                        })
+                                        .catch(function (error) {
+                                            console.log("error " + error);
+                                        })
+                                })
+                            )
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -516,12 +607,31 @@
                     .then(function (response) {
                         $("#comment-area").prepend(response.data)
                         let numb = document.getElementById("comment-area").childElementCount;
-                        console.log("lol: " + numb)
+                        
                         
                         
                         $("#comCount").text(numb)
                         console.log(response)
                         $("#comment-input").val("")
+                        $("#comment-warning").text("")
+                        let prodelComment = document.querySelectorAll(".pro-deleteComment")
+                        let promainComments = $("#comCount")
+
+                        prodelComment.forEach(del =>
+
+                            del.addEventListener("click", function () {
+                                let dataId = this.getAttribute("data-id")
+                                axios.post("/blog/DeleteComment?id=" + dataId)
+                                    .then(function (response) {
+                                        console.log(response)
+                                        del.parentElement.parentElement.parentElement.parentElement.remove()
+                                        promainComments.html(response.data.count)
+                                    })
+                                    .catch(function (error) {
+                                        console.log("error " + error);
+                                    })
+                            })
+                        )
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -564,6 +674,27 @@
                             console.log(response)
                             $("#pro-comment-input").val("")
                             $("#pro-comment-name").val("")
+                            $("#pro-comment-warning").text("")
+
+                            let prodelComment = document.querySelectorAll(".pro-deleteComment")
+                            let promainComments = $("#pro-comCount")
+
+                            prodelComment.forEach(del =>
+
+                                del.addEventListener("click", function () {
+                                    let dataId = this.getAttribute("data-id")
+                                    axios.post("/home/DeleteComment?id=" + dataId)
+                                        .then(function (response) {
+                                            console.log(response)
+                                            del.parentElement.parentElement.parentElement.parentElement.remove()
+                                            promainComments.html(response.data.count)
+
+                                        })
+                                        .catch(function (error) {
+                                            console.log("error " + error);
+                                        })
+                                })
+                            )
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -584,6 +715,26 @@
                         $("#pro-comCount").text(numb)
                         console.log(response)
                         $("#pro-comment-input").val("")
+                        $("#pro-comment-warning").text("")
+
+                        let prodelComment = document.querySelectorAll(".pro-deleteComment")
+                        let promainComments = $("#pro-comCount")
+
+                        prodelComment.forEach(del =>
+
+                            del.addEventListener("click", function () {
+                                let dataId = this.getAttribute("data-id")
+                                axios.post("/home/DeleteComment?id=" + dataId)
+                                    .then(function (response) {
+                                        console.log(response)
+                                        del.parentElement.parentElement.parentElement.parentElement.remove()
+                                        promainComments.html(response.data.count)
+                                    })
+                                    .catch(function (error) {
+                                        console.log("error " + error);
+                                    })
+                            })
+                        )
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -610,7 +761,24 @@
             success: function (res) {
                 commentSection.append(res)
                 proSkip += 2;
-                console.log(proSkip)
+                let prodelComment = document.querySelectorAll(".pro-deleteComment")
+                let promainComments = $("#pro-comCount")
+
+                prodelComment.forEach(del =>
+
+                    del.addEventListener("click", function () {
+                        let dataId = this.getAttribute("data-id")
+                        axios.post("/home/DeleteComment?id=" + dataId)
+                            .then(function (response) {
+                                console.log(response)
+                                del.parentElement.parentElement.parentElement.parentElement.remove()
+                                promainComments.html(response.data.count)
+                            })
+                            .catch(function (error) {
+                                console.log("error " + error);
+                            })
+                    })
+                )
                 if (proSkip >= commentCount) {
                     $(`#pro-loadmore`).remove();
                 }

@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
     string decimalString = "";
     decimalString = Model.Product.Rating.ToString("#.##");
     string discountday="";
@@ -10,6 +11,8 @@
     string year="";
     string discounthour="";
     string hours="";
+
+    //2022/10/12 12:00:00
     if (Model.Product.DiscountUntil > DateTime.Now && Model.Product.DiscountUntil != null && Model.Product.DiscountPercent > 0)
     {
         discountday = Model.Product.DiscountUntil.ToString().Split('/')[1];

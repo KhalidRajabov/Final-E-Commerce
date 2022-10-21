@@ -50,7 +50,7 @@ namespace Final_E_Commerce.Controllers
                     product.DiscountUntil = null;
                     product.DiscountPercent = 0;
                     product.DiscountPrice = 0;
-                    _context?.SaveChangesAsync();
+                    await _context?.SaveChangesAsync();
                 }
             }
             
@@ -60,7 +60,6 @@ namespace Final_E_Commerce.Controllers
                 .Where(p => p.Status == ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToListAsync();
             if (User.Identity.IsAuthenticated)
             {
-                
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 homeVM.User = user;
                 homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync();
@@ -87,7 +86,6 @@ namespace Final_E_Commerce.Controllers
                 .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToListAsync();
             homeVM.BestSellerProducts = Bestsellers;
             homeVM.Sliders = await _context?.Sliders?.ToListAsync();
-            
             return View(homeVM);
         }
         public async Task<IActionResult> Detail(int? id)

@@ -60,7 +60,6 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
                 finally

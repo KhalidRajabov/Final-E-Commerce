@@ -36,13 +36,18 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             _config = config;
         }
 
-        public IActionResult Index(string? search)
+        public async Task<IActionResult> Index(string? search)
         {
             var users = search == null ?
                 _userManager.Users.ToList() :
                 _userManager.Users.Where(users => users.Fullname.ToLower().Contains(search.ToLower()) ||
                 users.UserName.ToLower().Contains(search.ToLower()) ||
                 users.Email.ToLower().Contains(search.ToLower())).ToList();
+
+            foreach (var user in users)
+            {
+                var roles =await _userManager.GetRolesAsync(user);
+            }
             UserVM userVM = new UserVM
             {
                 Users = users
@@ -86,7 +91,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             if (id == null) return RedirectToAction("error", "home");
             AppUser user = await _userManager.FindByIdAsync(id);
             if (user == null) return RedirectToAction("error", "home");
-            List<Order>? order = _context?.Orders?.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
+            List<Orders>? order = _context?.Orders?.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
             UserInfoVM? userVM = new UserInfoVM();
             var roles = await _userManager.GetRolesAsync(user);
             userVM.Role = roles.ToList();
@@ -102,7 +107,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         }
         public async Task<IActionResult> OrderDetail(int id)
         {
-            Order? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            Orders? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
             List<OrderItem> orderItems = await _context?.OrderItems?.Where(o => o.OrderId == order.Id).ToListAsync();
             AppUser? user = await _userManager.Users.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
             OrderItemVM orderItemVM = new OrderItemVM();

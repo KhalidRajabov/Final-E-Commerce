@@ -1,4 +1,5 @@
 ﻿using Final_E_Commerce.Areas.Admin.ViewModels;
+using Final_E_Commerce.Areas.Editor.ViewModels;
 using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Extensions;
@@ -12,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Controllers
 {
-    
+    [Authorize]
     public class UserController:Controller
     {
         private readonly AppDbContext _context;
@@ -35,7 +36,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
+        
         public async Task<IActionResult> Index()
         {
             AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -52,6 +53,7 @@ namespace Final_E_Commerce.Controllers
             UserVM? userVM = new UserVM();
 
             ViewBag.Subscribers = _context?.Subscription?.Where(s => s.ProfileId == user.Id).ToList().Count;
+            ViewBag.Following = _context?.Subscription?.Where(s => s.SubscriberId == user.Id).ToList().Count;
 
 
             userVM.User = user;
@@ -59,7 +61,7 @@ namespace Final_E_Commerce.Controllers
             return View(userVM);
         }
 
-        [Authorize]
+
         public async Task<IActionResult> Subscribers()
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -76,9 +78,23 @@ namespace Final_E_Commerce.Controllers
             };
             return View(userVM);
         }
-        
-        
-        [Authorize]
+        public async Task<IActionResult> Following()
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            List<UserSubscription>? subscribers = await _context?.Subscription?.Where(s => s.SubscriberId == user.Id).ToListAsync();
+            List<AppUser> users = new List<AppUser>();
+            foreach (var item in subscribers)
+            {
+                AppUser sub = await _usermanager.FindByIdAsync(item.ProfileId);
+                users.Add(sub);
+            }
+            UserVM userVM = new UserVM
+            {
+                Users = users
+            };
+            return View(userVM);
+        }
+
         public async Task<IActionResult> UserDetail()
         {
             AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -123,7 +139,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize,HttpPost]
+        [HttpPost]
         public async Task<IActionResult> ChangeImage(UserPhotoVM image)
         {
             AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -159,7 +175,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-
+        [AllowAnonymous]
         public async Task<IActionResult> ProfilePage(string id)
         {
             if (User.Identity.IsAuthenticated)
@@ -201,6 +217,8 @@ namespace Final_E_Commerce.Controllers
             return View(userVM);
         }
 
+
+        [AllowAnonymous]
         public async Task<IActionResult> ProfileProducts(string id)
         {
             if (User.Identity.IsAuthenticated)
@@ -229,7 +247,7 @@ namespace Final_E_Commerce.Controllers
             return View(userProductsVM);
         }
 
-        [Authorize]
+    
         public async Task<IActionResult> UpdateProfile()
         {
             if (User.Identity.IsAuthenticated)
@@ -264,7 +282,7 @@ namespace Final_E_Commerce.Controllers
             return View(vM);
         }
 
-        [Authorize, HttpPost]
+        [ HttpPost]
         public async Task<IActionResult> UpdateProfile(UserProfileVM? userProfile)
         {
             
@@ -313,7 +331,6 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
         public async Task<IActionResult> UpdateProfileDetail()
         {
             if (User.Identity.IsAuthenticated)
@@ -343,7 +360,7 @@ namespace Final_E_Commerce.Controllers
             userVM.ZipCode = detail.ZipCode;
             return View(userVM);
         }
-        [Authorize,HttpPost]
+        [HttpPost]
         public async Task<IActionResult> UpdateProfileDetail(UserDetailsVM detail)
         {
             if (User.Identity.IsAuthenticated)
@@ -373,7 +390,6 @@ namespace Final_E_Commerce.Controllers
             _context.SaveChanges();
             return RedirectToAction("UserDetail", "user");
         }
-        [Authorize]
         public async Task<IActionResult> Orders()
         {
          
@@ -401,12 +417,12 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            List<Order>? order = _context?.Orders?.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
+            List<Orders>? order = _context?.Orders?.Where(o => o.AppUserId == user.Id).OrderByDescending(o => o.Id).ToList();
             OrderVM orderVM = new OrderVM();
             orderVM.Orders = order;
             return View(orderVM);
         }
-        [Authorize]
+    
         public async Task<IActionResult> Detail(int id)
         {
                 AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -432,7 +448,7 @@ namespace Final_E_Commerce.Controllers
                  await _context.SaveChangesAsync();
                 }
             }
-            Order? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
+            Orders? order = await _context?.Orders?.Where(o => o.Id == id).FirstOrDefaultAsync();
             List<OrderItem> orderItems = await _context?.OrderItems?.Where(o => o.OrderId == order.Id).ToListAsync();
             AppUser? user = await _usermanager?.Users?.FirstOrDefaultAsync(i => i.Id == order.AppUserId);
             OrderItemVM? orderItemVM = new OrderItemVM();
@@ -441,7 +457,7 @@ namespace Final_E_Commerce.Controllers
             orderItemVM.OrderItems = orderItems;
             return View(orderItemVM);
         }
-        [Authorize]
+    
         public async Task<IActionResult> Products()
         {
                 AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -477,7 +493,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
+  
         public async Task<IActionResult> CreateProduct()
         {
             
@@ -502,7 +518,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize,HttpPost]
+        [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductCreateVM? vm)
         {
 
@@ -682,7 +698,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
+    
         public async Task<IActionResult> EditProduct(int? id)
         {
             AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -750,7 +766,7 @@ namespace Final_E_Commerce.Controllers
             return View(vm);
         }
 
-        [Authorize,HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(int id, ProductUpdateVM? product)
         {
@@ -952,7 +968,6 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
         public async Task<IActionResult> EditPictures(int id)
         {
             AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -993,7 +1008,6 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
         public async Task<IActionResult> MainImage(int? imageid, int? productid, string? Returnurl)
         {
             AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -1038,7 +1052,6 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
         public async Task<IActionResult> RemoveImage(int? imageid, int? productid, string Returnurl)
         {
             AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -1078,12 +1091,14 @@ namespace Final_E_Commerce.Controllers
             return Redirect(Returnurl);
         }
 
-        [Authorize, HttpGet]
+        [HttpGet]
         public IActionResult ChangePassword()
         {
             return View();
         }
-        [Authorize,HttpPost]
+
+
+        [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordVM password)
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -1099,6 +1114,8 @@ namespace Final_E_Commerce.Controllers
             }
             return RedirectToAction("index");
         }
+
+
         public IActionResult GetSubCategory(int cid)
         {
             var SubCategory_List = _context?.Categories?.Where(s => s.ParentId == cid).Where(s => s.ParentId != null).ToList();
@@ -1107,7 +1124,7 @@ namespace Final_E_Commerce.Controllers
         }
 
 
-        [Authorize]
+        
         public async Task<IActionResult> SubscribeToUser(string? id,string ReturnUrl)
         {
             AppUser Profile = await _usermanager.FindByIdAsync(id);
@@ -1145,7 +1162,7 @@ namespace Final_E_Commerce.Controllers
             return Redirect(ReturnUrl);
         }
 
-        [Authorize]
+        
         public async Task<IActionResult> UnSubscribeFromUser(string? id, string ReturnUrl)
         {
             AppUser Profile = await _usermanager.FindByIdAsync(id);
@@ -1163,12 +1180,25 @@ namespace Final_E_Commerce.Controllers
             return Redirect(ReturnUrl);
         }
 
-            [Authorize]
+        
         public async Task<IActionResult> MessageBox()
         {
             AppUser user =await _usermanager.FindByNameAsync(User.Identity.Name);
             ViewBag.CurrentUser = user;
             return View();
         }
+
+
+        public async Task<IActionResult> Blogs()
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            
+            return View();
+        }
+
+        /*public async Task<IActionResult> NewBlog()
+        {
+
+        }*/
     }
 }

@@ -92,7 +92,7 @@
                     Brand:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    <a asp-action="brands" asp-controller="home" asp-route-id="@Model.Product.Id">@Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" /> </a>
+                    <a asp-action="details" asp-controller="brand" asp-route-id="@Model.Product.BrandId">@Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" /> </a>
                 </div>
             </div>
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">

@@ -5,6 +5,7 @@ using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Controllers
@@ -36,7 +37,7 @@ namespace Final_E_Commerce.Controllers
                 item.CommentCount = _context?.BlogComments?.Where(bc => bc.BlogId == item.Id && !bc.IsDeleted).ToList().Count;
                 _context.SaveChanges();
             }
-            BlogDetailVM? blog = new BlogDetailVM
+            UserBlogDetailVM? blog = new UserBlogDetailVM
             {
                 Blogs=_context?.Blogs?.Where(b=>!b.IsDeleted)?.OrderByDescending(b=>b.Id)?.Include(b=>b.BlogSubjects).ThenInclude(bs=>bs.Subjects).ToList(),
             };
@@ -70,7 +71,7 @@ namespace Final_E_Commerce.Controllers
             {
                 return RedirectToAction("error", "home");
             }
-            
+            AppUser Editor = await _usermanager.FindByIdAsync(dbBlog.AppUserId);
             if (User.Identity.IsAuthenticated)
             {
                 if (User.Identity.IsAuthenticated)
@@ -111,6 +112,7 @@ namespace Final_E_Commerce.Controllers
             {
                 Blog = dbBlog,
                 Comments = Comments,
+                User=Editor
             };
             await _context.SaveChangesAsync();
             return View(blog);

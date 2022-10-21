@@ -23,6 +23,5 @@ namespace Final_E_Commerce.Entities
         public AppUser? AppUser { get; set; }
         public List<BlogSubject>? BlogSubjects { get; set; }
         public List<BlogComment>? Comments { get; set; }
-
     }
 }

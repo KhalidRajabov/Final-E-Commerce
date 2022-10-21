@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221015232915_userblogs")]
+    partial class userblogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,11 +215,16 @@ namespace Final_E_Commerce.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("UserBlogsId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("BlogId");
+
+                    b.HasIndex("UserBlogsId");
 
                     b.ToTable("BlogComments");
                 });
@@ -284,11 +291,16 @@ namespace Final_E_Commerce.Migrations
                     b.Property<int>("SubjectsId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserBlogId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BlogId");
 
                     b.HasIndex("SubjectsId");
+
+                    b.HasIndex("UserBlogId");
 
                     b.ToTable("BlogSubjects");
                 });
@@ -500,40 +512,7 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<double?>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<double?>("TotalPrice")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Orders", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -585,6 +564,39 @@ namespace Final_E_Commerce.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("TotalPrice")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.ProductComment", b =>
@@ -1088,6 +1100,54 @@ namespace Final_E_Commerce.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Final_E_Commerce.Entities.UserBlogs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CommentCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("UserBlogs");
+                });
+
             modelBuilder.Entity("Final_E_Commerce.Entities.UserDetails", b =>
                 {
                     b.Property<int>("Id")
@@ -1421,9 +1481,15 @@ namespace Final_E_Commerce.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Final_E_Commerce.Entities.UserBlogs", "UserBlogs")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserBlogsId");
+
                     b.Navigation("Blog");
 
                     b.Navigation("User");
+
+                    b.Navigation("UserBlogs");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>
@@ -1449,9 +1515,15 @@ namespace Final_E_Commerce.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Final_E_Commerce.Entities.UserBlogs", "UserBlog")
+                        .WithMany("BlogSubjects")
+                        .HasForeignKey("UserBlogId");
+
                     b.Navigation("Blog");
 
                     b.Navigation("Subjects");
+
+                    b.Navigation("UserBlog");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Category", b =>
@@ -1472,24 +1544,24 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.Orders", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.Orders", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
                         .WithMany("Orders")
                         .HasForeignKey("AppUserId");
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.ProductComment", b =>
@@ -1562,6 +1634,15 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.UserBlogs", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
+                        .WithMany("UserBlogs")
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.UserDetails", b =>
@@ -1688,6 +1769,8 @@ namespace Final_E_Commerce.Migrations
 
                     b.Navigation("Products");
 
+                    b.Navigation("UserBlogs");
+
                     b.Navigation("UserDetails");
 
                     b.Navigation("UserProductRatings");
@@ -1716,7 +1799,7 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.Orders", b =>
+            modelBuilder.Entity("Final_E_Commerce.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });
@@ -1740,6 +1823,13 @@ namespace Final_E_Commerce.Migrations
             modelBuilder.Entity("Final_E_Commerce.Entities.Tag", b =>
                 {
                     b.Navigation("ProductTag");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.UserBlogs", b =>
+                {
+                    b.Navigation("BlogSubjects");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
