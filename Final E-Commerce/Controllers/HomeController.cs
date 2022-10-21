@@ -29,6 +29,16 @@ namespace Final_E_Commerce.Controllers
             List<Products>? AllProducts = await _context.Products?
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
 
+            foreach (var product in AllProducts)
+            {
+                if (product.DiscountUntil<DateTime.Now)
+                {
+                    product.DiscountUntil = null;
+                    product.DiscountPercent = 0;
+                    product.DiscountPrice = 0;
+                    await _context?.SaveChangesAsync();
+                }
+            }
             if (User.Identity.IsAuthenticated)
             {
                 AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -40,17 +50,6 @@ namespace Final_E_Commerce.Controllers
                         await _signInManager.SignOutAsync();
                         return RedirectToAction("error", "home");
                     }
-                }
-            }
-            foreach (var product in AllProducts)
-            {
-
-                if (product.DiscountUntil<DateTime.Now)
-                {
-                    product.DiscountUntil = null;
-                    product.DiscountPercent = 0;
-                    product.DiscountPrice = 0;
-                    await _context?.SaveChangesAsync();
                 }
             }
             
