@@ -67,7 +67,8 @@ namespace Final_E_Commerce.Controllers
                 foreach (var item in followings)
                 {
                     AppUser profile = await _usermanager.FindByIdAsync(item.ProfileId);
-                    List<Products>? ProfileProducts =await _context.Products.Where(p => p.AppUserId == profile.Id).ToListAsync();
+                    List<Products>? ProfileProducts =await _context.Products.Where(p => p.AppUserId == profile.Id)
+                        .Include(p=>p.ProductImages).ToListAsync();
                     foreach (var products in ProfileProducts)
                     {
                         Following.Add(products);

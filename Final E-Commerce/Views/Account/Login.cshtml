@@ -1,4 +1,6 @@
-﻿@model LoginVM
+﻿@using Microsoft.AspNetCore.Identity
+@model LoginVM
+@inject SignInManager<AppUser> signinManager
 @{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -37,8 +39,26 @@
                     </form>
                     <p><a asp-action="forgotpassword" asp-controller="account"> Forgot your password?</a></p>
                     <p class="mt-3">New in this site ?<a asp-action="register" asp-controller="account"> Create New Account</a></p>
+                    @{
+                        var scheme = await signinManager.GetExternalAuthenticationSchemesAsync();
+                        var loginproviders = scheme.ToList();
+                    }
+                    @if (loginproviders.Count>0){
+
+                    }
+                    <div class="col-12 d-flex flex-row justify-content-around">
+                        <form asp-action="externallogin" asp-controller="account" asp-route-returnUrl="@Context.Request.Path" method="post" role="form">
+                            @foreach (var item in loginproviders)
+                            {
+                                <button type="submit" class="btn btn-dark" name="provider" value="@item.Name" title="Log in with @item.Name">
+                                    @item.Name
+                                </button>
+                            }
+                        </form>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </section>

@@ -18,6 +18,18 @@ builder.Services.AddSingleton<DashboardHub>();
 builder.Services.AddSingleton<SubscribeProductTableDependency>();
 builder.Services.AddSingleton<PendingsHub>();
 builder.Services.AddSingleton<SubscribePendingsTableDependency>();
+
+builder.Services.AddAuthentication()
+    .AddFacebook(opt =>
+    {
+        opt.AppId = "test";
+        opt.AppSecret = "test";
+    })
+    .AddGoogle(opts =>
+{
+    opts.ClientId = "595959956452-dk00irknf97petkp58813l64v4jmtbdh.apps.googleusercontent.com";
+    opts.ClientSecret = "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";
+});
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -41,7 +53,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
     opt.Password.RequireDigit = true;
 
     opt.User.RequireUniqueEmail = true;
-    opt.SignIn.RequireConfirmedEmail = true;
+    opt.SignIn.RequireConfirmedEmail = false;
     opt.Lockout.MaxFailedAccessAttempts = 3;
     opt.Lockout.AllowedForNewUsers = true;
     opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);

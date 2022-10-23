@@ -199,7 +199,7 @@
         <div class="row d-flex flex-column justify-content-center align-items-center">
             @if (User.Identity.IsAuthenticated && Model.Following.Count > 0)
             {
-                <div class="col-lg-12">
+                <div class="col-lg-12 d-flex flex-row justify-content-center">
                     <h2 class="mb-4 ">Product Feed</h2>
                 </div>
                 <div class="row d-flex flex-row flex-wrap justify-content-around">
@@ -286,8 +286,8 @@
             }
             else
             {
-                <div class="col-lg-12">
-                    <h2 class="mb-4">No Related Products Found</h2>
+                <div class="col-lg-12 d-flex flex-row justify-content-center">
+                    <h2 class="mb-4">Nothing in your Feed...</h2>
                 </div>
             }
         </div>

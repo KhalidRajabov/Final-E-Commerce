@@ -43,8 +43,8 @@
                                 count++;
                                 <tr>
                                     <td>@count</td>
-                                    <td>@item.Fullname</td>
-                                    <td>@item.UserName</td>
+                                    <td><a class="text-dark text-decoration-none" asp-action="profilepage" asp-controller="user" asp-area="default" asp-route-id="@item.Id">@item.Fullname</a></td>
+                                    <td><a class="text-dark text-decoration-none" asp-action="profilepage" asp-controller="user" asp-area="default" asp-route-id="@item.Id">@item.UserName</a></td>
                                     <td>@item.Email</td>
                                     <td>
 

@@ -1,0 +1,18 @@
+﻿@model ExternalLoginVM
+
+<div class="container d-flex flex-column justify-content-center align-items-center">
+
+    <h3>Associate your @ViewData["ProviderDisplayName"] account</h3>
+
+    <form asp-action="externalloginConfirmation" asp-controller="account" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" role="form">
+        <div class="form-group">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" placeholder="Username">
+            <span asp-validation-for="Username"></span>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+        </form>
+</div>

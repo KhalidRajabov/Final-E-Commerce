@@ -5,6 +5,7 @@ using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Final_E_Commerce.Controllers
@@ -174,6 +175,171 @@ namespace Final_E_Commerce.Controllers
 
         }
 
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginVM model, string? returnUrl=null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            if (ModelState.IsValid)
+            {
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info==null)
+                {
+                    return RedirectToAction("error", "home");
+                }
+                var user = new AppUser { UserName = model.Username};
+                user.Email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                user.EmailConfirmed = true;
+                user.Firstname = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+                user.Lastname = info.Principal.FindFirstValue(ClaimTypes.Surname);
+                user.Fullname = $"{user.Firstname} {user.Lastname}";
+                user.ProfilePicture = "default.jpg";
+                var result = await _usermanager.CreateAsync(user);
+                await _usermanager.AddToRoleAsync(user, "Member");
+                if (result.Succeeded)
+                {
+                    UserProfile Profile = new UserProfile();
+                    UserDetails Detail = new UserDetails();
+                    Profile.AppUserId = user.Id;
+                    Detail.AppUserId = user.Id;
+                    _context.Add(Profile);
+                    _context.Add(Detail);
+                    _context.SaveChanges();
+                    result = await _usermanager.AddLoginAsync(user, info);
+                    if (result.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+            }
+            ViewData["ReturnUrl"] = returnUrl;  
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        {
+            var redirect = Url.Action("ExternalLoginCallback", "account", new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirect);
+            return Challenge(properties, provider);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+        {
+            if (remoteError!=null)
+            {
+                ModelState.AddModelError(string.Empty,"Error from external provider" );
+                return RedirectToAction("login");
+            }
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info==null)
+            {
+                return RedirectToAction("login");
+            }
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            if (result.Succeeded)
+            {
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                ViewData["ReturnUrl"] = returnUrl;
+                ViewData["ProviderDisplayName"] = info.ProviderDisplayName;
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                return View("ExternalEmailConfirmation");
+            }
+
+        }
+
+        #region Google Login, not working properly
+        /*public IActionResult GoogleLogin(string ReturnUrl)
+        {
+            string? RedirectUrl = Url.Action("ExternalResponse","Account", new { ReturnUrl = ReturnUrl});
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", RedirectUrl);
+            return new ChallengeResult("Google", properties);
+        }
+
+
+        public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
+        {
+            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info==null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                SignInResult result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+                if (result.Succeeded)
+                {
+                    return Redirect(ReturnUrl);
+                }
+                 
+                else
+                {
+                    AppUser user = new AppUser();
+                 
+                    user.Email = info.Principal.FindFirst(ClaimTypes.Email).Value;
+                    string ExternalUserId = info.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    if (info.Principal.HasClaim(x=>x.Type==ClaimTypes.Name))
+                    {
+                        string username = info.Principal.FindFirst(ClaimTypes.Name).Value;
+                        username = username.Replace(' ', '-').ToLower() + ExternalUserId.Substring(0,5).ToString();
+                        user.UserName = username;
+                        user.Firstname = info.Principal.FindFirst(ClaimTypes.Name).Value;
+                        user.Lastname = info.Principal.FindFirst(ClaimTypes.Surname).Value;
+                        user.Fullname = info.Principal.FindFirst(ClaimTypes.Name).Value.ToString()+info.Principal.FindFirst(ClaimTypes.Surname).Value.ToString();
+                        user.EmailConfirmed = true;
+                        user.ProfilePicture = "default.jpg";
+                        
+
+                    }
+                    IdentityResult createresult = await _usermanager.CreateAsync(user);
+                    await _usermanager.AddToRoleAsync(user, "Member");
+                    if (createresult.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, true);
+                        UserProfile Profile = new UserProfile();
+                        UserDetails Detail = new UserDetails();
+                        Profile.AppUserId = user.Id;
+
+                        Detail.AppUserId = user.Id;
+                        _context.Add(Profile);
+                        _context.Add(Detail);
+                        _context.SaveChanges();
+                        IdentityResult loginresult = await _usermanager.AddLoginAsync(user, info);
+                        if (loginresult.Succeeded)
+                        {
+                            return Redirect(ReturnUrl);
+                        }
+                        else
+                        {
+                            foreach (var item in loginresult.Errors)
+                            {
+                                ModelState.AddModelError("", item.Description);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in createresult.Errors)
+                        {
+                            ModelState.AddModelError("", item.Description);
+                        }
+                    }
+                }
+            }
+            return NotFound();
+        }*/
+        #endregion
+
         public async Task<IActionResult> Logout(string returnurl)
         {
             await _signInManager.SignOutAsync();
@@ -212,90 +378,6 @@ namespace Final_E_Commerce.Controllers
                 await _roleManager.CreateAsync(new IdentityRole { Name = "Moderator" });
             }
         }
-
-        /*[AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword()
-        {
-            return View();
-        }
-        [AllowAnonymous, HttpPost]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordVM forgotPasswordVM)
-        {
-            AppUser user = await _usermanager.FindByEmailAsync(forgotPasswordVM.Email);
-            string token = await _usermanager.GeneratePasswordResetTokenAsync(user);
-            string? ConfirmationLink = Url.Action("ResetPassword", "EmailConfirmation", new 
-            {
-                token, Email = forgotPasswordVM.Email 
-            }, Request.Scheme);
-
-            EmailHelper emailHelper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
-            var emailResult = emailHelper.SendEmail(forgotPasswordVM.Email, ConfirmationLink);
-
-            return RedirectToAction("Login");
-        }*/
-        /*[HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginVM model, string? returnurl = null)
-        {
-            returnurl = returnurl ?? Url.Content("~/");
-            if (ModelState.IsValid)
-            {
-                var info = await _signInManager.GetExternalLoginInfoAsync();
-                if (info == null) return View("Error");
-                var user = new AppUser { UserName = model.Username, Email = model.Email };
-                var result = await _usermanager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    await _usermanager.AddToRoleAsync(user, "Member");
-                    result = await _usermanager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
-                        return LocalRedirect(returnurl);
-                    }
-                }
-                ModelState.AddModelError("Email", "Email already used");
-            }
-            ViewData["ReturnUrl"] = returnurl;
-            return View(model);
-        }*/
-
-        /*[HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, string returnurl = null)
-        {
-            var redirectUrl = Url.Action("ExternalLoginCallBack", "Account", new { ReturnUrl = returnurl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return Challenge(properties, provider);
-        }
-        [HttpGet]
-        public async Task<IActionResult> ExternalLoginCallBack(string returnurl = null, string remoteerror = null)
-        {
-            if (remoteerror != null)
-            {
-                ModelState.AddModelError(string.Empty, "Provider error");
-                return View("Login");
-            }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null) return RedirectToAction("Login");
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true);
-            if (result.Succeeded)
-            {
-                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
-                return LocalRedirect(returnurl);
-            }
-            else
-            {
-                ViewData["ReturnUrl"] = returnurl;
-                ViewData["ProviderDisplayName"] = info.ProviderDisplayName;
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginVM { Email = email });
-            }
-
-        }*/
-
 
     }
 }

@@ -11,3 +11,8 @@
 .search-list-content:not(:hover) {
     transition: .1s;
 }
+
+search-wrapper{
+    position: relative;
+    margin-top: 15px;
+}
