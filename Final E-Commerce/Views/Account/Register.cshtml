@@ -68,13 +68,13 @@
                                 {
                                     if (item.Name.ToLower() == "google")
                                     {
-                                        <button type="submit" class="btn m-1 text-light" style="width: 40%; background-color:rgb(179,38,30);" name="provider" value="@item.Name" title="Log in with @item.Name">
-                                            <img src="~/images/TiQ81.png" width="28" /> @item.Name
+                                        <button type="submit" class="btn m-1 text-dark" style="width: 40%; border-radius: 5px; border: 2px solid rgb(179,38,30)" name="provider" value="@item.Name" title="Log in with @item.Name">
+                                            <img src="~/images/TiQ81.png" width="23" /> @item.Name
                                         </button>
                                     }
                                     else
                                     {
-                                        <button type="submit" class="btn m-1 text-light" style="width: 40%; background-color:rgb(57,86,151)" name="provider" value="@item.Name" title="Log in with @item.Name">
+                                        <button type="submit" class="btn m-1 text-light" style="width: 40%; border-radius: 5px;background-color:rgb(57,86,151)" name="provider" value="@item.Name" title="Log in with @item.Name">
                                             <i style="font-size: 130%" class="fw-bold fa-brands fa-facebook-f"></i> @item.Name
                                         </button>
                                     }

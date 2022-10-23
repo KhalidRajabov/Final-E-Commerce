@@ -39,19 +39,6 @@ namespace Final_E_Commerce.Controllers
                     await _context?.SaveChangesAsync();
                 }
             }
-            if (User.Identity.IsAuthenticated)
-            {
-                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-                var userroles = await _usermanager.GetRolesAsync(AppUser);
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        await _signInManager.SignOutAsync();
-                        return RedirectToAction("error", "home");
-                    }
-                }
-            }
             
             HomeVM? homeVM = new HomeVM();
             List<Products> Bestsellers = await _context.Products
@@ -60,6 +47,15 @@ namespace Final_E_Commerce.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(user);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
                 homeVM.User = user;
                 homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync();
                 List<Products> Following = new List<Products>();

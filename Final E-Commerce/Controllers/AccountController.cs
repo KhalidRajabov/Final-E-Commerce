@@ -197,8 +197,8 @@ namespace Final_E_Commerce.Controllers
                 user.Fullname = $"{user.Firstname} {user.Lastname}";
                 user.ProfilePicture = "default.jpg";
                 var result = await _usermanager.CreateAsync(user);
-                await _usermanager.AddToRoleAsync(user, "Member");
                 if (result.Succeeded)
+                    await _usermanager.AddToRoleAsync(user, "Member");
                 {
                     UserProfile Profile = new UserProfile();
                     UserDetails Detail = new UserDetails();
@@ -242,6 +242,12 @@ namespace Final_E_Commerce.Controllers
             {
                 return RedirectToAction("login");
             }
+            var user = await _usermanager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
+            if (user!=null)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("index", "home");
+            };
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
