@@ -196,6 +196,7 @@ namespace Final_E_Commerce.Controllers
                 user.Lastname = info.Principal.FindFirstValue(ClaimTypes.Surname);
                 user.Fullname = $"{user.Firstname} {user.Lastname}";
                 user.ProfilePicture = "default.jpg";
+                user.DateRegistered = DateTime.Now;
                 var result = await _usermanager.CreateAsync(user);
                 if (result.Succeeded)
                     await _usermanager.AddToRoleAsync(user, "Member");

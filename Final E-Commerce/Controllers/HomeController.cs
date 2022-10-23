@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.CodeAnalysis;
 using Final_E_Commerce.Migrations;
+using Final_E_Commerce.Helper;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -18,6 +19,7 @@ namespace Final_E_Commerce.Controllers
         private readonly AppDbContext? _context;
         private readonly UserManager<AppUser>? _usermanager;
         private readonly SignInManager<AppUser>? _signInManager;
+        private IConfiguration _config { get; }
         public HomeController(AppDbContext? context, UserManager<AppUser>? usermanager, SignInManager<AppUser>? signInManager)
         {
             _context = context;
@@ -437,6 +439,77 @@ namespace Final_E_Commerce.Controllers
                 Brand = await _context?.Brands?.FirstOrDefaultAsync(b=>b.Id==id)
             };
             return View(listProducts);
+        }
+
+        public async Task<IActionResult> Contact()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
+                var userroles = await _usermanager.GetRolesAsync(AppUser);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "ban" || userroles == null)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("error", "home");
+                    }
+                }
+            }
+            ContactVM contact = new ContactVM();
+            return View(contact);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Contact(ContactVM contact)
+        {
+            Message message = new Message();
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+                message.AppUserId = user.Id;
+                message.Firstname = user.Firstname;
+                message.Lastname = user.Lastname;
+                message.Email = user.Email;
+            }
+            else
+            {
+                message.Firstname = contact.Firstname;
+                message.Lastname = contact.Lastname;
+                message.Email = contact.Email;
+            }
+            message.Subject = contact.Subject;
+            message.Content = contact.Message;
+            message.Date = DateTime.Now;
+            await _context.AddAsync(message);
+            await _context.SaveChangesAsync();
+            #region
+            /*List<AppUser> AppUsers = await _usermanager.Users.ToListAsync();
+            foreach (var user in AppUsers)
+            {
+                var userroles = await _usermanager.GetRolesAsync(user);
+                foreach (var item in userroles)
+                {
+                    if (item.ToLower() == "admin" )
+                    {
+                        var token = "";
+                        string subject = $"New message about {contact.Subject}";
+                        EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+                        token = $"Hello {user.Fullname}. {contact.Firstname} {contact.Lastname} asked something <br> <br> \n" +
+                            "Message: <br>\n"+
+                            $"<p style='align-text: center'>{contact.Message}</p> <br>\n" +
+                            $"Go to the app: <a href='https://localhost:44393/admin/message/detail/{message.Id}' style='color:red'>{message.Subject} </a>";
+                        var emailResult = helper.SendNews(user.Email, token, subject);
+
+                        string? discountemail = Url.Action("ConfirmEmail", "Account", new
+                        {
+                            token
+                        }, Request.Scheme);
+                    }
+                }
+            }*/
+            #endregion
+            return View();
         }
     }
 }

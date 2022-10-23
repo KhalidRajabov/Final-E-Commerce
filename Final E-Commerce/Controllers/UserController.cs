@@ -318,6 +318,7 @@ namespace Final_E_Commerce.Controllers
             user.Lastname = userProfile.Lastname;
             user.Fullname = $"{userProfile.Firstname} {userProfile.Lastname}";
             user.UserName = userProfile.Username;
+            user.NormalizedUserName = userProfile.Username.ToUpper();
 
             UserProfile? profile = await _context?.UserProfiles?.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
             profile.Birthdate = userProfile.Birthdate;
