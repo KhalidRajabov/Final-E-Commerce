@@ -1,4 +1,6 @@
-﻿@model RegisterVM
+﻿@using Microsoft.AspNetCore.Identity
+@model RegisterVM
+@inject SignInManager<AppUser> signinManager
 @{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -51,6 +53,35 @@
                     </form>
                     <p class="mt-3">Already hava an account ?<a asp-action="login" asp-controller="account"> Login</a></p>
                     
+                @{
+                    var scheme = await signinManager.GetExternalAuthenticationSchemesAsync();
+                    var loginproviders = scheme.ToList();
+                }
+                @if (loginproviders.Count > 0)
+                {
+
+                }
+                <div class="col-12 d-flex flex-row justify-content-around">
+                    <form class="col-12" asp-action="externallogin" asp-controller="account" asp-route-returnUrl="@Context.Request.Path" method="post" role="form">
+                        <div class="row d-flex flex-row justify-content-around col-12">
+                                @foreach (var item in loginproviders)
+                                {
+                                    if (item.Name.ToLower() == "google")
+                                    {
+                                        <button type="submit" class="btn m-1 text-light" style="width: 40%; background-color:rgb(179,38,30);" name="provider" value="@item.Name" title="Log in with @item.Name">
+                                            <img src="~/images/TiQ81.png" width="28" /> @item.Name
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn m-1 text-light" style="width: 40%; background-color:rgb(57,86,151)" name="provider" value="@item.Name" title="Log in with @item.Name">
+                                            <i style="font-size: 130%" class="fw-bold fa-brands fa-facebook-f"></i> @item.Name
+                                        </button>
+                                    }
+                                }
+                        </div>
+                    </form>
+                </div>
                 </div>
             </div>
         </div>

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.Hubs;
 using Final_E_Commerce.SubscribeTableDependency;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Facebook;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,13 +24,14 @@ builder.Services.AddSingleton<SubscribePendingsTableDependency>();
 builder.Services.AddAuthentication()
     .AddFacebook(opt =>
     {
-        opt.AppId = "test";
-        opt.AppSecret = "test";
+        opt.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+        opt.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
     })
     .AddGoogle(opts =>
 {
-    opts.ClientId = "595959956452-dk00irknf97petkp58813l64v4jmtbdh.apps.googleusercontent.com";
-    opts.ClientSecret = "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";
+    opts.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    opts.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    
 });
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
