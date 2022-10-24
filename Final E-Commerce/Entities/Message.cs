@@ -10,8 +10,10 @@
         public string? Email { get; set; }
         public DateTime Date { get; set; }
 
+        public string? Answer { get; set; }
         public bool IsAnswered { get; set; }
         public DateTime AnsweredDate { get; set; }
+        public string? AnsweredBy { get; set; }
 
         public string? AppUserId { get; set; }
         public AppUser? User { get; set; }

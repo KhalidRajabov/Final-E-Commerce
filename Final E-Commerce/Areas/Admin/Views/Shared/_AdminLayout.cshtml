@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Final_E_Commerce.DAL
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> _usermanager
+@inject AppDbContext context
+@{
+    AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+    var unredmessages = context?.Messages?.Where(m => !m.IsAnswered).ToList();
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -20,9 +28,11 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="~/admin/css/vertical-layout-light/style.css">
+    <link rel="stylesheet" href="~/admin/css/vertical-layout-light/StyleSheet.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- endinject -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" href="~/admin/images/favicon.png" />
     @RenderSection("css", false);
     @RenderSection("Styles", false);
@@ -54,40 +64,8 @@
                         
                     </li>
                 </ul>
-                @*<ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown d-none d-lg-block">
-                        <a class="nav-link dropdown-bordered dropdown-toggle dropdown-toggle-split" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false"> Select Category </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="messageDropdown">
-                            <a class="dropdown-item py-3">
-                                <p class="mb-0 font-weight-medium float-left">Select category</p>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis font-weight-medium text-dark">Bootstrap Bundle </p>
-                                    <p class="fw-light small-text mb-0">This is a Bundle featuring 16 unique dashboards</p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis font-weight-medium text-dark">Angular Bundle</p>
-                                    <p class="fw-light small-text mb-0">Everything you’ll ever need for your Angular projects</p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis font-weight-medium text-dark">VUE Bundle</p>
-                                    <p class="fw-light small-text mb-0">Bundle of 6 Premium Vue Admin Dashboard</p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis font-weight-medium text-dark">React Bundle</p>
-                                    <p class="fw-light small-text mb-0">Bundle of 8 Premium React Admin Dashboard</p>
-                                </div>
-                            </a>
-                        </div>
-                    </li>
+                <ul class="navbar-nav ms-auto">
+                    
                     <li class="nav-item d-none d-lg-block">
                         <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
                             <span class="input-group-addon input-group-prepend border-right">
@@ -104,80 +82,29 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-                            <i class="icon-mail icon-lg"></i>
+                            <i class="@(unredmessages.Count>0?"text-danger":"text-dark") icon-mail icon-lg"></i>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
-                            <a class="dropdown-item py-3 border-bottom">
-                                <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown unread-messages preview-list pb-0" aria-labelledby="notificationDropdown">
+                            <a asp-action="index" asp-controller="message" asp-area="admin" class="dropdown-item py-3 border-bottom">
+                                <p class="mb-0 font-weight-medium float-left">You have @unredmessages.Count new notifications </p>
                                 <span class="badge badge-pill badge-primary float-right">View all</span>
                             </a>
-                            <a class="dropdown-item preview-item py-3">
-                                <div class="preview-thumbnail">
-                                    <i class="mdi mdi-alert m-auto text-primary"></i>
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject fw-normal text-dark mb-1">Application Error</h6>
-                                    <p class="fw-light small-text mb-0"> Just now </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item py-3">
-                                <div class="preview-thumbnail">
-                                    <i class="mdi mdi-settings m-auto text-primary"></i>
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject fw-normal text-dark mb-1">Settings</h6>
-                                    <p class="fw-light small-text mb-0"> Private message </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item py-3">
-                                <div class="preview-thumbnail">
-                                    <i class="mdi mdi-airballoon m-auto text-primary"></i>
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject fw-normal text-dark mb-1">New user registration</h6>
-                                    <p class="fw-light small-text mb-0"> 2 days ago </p>
-                                </div>
-                            </a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="icon-bell"></i>
-                            <span class="count"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
-                            <a class="dropdown-item py-3">
-                                <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
-                                <span class="badge badge-pill badge-primary float-right">View all</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
-                                    <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="~/admin/images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
-                                    <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="~/admin/images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow py-2">
-                                    <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
-                                    <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                                </div>
-                            </a>
+
+                            @if (unredmessages.Count>0)
+                            {
+                                @foreach (var message in unredmessages)
+                                {
+                                    <a asp-action="detail" asp-controller="message" asp-route-id="@message.Id" class="dropdown-item preview-item py-3">
+                                        <div class="preview-thumbnail">
+                                            <i class="mdi mdi-alert m-auto text-danger"></i>
+                                        </div>
+                                        <div class="preview-item-content">
+                                            <h6 class="preview-subject fw-normal text-dark mb-1">@message.Subject</h6>
+                                            <p class="fw-light small-text mb-0"> @message.Date</p>
+                                        </div>
+                                    </a>
+                                }    
+                            }
                         </div>
                     </li>
                     <li class="nav-item dropdown d-none d-lg-block user-dropdown">
@@ -197,7 +124,7 @@
                             <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
                         </div>
                     </li>
-                </ul>*@
+                </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
                     <span class="mdi mdi-menu"></span>
                 </button>
@@ -244,7 +171,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="list-wrapper px-3">
+                        <div class="list-wrapper px-3"> 
                             <ul class="d-flex flex-column-reverse todo-list">
                                 <li>
                                     <div class="form-check">
@@ -388,6 +315,12 @@
                         <a class="nav-link" asp-area="default" asp-controller="home" asp-action="index">
                             <i style="font-size:180%" class="mdi mdi-sitemap"></i>
                             <span style="margin-left: 16px" class="menu-title">Site</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="message" asp-action="index">
+                            <i style="font-size:180%" class="icon-mail icon-lg"></i>
+                            <span style="margin-left: 16px" class="menu-title">Messages</span>
                         </a>
                     </li>
                     <li class="nav-item">

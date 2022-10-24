@@ -41,7 +41,7 @@ namespace Final_E_Commerce.Areas.Admin.Repositories
         
         public DataTable GetProductDetailsFromDb()
         {
-            var query = "SELECT Id, Name, Price, Sold, Count, Profit, Views, Rating FROM Products ";
+            var query = "SELECT Id, Name, Price, Sold, Count, Profit, Views, Rating FROM Products ORDER BY Sold DESC";
             DataTable dataTable = new DataTable();
 
             using (SqlConnection connection = new SqlConnection(connectionString))

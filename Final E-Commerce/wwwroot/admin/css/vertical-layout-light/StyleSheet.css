@@ -1,0 +1,21 @@
+﻿.unread-messages {
+    max-height: 600px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+
+ .unread-messages::-webkit-scrollbar-track {
+     box-shadow: inset 0 0 5px grey;
+     border-radius: 10px;
+ }
+
+ .unread-messages::-webkit-scrollbar {
+     width: 20px;
+ }
+
+    .unread-messages::-webkit-scrollbar-thumb {
+        background: rgb(13,110,253);
+        height: 15px;
+        border-radius: 10px;
+    }

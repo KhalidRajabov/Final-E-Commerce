@@ -1,0 +1,60 @@
+﻿@model AdminMessagesVM
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-lg-12 grid-margin stretch-card mt-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="user-table" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Answered</th>
+                            <th>AnswerDate</th>
+                            <th>Answered By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Messages)
+                        {
+                            <tr>
+                                @if (!item.IsAnswered)
+                                {
+                                    <td>
+                                        <i style="font-size:150%" class="text-danger fa-solid fa-square-xmark"></i>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <i style="font-size:150%" class="text-success fa-solid fa-square-check"></i>
+                                    </td>
+                                }
+                                <td>@item.Firstname @item.Lastname</td>
+                                <td><a asp-action="detail" asp-route-id="@item.Id" class="text-dark">@item.Subject</a></td>
+                                <td>@item.Date</td>
+                                @if (!item.IsAnswered)
+                                {
+                                    <td><span class="text-primary">Not asnwered</span></td>
+                                    <td><span class="text-primary">Empty</span></td>
+                                }
+                                else{
+                                    <td><span class="text-dark">Answered</span></td>
+                                    <td><span class="text-dark">@item.AnsweredDate</span></td>
+                                }
+                                <td><span class="text-dark">@item.AnsweredBy</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,66 @@
+﻿@model AdminMessagesVM
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container col-12">
+    <div class="row d-flex flex-column" style="background-color:rgb(238,238,238)">
+        <div class="d-flex flex-column p-1">
+            <h4 class="text-dark align-self-start">Name</h4>
+            <div class="col-12 bg-light p-2" >
+                <p>@Model.SingleMessage.Firstname @Model.SingleMessage.Lastname</p>
+            </div>
+        </div>
+        <div class="d-flex flex-column p-1">
+            <h4 class="text-dark align-self-start">Message</h4>
+            <div class="col-12 bg-light p-3" >
+                <p>@Model.SingleMessage.Content</p>
+            </div>
+        </div>
+        <div class="d-flex flex-column p-1">
+            <h4 class="text-dark align-self-start">Email</h4>
+            <div class="col-12 bg-light p-2">
+                <p>@Model.SingleMessage.Email</p>
+            </div>
+        </div>
+        <div class="d-flex flex-column p-1">
+            <h4 class="text-dark align-self-start">Date</h4>
+            <div class="col-12 bg-light p-2">
+                <p>@Model.SingleMessage.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</p>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex flex-column mt-3" >
+        @if (Model.SingleMessage.IsAnswered!=true)
+        {
+            <form method="post" asp-action="reply" asp-controller="message" asp-route-id="@Model.SingleMessage.Id" role="form">
+                <div class="col-12">
+                    <h4 class="text-dark align-self-start">Reply</h4>
+                    <textarea asp-for="Reply" class="form-control rounded-0 mb-4" style="height:150px" placeholder="Reply"></textarea>
+                    <span asp-validation-for="Reply" class="text-danger"></span>
+                </div>
+                <div class="col-md-12 d-flex flex-row justify-content-start">
+                    <button type="submit" class="btn btn-success">Send</button>
+                </div>
+            </form>
+        }
+        else{
+            <div class="d-flex flex-column p-1" style="background-color:rgb(238,238,238)">
+                <h4 class="text-dark align-self-start">Answer</h4>
+                <div  class="col-12 ">
+                    <p >@Model.SingleMessage.Answer</p>
+                </div>
+                <div class="col-12 ">
+                    <p  class="p-1 mt-5">@Model.SingleMessage.AnsweredBy</p>
+                    <p  class="p-1 mt-1">@Model.SingleMessage.AnsweredDate</p>
+                </div>
+            </div>
+            
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

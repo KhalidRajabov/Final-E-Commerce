@@ -35,12 +35,13 @@ function BindProductsToGrid(products) {
     $.each(products, function (index, product) {
         tr = $('<tr/>');
         tr.append(`<td>${index + 1}</td>`);
-        tr.append(`<td><a class='text-dark' href='home/detail/${product.id}'>${product.name}</a></td>`);
+        tr.append(`<td><a class='text-dark' href='admin/product/detail/${product.id}'>${product.name}</a></td>`);
         tr.append(`<td>${product.price}</td>`);
         tr.append(`<td>${product.sold}</td>`);
         tr.append(`<td>${product.profit}</td>`);
         tr.append(`<td>${product.count}</td>`);
         tr.append(`<td>${product.rating}</td>`);
+        tr.append(`<td>${product.views}</td>`);
         $('#user-table').append(tr);
         totalProfit += product.profit;
         totalSold += product.sold;

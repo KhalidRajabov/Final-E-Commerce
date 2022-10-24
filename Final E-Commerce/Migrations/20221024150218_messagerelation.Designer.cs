@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221024150218_messagerelation")]
+    partial class messagerelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -514,12 +516,20 @@ namespace Final_E_Commerce.Migrations
                     b.Property<string>("Lastname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Subject")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
+
+                    b.HasIndex("MessageId");
 
                     b.ToTable("Messages");
                 });
@@ -1493,6 +1503,10 @@ namespace Final_E_Commerce.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("AppUserId");
 
+                    b.HasOne("Final_E_Commerce.Entities.Message", null)
+                        .WithMany("Children")
+                        .HasForeignKey("MessageId");
+
                     b.Navigation("User");
                 });
 
@@ -1738,6 +1752,11 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Children");
 
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Message", b =>
+                {
+                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Orders", b =>
