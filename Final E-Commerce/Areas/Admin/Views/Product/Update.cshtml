@@ -17,8 +17,9 @@
                     {
                         <img src="~/images/products/@item.ImageUrl" style="width: 250px; height: 150px;" class="img-fluid" alt="...">
                     }
+                    <a asp-action="update" asp-controller="product" asp-route-id="@Model.Product.Id" class="btn bg-info">Edit images</a>
                 </div>
-                <div class="row justify-content-between">
+                <div class="row justify-content-between mt-3">
                     <!-- form -->
 
                     <h2 class="section-title">@Model.Name</h2>

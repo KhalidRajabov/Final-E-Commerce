@@ -82,6 +82,7 @@
                                                     <img style="width:100%; height:200px;" class="img-fluid align-self-center mb-3 img-first" src="~/images/products/@image.ImageUrl" alt="product-img">
                                                 }
                                             }
+
                                         </a>
                                         <div class="btn-cart">
                                             <a class="btn btn-primary btn-sm add" data-id="@item.Id">Add To Cart</a>
@@ -110,7 +111,7 @@
                                     }
                                 </div>
                                 <div class="product-info">
-                                    <h3 class="h5"><a class="text-color" href="product-single.html">@item.Name</a></h3>
+                                    <h3 class="h5"><a class="text-color" asp-action="detail" asp-route-id="@item.Name">@item.Name</a></h3>
                                     @if (item.DiscountPercent>0)
                                     {
                                         <span class="h5">$@item.DiscountPrice</span>
@@ -192,6 +193,33 @@
     </div>
   </div>
 </section>
+
+
+
+<section class="section">
+    <div class="container">
+        <div class="row d-flex flex-column justify-content-center align-items-center">
+            
+                <div class="col-lg-12 d-flex flex-row justify-content-center">
+                    <h2 class="mb-4 ">Blogs</h2>
+                </div>
+                <div class="row d-flex flex-row flex-wrap justify-content-around">
+                    @foreach (var blog in Model.Blogs)
+                    {
+                    <div class="card m-2 homeblog" style="width: 30%;">
+                        <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark mt-2"><img width="150" height="250" src="~/images/blog/@blog.ImageUrl" class="card-img-top"></a>
+                        <div class="card-body">
+                            <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark"><h5 class="card-title fw-bolder">@(blog.Title.Length > 29 ? blog.Title.Substring(0, 29) : blog.Title)</h5> </a>
+                            <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark"><p style="height:10%; overflow:hidden;" class="card-text">@Html.Raw(blog.Content.Substring(0,90))...</p></a>
+                        </div>
+                    </div>
+                    }
+                </div>
+        </div>
+    </div>
+</section>
+
+
 
 
 <section class="section">

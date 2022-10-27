@@ -2629,3 +2629,11 @@ label {
     transition: .3s;
 }
 
+.homeblog:hover {
+    transition: .3s;
+    transform: scaleX(1.01) scaleY(1.01);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 27px 26px, rgba(0, 0, 0, 0.12) 0px -6px 15px, rgba(0, 0, 0, 0.12) 0px 2px 3px, rgba(0, 0, 0, 0.17) 0px 6px 6px, rgba(0, 0, 0, 0.09) 0px -2px 2px;
+}
+.homeblog:not(hover) {
+    transition: .3s;
+}

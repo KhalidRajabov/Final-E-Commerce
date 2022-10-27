@@ -32,7 +32,7 @@ namespace Final_E_Commerce.DAL
         public DbSet<BlogComment>? BlogComments { get; set; }
         public DbSet<ProductComment>? ProductComments{ get; set; }
         public DbSet<UserProductRatings>? UserProductRatings { get; set; }
-        public DbSet<Message>? Messages { get; set; }
+        public DbSet<Messages>? Messages { get; set; }
         public DbSet<UserSubscription>? Subscription { get; set; }
 
 

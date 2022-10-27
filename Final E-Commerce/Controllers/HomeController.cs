@@ -3,14 +3,10 @@ using Final_E_Commerce.Entities;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.CodeAnalysis;
-using Final_E_Commerce.Migrations;
-using Final_E_Commerce.Helper;
+
 
 namespace Final_E_Commerce.Controllers
 {
@@ -84,7 +80,120 @@ namespace Final_E_Commerce.Controllers
                 .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToListAsync();
             homeVM.BestSellerProducts = Bestsellers;
             homeVM.Sliders = await _context?.Sliders?.ToListAsync();
+            homeVM.Blogs = await _context?.Blogs?.Where(b=>!b.IsDeleted).OrderByDescending(b=>b.ViewCount).Take(6).ToListAsync();
             return View(homeVM);
+        }
+
+
+        public async Task<IActionResult> Shop(ShopVM? filter)
+        {
+
+            #region Discount/Ban operation
+                List<Products>? AllProducts = await _context.Products?
+                  .Where(p => p.DiscountPercent > 0).ToListAsync();
+
+                foreach (var product in AllProducts)
+                {
+                    if (product.DiscountUntil < DateTime.Now)
+                    {
+                        product.DiscountUntil = null;
+                        product.DiscountPercent = 0;
+                        product.DiscountPrice = 0;
+                        await _context?.SaveChangesAsync();
+                    }
+                }
+                if (User.Identity.IsAuthenticated)
+                {
+                    AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+                    var userroles = await _usermanager.GetRolesAsync(user);
+                    foreach (var item in userroles)
+                    {
+                        if (item.ToLower() == "ban" || userroles == null)
+                        {
+                            await _signInManager.SignOutAsync();
+                            return RedirectToAction("error", "home");
+                        }
+                    }
+                }
+            #endregion
+
+            #region SelectItems
+                ViewBag.AlphabeticOrder = new List<string>() { "A-Z", "Z-A" };
+                ViewBag.DateOrder = new List<string>() { "New to Old", "Old to New" };
+                ViewBag.SpecialOrder = new List<string>() { "Populars", "Top sellers" };
+                ViewBag.Price = new List<string>() { "Low", "High" };
+            #endregion
+            List<Products> Products = new List<Products>();
+            if (filter != null)
+            {
+                Products = await _context?.Products?
+                    .Include(p=>p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
+                if (filter.Search != null)
+                {
+                    Products.Where(p => p.Name.ToLower().Contains(filter.Search.ToLower()));
+                }
+                if (filter.AlphabeticOrder != null)
+                {
+                    if (filter.AlphabeticOrder == "A-Z")
+                    {
+                        Products.OrderBy(p => p.Name);
+                    }
+                    else
+                    {
+                        Products.OrderByDescending(p => p.Name);
+                    }
+                }
+                if (filter.DateOrder != null)
+                {
+                    if (filter.DateOrder == "New to Old")
+                    {
+                        Products.OrderByDescending(p => p.CreatedTime);
+                    }
+                    else
+                    {
+                        Products.OrderBy(p => p.CreatedTime);
+                    }
+                }
+                if (filter.Speciality!=null)
+                {
+                    if (filter.Speciality == "Populars")
+                    {
+                        Products.OrderByDescending(p => p.Views);
+                    }
+                    else
+                    {
+                        Products.OrderByDescending(p => p.Sold);
+                    }
+                }
+                if (filter.Price!=null)
+                {
+                    if (filter.Speciality == "Low")
+                    {
+                        Products.OrderBy(p => p.Price);
+                    }
+                    else
+                    {
+                        Products.OrderByDescending(p => p.Price);
+                    }
+                }
+            }
+            else
+            {
+                Products = await _context?.Products?
+                    .Include(p=>p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
+            }
+            ShopVM shopVM = new ShopVM
+            {
+                Products = Products
+            };
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+                shopVM.User = user;
+                shopVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync();
+            }
+
+            return View(shopVM);
         }
         public async Task<IActionResult> Detail(int? id)
         {
@@ -462,7 +571,7 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public async Task<IActionResult> Contact(ContactVM contact)
         {
-            Message message = new Message();
+            Messages message = new Messages();
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);

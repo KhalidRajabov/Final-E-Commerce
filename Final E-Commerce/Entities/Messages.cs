@@ -1,6 +1,6 @@
 ﻿namespace Final_E_Commerce.Entities
 {
-    public class Message
+    public class Messages
     {
         public int Id { get; set; }
         public string? Firstname { get; set; }

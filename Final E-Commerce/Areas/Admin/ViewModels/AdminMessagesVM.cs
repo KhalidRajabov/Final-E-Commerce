@@ -7,8 +7,8 @@ namespace Final_E_Commerce.Areas.Admin.ViewModels
 {
     public class AdminMessagesVM
     {
-        public List<Message>? Messages { get; set; }
-        public Message? SingleMessage { get; set; }
+        public List<Messages>? Messages { get; set; }
+        public Messages? SingleMessage { get; set; }
         [Required, MinLength(15),MaxLength(2000)]
         public string? Reply { get; set; }
     }

@@ -13,5 +13,6 @@ namespace Final_E_Commerce.ViewModels
         public List<Products>? Following { get; set; }
         public List<Slider>? Sliders { get; set; }
         public List<Wishlist>? Wishlists { get; set; }
+        public List<Blogs>? Blogs { get; set; }
     }
 }

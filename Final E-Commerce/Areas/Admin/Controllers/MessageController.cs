@@ -46,7 +46,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Reply(AdminMessagesVM messagevm, int id)
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-            Message? message = await _context?.Messages?.FirstOrDefaultAsync(m => m.Id == id);
+            Messages? message = await _context?.Messages?.FirstOrDefaultAsync(m => m.Id == id);
             message.Answer = messagevm.Reply;
             message.AnsweredDate = DateTime.Now;
             message.AnsweredBy = user.Fullname;

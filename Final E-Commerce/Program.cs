@@ -7,19 +7,28 @@ using Microsoft.AspNetCore.Identity;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.Hubs;
 using Final_E_Commerce.SubscribeTableDependency;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.Facebook;
+using Serilog;
+using Serilog.Core;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 
 // Add services to the container.
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(c =>
+{
+    c.EnableDetailedErrors = true;
+    c.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+    c.KeepAliveInterval = TimeSpan.FromSeconds(15);
+});
 builder.Services.AddSingleton<DashboardHub>();
 builder.Services.AddSingleton<SubscribeProductTableDependency>();
 builder.Services.AddSingleton<PendingsHub>();
 builder.Services.AddSingleton<SubscribePendingsTableDependency>();
+builder.Services.AddSingleton<MessagesHub>();
+builder.Services.AddSingleton<SubscribeMessagesTableDependency>();
 
 builder.Services.AddAuthentication()
     .AddFacebook(opt =>
@@ -33,6 +42,17 @@ builder.Services.AddAuthentication()
     opts.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     
 });
+var columnOptions = new ColumnOptions
+{
+    AdditionalColumns = new Collection<SqlColumn>
+    {
+        new SqlColumn("UserId", System.Data.SqlDbType.VarChar)
+    }
+};
+/*Logger log = new LoggerConfiguration()
+    .
+    .CreateLogger();
+builder.Host.UseSerilog(log);*/
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -85,7 +105,7 @@ app.UseAuthorization();
 
 app.MapHub<DashboardHub>("/dashboardHub");
 app.MapHub<PendingsHub>("/pendingsHub");
-//app.MapHub<ChatHub>("/chatHub");
+app.MapHub<MessagesHub>("/messagesHub");
 
 app.UseEndpoints(endpoints =>
 {
@@ -100,5 +120,5 @@ app.UseEndpoints(endpoints =>
 
 app.UseProductTableDependency();
 app.UsePendingsTableDependency();
-
+app.UseMessagesTableDependency();
 app.Run();

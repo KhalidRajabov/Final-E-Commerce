@@ -19,16 +19,25 @@
             </div>
         </div>
         <div class="d-flex flex-column p-1">
+            <h4 class="text-dark align-self-start">Date</h4>
+            <div class="col-12 bg-light p-2">
+                <p>@Model.SingleMessage.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</p>
+            </div>
+        </div>
+        <div class="d-flex flex-column p-1">
             <h4 class="text-dark align-self-start">Email</h4>
             <div class="col-12 bg-light p-2">
                 <p>@Model.SingleMessage.Email</p>
             </div>
         </div>
         <div class="d-flex flex-column p-1">
-            <h4 class="text-dark align-self-start">Date</h4>
-            <div class="col-12 bg-light p-2">
-                <p>@Model.SingleMessage.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</p>
-            </div>
+            @if (Model.SingleMessage.AppUserId!=null)
+            {
+                <p class="text-dark align-self-start"><span class="text-danger">Note:</span> @Model.SingleMessage.Firstname @Model.SingleMessage.Lastname is our user. Profile: <a asp-action="detail" asp-controller="user" asp-route-id="@Model.SingleMessage.AppUserId">Go to profile</a></p>
+            }
+            else{
+                <p class="text-dark align-self-start"><span class="text-danger">Note:</span> @Model.SingleMessage.Firstname @Model.SingleMessage.Lastname is not our user. </p>
+            }
         </div>
     </div>
     <div class="row d-flex flex-column mt-3" >
@@ -56,7 +65,6 @@
                     <p  class="p-1 mt-1">@Model.SingleMessage.AnsweredDate</p>
                 </div>
             </div>
-            
         }
     </div>
 </div>

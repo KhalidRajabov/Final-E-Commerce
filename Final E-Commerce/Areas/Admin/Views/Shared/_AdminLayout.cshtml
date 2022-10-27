@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="~/admin/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="~/admin/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    @*<link rel="stylesheet" href="~/admin/vendors/datatables.net-bs4/dataTables.bootstrap4.css">*@
     <link rel="stylesheet" href="~/admin/js/select.dataTables.min.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
@@ -89,22 +89,23 @@
                                 <p class="mb-0 font-weight-medium float-left">You have @unredmessages.Count new notifications </p>
                                 <span class="badge badge-pill badge-primary float-right">View all</span>
                             </a>
-
-                            @if (unredmessages.Count>0)
-                            {
-                                @foreach (var message in unredmessages)
+                            <div id="newmessages">
+                                @if (unredmessages.Count>0)
                                 {
-                                    <a asp-action="detail" asp-controller="message" asp-route-id="@message.Id" class="dropdown-item preview-item py-3">
-                                        <div class="preview-thumbnail">
-                                            <i class="mdi mdi-alert m-auto text-danger"></i>
-                                        </div>
-                                        <div class="preview-item-content">
-                                            <h6 class="preview-subject fw-normal text-dark mb-1">@message.Subject</h6>
-                                            <p class="fw-light small-text mb-0"> @message.Date</p>
-                                        </div>
-                                    </a>
-                                }    
-                            }
+                                    @foreach (var message in unredmessages)
+                                    {
+                                        <a asp-action="detail" asp-controller="message" asp-route-id="@message.Id" class="dropdown-item preview-item py-3">
+                                            <div class="preview-thumbnail">
+                                                <i class="mdi mdi-alert m-auto text-danger"></i>
+                                            </div>
+                                            <div class="preview-item-content">
+                                                <h6 class="preview-subject fw-normal text-dark mb-1">@message.Subject</h6>
+                                                <p class="fw-light small-text mb-0"> @message.Date</p>
+                                            </div>
+                                        </a>
+                                    }    
+                                }
+                            </div>
                         </div>
                     </li>
                     <li class="nav-item dropdown d-none d-lg-block user-dropdown">
@@ -401,7 +402,7 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="~/https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <audio id="messageaudio" src="~/sounds/mixkit-software-interface-start-2574.wav"></audio>
     <script src="~/admin/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
@@ -421,8 +422,11 @@
     <script src="~/admin/js/jquery.cookie.js" type="text/javascript"></script>
     <script src="~/admin/js/dashboard.js"></script>
     <script src="~/admin/js/Chart.roundedBarCharts.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    @*<script src="~/js/Messages.js"></script>*@
     @RenderSection("JqueryValidationScript", false);
     @RenderSection("Scripts", false);
+
     <!-- End custom js for this page-->
 </body>
 
