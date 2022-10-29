@@ -591,6 +591,7 @@ namespace Final_E_Commerce.Controllers
                 Profit = 0,
                 CreatedTime = DateTime.Now,
                 InStock = true,
+                IsNew = vm.IsNew,
                 Views = 0
             };
 
@@ -694,6 +695,7 @@ namespace Final_E_Commerce.Controllers
             Products? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
+            product.DeletedBy = AppUser.Fullname;
             await _context.SaveChangesAsync();
             return RedirectToAction("Products");
         }
@@ -762,6 +764,7 @@ namespace Final_E_Commerce.Controllers
                 CategoryId=p.CategoryId,
                 BrandId=p.BrandId,
                 Product=p,
+                IsNew=p.IsNew,
             };
             
             return View(vm);
@@ -864,6 +867,7 @@ namespace Final_E_Commerce.Controllers
             dbProduct.RearCamera = product.RearCamera;
             dbProduct.Battery = product.Battery;
             dbProduct.Weight = product.Weight;
+            dbProduct.IsNew = product.IsNew;
 
             
             dbProduct.Count = product.Count;
@@ -1197,9 +1201,6 @@ namespace Final_E_Commerce.Controllers
             return View();
         }
 
-        /*public async Task<IActionResult> NewBlog()
-        {
-
-        }*/
+      
     }
 }

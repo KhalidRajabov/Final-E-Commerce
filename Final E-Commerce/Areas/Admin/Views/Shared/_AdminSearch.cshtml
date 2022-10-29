@@ -1,0 +1,26 @@
+﻿@model DetailVM
+
+@foreach (var item in Model.SearchProducts)
+{
+    <li class=" px-3  bg-dark p-2 search-list-content cool-search-list" style="width:90%;">
+        <a class="text-dark d-flex flex-row align-content-center justify-content-between" style="width:100%; align-items: center" asp-controller="home" asp-action="detail" asp-route-Id="@item.Id">
+            <span class="text-danger">@item.Name</span>
+            @foreach (var image in item.ProductImages)
+            {
+                if (image.IsMain)
+                {
+                    <img width="100" src="~/images/products/@image.ImageUrl">
+                }
+            }
+        </a>
+    </li>
+}
+@foreach (var item in Model.Users)
+{
+    <li class=" px-3  bg-dark p-2 search-list-content cool-search-list" style="width:90%;">
+        <a class="text-dark d-flex flex-row align-content-center justify-content-between" style="width:100%; align-items: center" asp-controller="users" asp-action="detail" asp-route-Id="@item.Id">
+                <span class="text-warning">@item.Fullname</span>            
+            <img width="100" src="~/images/ProfilePictures/@item.ProfilePicture">
+        </a>
+    </li>
+}

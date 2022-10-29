@@ -68,12 +68,13 @@
                                 <span class="price">€@item.Price</span>
                             </div>
                         </td>
+
                         <td>
                             <div class="product-quantity">
                                 <div class="quantity mt-15 d-flex justify-content-around">
-                                    <a class="minusitem" data-id="@item.Id"><i class="fa-regular fa-square-minus"></i></a>
+                                    <a style="cursor:pointer" class="minusitem" data-id="@item.Id"><i class="fa-regular fa-square-minus"></i></a>
                                     <span> @item.ProductCount</span>
-                                    <a data-id="@item.Id" class="plusitem"><i class="fa-regular fa-square-plus "></i></a>
+                                    <a style="cursor:pointer" data-id="@item.Id" class="plusitem"><i class="fa-regular fa-square-plus "></i></a>
                                 </div>
                             </div>
                         </td>
@@ -84,7 +85,7 @@
                         </td>
                         <td>
                             <div class="product-delete">
-                                <a class="deleteitem" data-id="@item.Id"><i class="text-danger fa-solid fa-trash"></i></a>
+                                <a style="cursor:pointer" class="deleteitem" data-id="@item.Id"><i class="text-danger fa-solid fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>

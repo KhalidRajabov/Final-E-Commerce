@@ -1,10 +1,14 @@
 ﻿@using Final_E_Commerce.DAL
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @inject UserManager<AppUser> _usermanager
 @inject AppDbContext context
 @{
     AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
     var unredmessages = context?.Messages?.Where(m => !m.IsAnswered).ToList();
+    var orders = context?.Orders?.Where(o => o.OrderStatus == OrderStatus.Pending).Include(u=>u.AppUser).ToList();
+    var products = context?.Products?.Where(p => p.Status == ProductConfirmationStatus.Pending).Include(u=>u.AppUser).ToList();
+    int notificationCount = orders.Count + products.Count;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -66,18 +70,14 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     
-                    <li class="nav-item d-none d-lg-block">
-                        <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
-                            <span class="input-group-addon input-group-prepend border-right">
-                                <span class="icon-calendar input-group-text calendar-icon"></span>
-                            </span>
-                            <input type="text" class="form-control">
-                        </div>
-                    </li>
+                    
                     <li class="nav-item">
                         <form class="search-form" action="#">
                             <i class="icon-search"></i>
-                            <input type="search" class="form-control" placeholder="Search Here" title="Search here">
+                            <input type="search" id="search" class="form-control" placeholder="Search Here" title="Search here">
+                            <ul class="search-wrapper" id="SearchList">
+                                
+                            </ul>
                         </form>
                     </li>
                     <li class="nav-item dropdown">
@@ -108,21 +108,57 @@
                             </div>
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="icon-bell"></i>
+                            @if (notificationCount>0)
+                            {
+                                <span class="count"></span>
+                            }
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
+                            <p class="dropdown-item py-3">
+                                <span class="mb-0 font-weight-medium float-left">You have @notificationCount notifications </span>
+                            </p>
+                            <div class="dropdown-divider"></div>
+                            @foreach (var item in orders)
+                            {
+                                <a asp-action="detail" asp-controller="orders" asp-route-id="@item.Id" class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="~/images/ProfilePictures/@item.AppUser.ProfilePicture" alt="image" class="img-sm profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow py-2">
+                                        <p class="preview-subject ellipsis font-weight-medium text-dark">@item.AppUser.Fullname</p>
+                                        <p class="fw-light small-text mb-0">Made a purchase, need to be confirmed</p>
+                                    </div>
+                                </a>
+                            }
+                            @foreach (var item in products)
+                            {
+                                <a asp-action="detail" asp-controller="product" asp-route-id="@item.Id" class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="~/images/ProfilePictures/@item.AppUser.ProfilePicture" alt="image" class="img-sm profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow py-2">
+                                        <p class="preview-subject ellipsis font-weight-medium text-dark">@item.AppUser.Fullname</p>
+                                        <p class="fw-light small-text mb-0">Added a new product, need to be checked</p>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </li>
                     <li class="nav-item dropdown d-none d-lg-block user-dropdown">
                         <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="img-xs rounded-circle" src="~/admin/images/faces/face8.jpg" alt="Profile image">
+                            <img class="img-xs rounded-circle" width="50" src="~/images/ProfilePictures/@user.ProfilePicture" alt="Profile image">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <div class="dropdown-header text-center">
-                                <img class="img-md rounded-circle" src="~/admin/images/faces/face8.jpg" alt="Profile image">
-                                <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
-                                <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+                                <img class="img-md rounded-circle" width="50" src="~/images/ProfilePictures/@user.ProfilePicture" alt="Profile image">
+                                <p class="mb-1 mt-3 font-weight-semibold">@user.Fullname</p>
+                                <p class="fw-light text-muted mb-0">@user.Email</p>
                             </div>
-                            <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>
-                            <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>
-                            <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>
-                            <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-                            <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+                            <a asp-action="index" asp-controller="user" asp-area="default" class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile</a>
+                            <a asp-action="logout" asp-controller="account" asp-area="default" class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
                         </div>
                     </li>
                 </ul>
@@ -379,6 +415,7 @@
                         <div class="collapse" id="ui-basic">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link" asp-action="DeletedProducts" asp-controller="recycle">Products</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="DeletedBrands" asp-controller="recycle">Brands</a></li>
                             </ul>
                         </div>
                     </li>
@@ -419,10 +456,12 @@
     <script src="~/admin/js/todolist.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/admin/js/jquery.cookie.js" type="text/javascript"></script>
     <script src="~/admin/js/dashboard.js"></script>
     <script src="~/admin/js/Chart.roundedBarCharts.js"></script>
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/admin/js/JavaScript.js"></script>
     @*<script src="~/js/Messages.js"></script>*@
     @RenderSection("JqueryValidationScript", false);
     @RenderSection("Scripts", false);

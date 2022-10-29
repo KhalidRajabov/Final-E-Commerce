@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221028215849_basentityDeletedBY")]
+    partial class basentityDeletedBY
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -836,9 +838,6 @@ namespace Final_E_Commerce.Migrations
                     b.Property<bool>("IsFeatured")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsNew")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -910,7 +909,6 @@ namespace Final_E_Commerce.Migrations
                             InStock = false,
                             IsDeleted = false,
                             IsFeatured = false,
-                            IsNew = false,
                             Memory = "64GB 6GB RAM, 128GB 6GB RAM, 256GB 8GB RAM",
                             Name = "Xiaomi Pocophone F1",
                             NewArrival = false,
@@ -944,7 +942,6 @@ namespace Final_E_Commerce.Migrations
                             InStock = false,
                             IsDeleted = false,
                             IsFeatured = false,
-                            IsNew = false,
                             Memory = "128GB 8GB RAM, 256GB 12GB RAM, 512GB 12GB RAM, 1TB 12GB RAM",
                             Name = "Samsung Galaxy S22 Ultra",
                             NewArrival = false,
@@ -978,7 +975,6 @@ namespace Final_E_Commerce.Migrations
                             InStock = false,
                             IsDeleted = false,
                             IsFeatured = false,
-                            IsNew = false,
                             Memory = "128GB 6GB RAM, 256GB 6GB RAM, 512GB 6GB RAM, 1TB 6GB RAM",
                             Name = "Apple iPhone 14 Pro Max",
                             NewArrival = false,

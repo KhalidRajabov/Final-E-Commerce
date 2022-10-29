@@ -165,6 +165,8 @@
                         <p class="text-gray mb-4">
                           @Model.Product.Description
                         </p>
+                    <h4 class="text-dark" >Condition: <span class="text-color">@(Model.Product.IsNew?"New":"Used")</span></h4>
+                    <br />
                     <h4 class="text-primary" style="color:blue !important">View: <span class="text-color">@Model.Product.Views</span></h4>
                     <div class="col-12 d-flex flex-row">
                         <input style="width:100%" id="quantity" class="quantity mr-sm-2 mb-3 mb-sm-0" type="text" value="" name="quantity">

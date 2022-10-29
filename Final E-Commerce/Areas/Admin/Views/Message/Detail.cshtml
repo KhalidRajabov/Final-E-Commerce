@@ -33,10 +33,10 @@
         <div class="d-flex flex-column p-1">
             @if (Model.SingleMessage.AppUserId!=null)
             {
-                <p class="text-dark align-self-start"><span class="text-danger">Note:</span> @Model.SingleMessage.Firstname @Model.SingleMessage.Lastname is our user. Profile: <a asp-action="detail" asp-controller="user" asp-route-id="@Model.SingleMessage.AppUserId">Go to profile</a></p>
+                <p class="text-dark align-self-start"><span class="text-danger">Note:</span> <span class="fw-bolder">@Model.SingleMessage.Firstname @Model.SingleMessage.Lastname</span>  is our user. Profile: <a asp-action="detail" asp-controller="user" asp-route-id="@Model.SingleMessage.AppUserId">Go to profile</a></p>
             }
             else{
-                <p class="text-dark align-self-start"><span class="text-danger">Note:</span> @Model.SingleMessage.Firstname @Model.SingleMessage.Lastname is not our user. </p>
+                <p class="text-dark align-self-start"><span class="text-danger">Note:</span> <span class ="fw-bolder">@Model.SingleMessage.Firstname @Model.SingleMessage.Lastname</span> is not our user. </p>
             }
         </div>
     </div>

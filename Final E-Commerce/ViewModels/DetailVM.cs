@@ -11,6 +11,7 @@ namespace Final_E_Commerce.ViewModels
         public List<Products>? SearchProducts { get; set; }
         public List<Blogs>? Blogs { get; set; }
         public List<ProductComment>? Comments { get; set; }
+        public List<AppUser>? Users { get; set; }
         public int UsersWantIt { get; set; }
 
     }

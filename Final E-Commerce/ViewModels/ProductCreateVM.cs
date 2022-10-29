@@ -25,6 +25,7 @@ namespace Final_E_Commerce.ViewModels
         public string? RearCamera { get; set; }
         public string? Battery { get; set; }
         public string? Weight { get; set; }
+        public bool IsNew { get; set; }
 
         public Nullable<double> DiscountPercent { get; set; }
         public Nullable<DateTime> DiscountUntil { get; set; }

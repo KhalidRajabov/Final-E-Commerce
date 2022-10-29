@@ -4,6 +4,7 @@ using Final_E_Commerce.Entities;
 using Final_E_Commerce.Extensions;
 using Final_E_Commerce.Migrations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
-        public BrandController(AppDbContext context, IWebHostEnvironment env)
+        private readonly UserManager<AppUser> _usermanager;
+        public BrandController(AppDbContext context, IWebHostEnvironment env, UserManager<AppUser> usermanager)
         {
             _context = context;
             _env = env;
+            _usermanager = usermanager;
         }
         public IActionResult Index()
         {
@@ -82,7 +85,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         {
 
             if (id == null) return RedirectToAction("error", "home");
-            Brand brand = await _context.Brands.FindAsync(id);
+            Brand? brand = await _context.Brands.FindAsync(id);
             if (brand == null) return RedirectToAction("error", "home");
             BrandVM brandVM = new BrandVM();
             brandVM.Brand = brand;
@@ -146,11 +149,13 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             if (id == null) return RedirectToAction("error", "home");
             Brand? brands = await _context.Brands.FindAsync(id);
             if (brands == null) return RedirectToAction("error", "home");
             brands.IsDeleted = true;
             brands.DeletedAt = DateTime.Now;
+            brands.DeletedBy = user.Fullname;
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }

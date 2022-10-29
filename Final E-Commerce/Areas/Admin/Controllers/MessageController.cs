@@ -2,6 +2,8 @@
 using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Helper;
+using Final_E_Commerce.Migrations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Final_E_Commerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin, SuperAdmin")]
     public class MessageController : Controller
     {
         private readonly AppDbContext? _context;

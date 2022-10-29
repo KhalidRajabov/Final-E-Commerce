@@ -32,27 +32,17 @@
                                 <i class="fa-solid fa-eye text-dark"></i> @Model.Blog.ViewCount
                             </li>
                             <li>
-                                <i class="ti-comments"></i> <span id="cm-cnt">@Model.Blog.CommentCount</span> <a href="#cmntSection">COMMENTS</a>
+                                <i class="ti-comments"></i> <span id="cm-cnt">@Model.Blog.CommentCount</span> <a href="#comment-section">COMMENTS</a>
                             </li>
                         </ul>
                     </div>
                     <div class="post-content post-excerpt mb-5">
                         @Html.Raw(Model.Blog.Content)
                     </div>
-                    <div class="post-social-share mb-4" id="cmntSection">
-                        <h4 class="post-sub-heading border-bottom pb-3 mb-3">Share this post</h4>
-                        <div class="social-media-icons">
-                            <ul class="list-inline social-icons">
-                                <li class="list-inline-item"><a href="#"><i class="ti-facebook"></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="ti-twitter-alt"></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="ti-vimeo-alt"></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="ti-google"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
+                 
 
                     <div class="post-comments" >
-                        <h4 class="post-sub-heading border-bottom pb-3 mb-3">    <span id="comCount">@Model.Blog.CommentCount</span>    Comments</h4>
+                        <h4 id="comment-section" class="post-sub-heading border-bottom pb-3 mb-3">    <span id="comCount">@Model.Blog.CommentCount</span>    Comments</h4>
                         <ul class="media-list" id="comment-area">
                             @if (Model.Blog.Comments!=null)
                             {

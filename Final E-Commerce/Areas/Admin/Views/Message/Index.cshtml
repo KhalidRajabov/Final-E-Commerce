@@ -15,9 +15,10 @@
                             <th>Name</th>
                             <th>Subject</th>
                             <th>Date</th>
-                            <th>Answered</th>
+                            <th>Status</th>
                             <th>AnswerDate</th>
                             <th>Answered By</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,7 @@
                                     <td><span class="text-dark">@item.AnsweredDate</span></td>
                                 }
                                 <td><span class="text-dark">@item.AnsweredBy</span></td>
+                                <td><a style="font-size:150%" asp-action="detail" asp-route-id="@item.Id"><i class="mdi mdi-information-outline"></i></a></td>
                             </tr>
                         }
                     </tbody>

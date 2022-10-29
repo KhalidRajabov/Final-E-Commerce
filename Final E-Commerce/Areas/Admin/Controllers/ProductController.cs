@@ -134,7 +134,8 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 BrandId = product.BrandId,
                 CreatedTime = DateTime.Now,
                 InStock = true,
-                Status = ProductConfirmationStatus.Approved
+                Status = ProductConfirmationStatus.Approved,
+                IsNew = product.IsNew
                 
             };
             if (product.DiscountPercent > 0 && product.DiscountUntil < DateTime.Now)
@@ -216,6 +217,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
                 Product = product,
+                IsNew = product.IsNew,
                 
             };
             return View(productUpdateVM);
@@ -355,7 +357,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.Count = product.Count;
             dbProduct.BrandId = product.BrandId;
             dbProduct.Description = product.Description; 
-            dbProduct.LastUpdatedAt = System.DateTime.Now;
+            dbProduct.LastUpdatedAt = DateTime.Now;
             dbProduct.ReleaseDate = product.ReleaseDate;
             dbProduct.OperationSystem = product.OperationSystem;
             dbProduct.GPU = product.GPU;
@@ -368,6 +370,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             dbProduct.Battery = product.Battery;
             dbProduct.Weight = product.Weight;
             dbProduct.Status = ProductConfirmationStatus.Approved;
+            dbProduct.IsNew = product.IsNew;
             if (product?.SubCategory == null)
             {
                 dbProduct.CategoryId = product.CategoryId;
@@ -439,11 +442,13 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             if (id == null) return RedirectToAction("error", "home");
             Products? product = await _context.Products.FindAsync(id);
             if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = true;
             product.DeletedAt = DateTime.Now;
+            product.DeletedBy = user.Fullname;
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }
@@ -596,7 +601,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
                 token = $"Hello {user.Fullname}. We've finished rewieving {product.Name}, now it is available on the site. \n" +
-                    $"Review your <a href='https://localhost:44393/User/productdetail/{product.Id}' style='color:red'>{product.Name} </a>";
+                    $"Review your <a href='https://localhost:44393/home/detail/{product.Id}' style='color:red'>{product.Name} </a>";
                 var emailResult = helper.SendNews(user.Email, token, subject);
 
                 string? discountemail = Url.Action("ConfirmEmail", "Account", new
@@ -616,7 +621,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
                     token = $"Hello {follower.Fullname}. {user.Fullname} Just added a new item. <br> \n" +
-                        $"{product.Name} for the price of {product.Price}. <a href='https://localhost:44393/User/productdetail/{product.Id}' style='color:red'>Check i </a>";
+                        $"{product.Name} for the price of {product.Price}. <a href='https://localhost:44393/home/detail/{product.Id}' style='color:red'>Check i </a>";
                     var emailResult = helper.SendNews(follower.Email, token, subject);
 
                     string? discountemail = Url.Action("ConfirmEmail", "Account", new
@@ -625,11 +630,8 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     }, Request.Scheme);
                 }
             }
-            var obj = new
-            {
-                status="successfull"
-            };
-            return Ok(obj);
+            
+            return RedirectToAction("index");
         }
 
 

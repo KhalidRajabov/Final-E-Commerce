@@ -1,6 +1,6 @@
-﻿using Final_E_Commerce.DAL;
+﻿using Final_E_Commerce.Areas.Admin.ViewModels;
+using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
-using Final_E_Commerce.Migrations;
 using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,10 +38,14 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> ProductDetails(int? id)
         {
             if (id == null) return RedirectToAction("error", "home");
-            Products? product = await _context?.Products?.Include(pi => pi.ProductImages)?
+            Products? product = await _context?.Products?.Include(p=>p.Category).Include(p=>p.Brand).Include(pi => pi.ProductImages)?
             .Include(t => t.ProductTags).ThenInclude(t => t.Tags).FirstOrDefaultAsync(p => p.Id == id);
             if (product == null) return RedirectToAction("error", "home");
-            return View(product);
+            DetailVM detailVM = new DetailVM
+            {
+                Product = product,
+            };
+            return View(detailVM);
         }
         public async Task<IActionResult> RecoverProduct(int? id)
         {
@@ -49,13 +53,41 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             Products? product = _context?.Products?.Find(id);
             if (product == null) return RedirectToAction("error", "home");
             product.IsDeleted = false;
+            product.DeletedAt = null;
+            product.DeletedBy = null;
             await _context.SaveChangesAsync();
             return RedirectToAction("DeletedProducts");
-
         }
 
 
+        public async Task<IActionResult> DeletedBrands()
+        {
 
+            List<Brand>? product = await _context?.Brands?.Where(b => b.IsDeleted).ToListAsync();
+            ListBrandVM brandVM = new ListBrandVM
+            {
+                Brands = product
+            };
+            return View(brandVM);
+        }
+
+        public async Task<IActionResult> BrandDetails(int id)
+        {
+            BrandVM? brand = new BrandVM
+            {
+                Brand = await _context?.Brands?.FirstOrDefaultAsync(b => b.Id == id)
+            }; 
+            return View(brand);
+        }
+        public async Task<IActionResult> RecoverBrand(int id)
+        {
+            Brand? brand = await _context?.Brands?.FirstOrDefaultAsync(b => b.Id == id);
+            brand.IsDeleted = false;
+            brand.DeletedAt = null;
+            brand.DeletedBy = null;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("DeletedBrands");
+        }
 
 
     }

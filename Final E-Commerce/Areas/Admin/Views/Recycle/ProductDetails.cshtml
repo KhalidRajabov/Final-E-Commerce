@@ -1,22 +1,41 @@
 ﻿@model DetailVM
 @{
-    ViewData["Title"] = "ProductDetail";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "ProductDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
- <div class="container">
+
+
+<div class="container">
     <div style="display:flex; flex-direction:row; justify-content:space-around; flex-wrap: wrap;">
-         @foreach (var item in Model.Product.ProductImages)
-         {
-             <img width="250" class="m-3" src="~/images/products/@item.ImageUrl"/>
-         }
-     </div>
-     <div class="row col-12 d-flex flex-row justify-content-center">
-        <a class="text-light btn btn-primary w-25" asp-action="EditPictures" asp-controller="user" asp-route-id="@Model.Product.Id">Edit Images</a>
-     </div>
-    
-            
-     <div class="row mt-5">
+        @foreach (var item in Model.Product.ProductImages)
+        {
+            <img width="250" class="m-3" src="~/images/products/@item.ImageUrl" />
+        }
+    </div>
+    <div class="row col-12 d-flex flex-row justify-content-center">
+        <a class="text-light btn btn-primary w-25" asp-action="EditPictures" asp-controller="product" asp-route-id="@Model.Product.Id">Edit Images</a>
+    </div>
+
+
+    <div class="row mt-5">
         <div class="col-lg-12">
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    Added by:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @if (Model.Owner == null)
+                    {
+                        <i><b>System</b></i>
+                    }
+                    else
+                    {
+                        @Model.Owner.Fullname
+                    }
+                </div>
+            </div>
+
+
 
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
@@ -31,10 +50,9 @@
                     Condition:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @(Model.Product.IsNew?"New":"Used")
+                    @(Model.Product.IsNew ? "New" : "Used")
                 </div>
             </div>
-            
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Price:
@@ -48,12 +66,12 @@
                     Discount Price:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @if (Model.Product.DiscountPercent>0)
+                    @if (Model.Product.DiscountPercent > 0)
                     {
-                        <span>@Model.Product.DiscountPrice </span> <span> (@Model.Product.DiscountPercent%) </span> 
-
+                        <span>@Model.Product.DiscountPrice </span> <span> (@Model.Product.DiscountPercent %)</span>
                     }
-                    else{
+                    else
+                    {
                         <span>0</span>
                     }
                 </div>
@@ -70,7 +88,6 @@
                 </div>
 
             }
-
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Category:
@@ -84,29 +101,27 @@
                     Brand:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" />
+                    <a asp-action="details" asp-controller="brand" asp-route-id="@Model.Product.BrandId">@Model.Product.Brand.Name <img width="50" src="~/images/Brands/@Model.Product.Brand.ImageUrl" /> </a>
                 </div>
             </div>
-                
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                    <b style="max-height:400px" class="col-2">
-                        Tags:
-                    </b>
-                    <div style="max-height:400px" class="col-9 flex-nowrap">
-            @if (Model.Product.ProductTags != null)
-            {
-                        @foreach (var tag in Model.Product.ProductTags)
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    Tags:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @if (Model.Product.ProductTags != null)
+                    {
+                        foreach (var tag in Model.Product.ProductTags)
                         {
-                            <span> @tag.Tags.Name </span>
+                            <span>@tag.Tags.Name</span>
                         }
-            }
-            else{
-                <span>no tag added</span>
-            }
-                    </div>
+                    }
+                    else
+                    {
+                        <span>No tags</span>
+                    }
                 </div>
-
-
+            </div>
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Info:
@@ -124,20 +139,15 @@
                     @Model.Product.ReleaseDate
                 </div>
             </div>
-            @if (Model.Product.OperationSystem!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                    <b style="max-height:400px" class="col-2">
-                        OS:
-                    </b>
-                    <div style="max-height:400px" class="col-9 flex-nowrap">
-                        @Model.Product.OperationSystem
-                    </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    OS:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @Model.Product.OperationSystem
                 </div>
-            }
-            @if (Model.Product.GPU!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     GPU:
                 </b>
@@ -145,10 +155,7 @@
                     @Model.Product.GPU
                 </div>
             </div>
-            }
-            @if (Model.Product.Chipset!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Chipset:
                 </b>
@@ -156,40 +163,30 @@
                     @Model.Product.Chipset
                 </div>
             </div>
-            }
-            @if (Model.Product.Memory!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                    <b style="max-height:400px" class="col-2">
-                        Memory:
-                    </b>
-                    <div style="max-height:400px" class="col-9 flex-nowrap">
-                        @Model.Product.Memory
-                    </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    Memory:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @Model.Product.Memory
                 </div>
-            }
-            @if (Model.Product.Body!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                    <b style="max-height:400px" class="col-2">
-                        Body:
-                    </b>
-                    <div style="max-height:400px" class="col-9 flex-nowrap">
-                        @Model.Product.Body
-                    </div>
+            </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    Body:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @Model.Product.Body
                 </div>
-            }
-            @if (Model.Product.Display!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                    <b style="max-height:400px" class="col-2">
-                        Display:
-                    </b>
-                    <div style="max-height:400px" class="col-9 flex-nowrap">
-                        @Model.Product.Display
-                    </div>
+            </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    Display:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @Model.Product.Display
                 </div>
-            }
+            </div>
             @if (Model.Product.FrontCamera != null)
             {
                 <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -213,20 +210,14 @@
                     </div>
                 </div>
             }
-            @if (Model.Product.Battery!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Battery:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
                     @Model.Product.Battery
                 </div>
-            </div>
-            }
-            @if (Model.Product.Weight!=null)
-            {
-                <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+            </div><div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
                     Weight:
                 </b>
@@ -234,16 +225,15 @@
                     @Model.Product.Weight
                 </div>
             </div>
-            }
         </div>
-     </div>
+    </div>
 
     <div class="row mt-5">
         <div class="col-lg-12">
 
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
-                    Current:
+                    In stock:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
                     @Model.Product.Count
@@ -254,7 +244,14 @@
                     Created:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @Model.Product.CreatedTime
+                    @if (Model.Product.CreatedTime == null)
+                    {
+                        <i><b>System</b></i>
+                    }
+                    else
+                    {
+                        @Model.Product.CreatedTime?.ToString("dddd, dd MMMM yyyy HH:mm:ss")
+                    }
                 </div>
             </div>
 
@@ -263,7 +260,14 @@
                     Updated at:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">
-                    @Model.Product.LastUpdatedAt
+                    @if (Model.Product.LastUpdatedAt == null)
+                    {
+                        <i><b>Not updated yet</b></i>
+                    }
+                    else
+                    {
+                        @Model.Product.LastUpdatedAt?.ToString("dddd, dd MMMM yyyy HH:mm:ss")
+                    }
                 </div>
             </div>
 
@@ -292,57 +296,28 @@
                 </div>
             </div>
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
-                @if (Model.Product.Status==ProductConfirmationStatus.Approved)
-                {
-                    <b style="max-height:400px" class="col-2">
-                        Link on the store:
-                    </b>
-                    <div style="max-height:400px" class="col-9 flex-nowrap">
-                        <a asp-action="detail" asp-controller="home" asp-route-id="@Model.Product.Id">See how it looks on store</a>
-                    </div>
-                    <br />
-                }
-                else if(Model.Product.Status==ProductConfirmationStatus.Pending){
-                    <h4 class="m-3">Awaiting confirmation</h4>
-                }
-                else if (Model.Product.Status == ProductConfirmationStatus.Refused)
-                {
-                    <h3 class="text-danger m-3">Refused</h3>
-                }
-                
+                <b style="max-height:400px" class="col-2">
+                    Deleted at:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @Model.Product.DeletedAt
+                </div>
+            </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
+                    Deleted by:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @Model.Product.DeletedBy
+                </div>
             </div>
         </div>
     </div>
     <div class="row bg-gray d-flex flex-row justify-content-around mt-5 flex-wrap">
-        <a class="btn btn-secondary w-25" asp-action="Products" asp-controller="user" >Go back</a>
+        <a class="btn btn-primary w-25" asp-action="index" asp-controller="product">Go back</a>
 
-        <a class="btn btn-warning text-light w-25" asp-action="editproduct" asp-controller="user" asp-route-id="@Model.Product.Id">Edit</a>
-        <!-- Button trigger modal -->
-    <button type="button" class="btn btn-danger w-25" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Delete
-    </button>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog ">
-                <div class="modal-content bg-dark">
-          <div class="modal-header">
-            <h5 class="modal-title text-danger" id="exampleModalLabel">Warning</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-                        <span class="text-light">Are you sure you want to delete @(Model.Product.Name)?</span> <br />
-                        <span class="text-warning mt-5">If you accidentally delete a product, you can contact an admin to restore it.</span>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn text-light" style="background-color: rgb(13,110,253)" data-bs-dismiss="modal">Cancel</button>
-            <a class="btn btn-danger" asp-action="DeleteProduct" asp-controller="user">Yes, delete it</a>
-          </div>
-        </div>
-      </div>
+        <a class="btn btn-success text-light w-25" asp-action="RecoverProduct" asp-route-id="@Model.Product.Id">Recover</a>
+
     </div>
+</div>
 
-
-        
-    </div>
- </div>

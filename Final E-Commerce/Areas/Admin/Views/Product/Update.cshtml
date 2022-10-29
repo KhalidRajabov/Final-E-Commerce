@@ -17,7 +17,9 @@
                     {
                         <img src="~/images/products/@item.ImageUrl" style="width: 250px; height: 150px;" class="img-fluid" alt="...">
                     }
-                    <a asp-action="update" asp-controller="product" asp-route-id="@Model.Product.Id" class="btn bg-info">Edit images</a>
+                    <div class="row col-12 d-flex flex-row justify-content-center">
+                        <a class="text-light btn btn-primary w-25" asp-action="EditPictures" asp-controller="product" asp-route-id="@Model.Product.Id">Edit Images</a>
+                    </div>
                 </div>
                 <div class="row justify-content-between mt-3">
                     <!-- form -->
@@ -114,7 +116,13 @@
                             <input asp-for="Count" class="form-control mb-4 rounded-0" placeholder="Count">
                             <span asp-validation-for="Count" class="text-danger"></span>
                         </div>
-
+                        <br />
+                        <div class="col-md-6 mt-2 w-100 mb-4">
+                            <span>Condition:</span>
+                            <label>New</label>
+                            <input asp-for="IsNew">
+                            <span asp-validation-for="IsNew" class="text-danger"></span>
+                        </div>
 
                         <div class="col-md-4">
                             <select asp-for="BrandId" class="form-select" asp-items="ViewBag.Brands">

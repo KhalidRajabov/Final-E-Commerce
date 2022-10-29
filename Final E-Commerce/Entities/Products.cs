@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace Final_E_Commerce.Entities
 {
@@ -29,6 +28,7 @@ namespace Final_E_Commerce.Entities
         public int? Sold { get; set; }
         public double? Profit { get; set; }
         public int Views { get; set; }
+        public bool IsNew { get; set; }
         public bool IsFeatured { get; set; }
         public bool Bestseller { get; set; }
         public bool NewArrival { get; set; }
@@ -36,16 +36,11 @@ namespace Final_E_Commerce.Entities
         public int CommentCount { get; set; }
         public double Rating { get; set; }
 
-
-
         [NotMapped]
         public List<IFormFile>? Photo { get; set; }
 
         [NotMapped]
         public List<int>? TagId { get; set; }
-
-
-
 
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }

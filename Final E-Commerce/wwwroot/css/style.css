@@ -2599,7 +2599,7 @@ label {
 }
 .table-shadow:hover {
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-    transform: scaleX(1.1) scaleY(1.1);
+    transform: scaleX(1.05) scaleY(1.05);
     transition: .3s;
 }
 .table-shadow:not(:hover){

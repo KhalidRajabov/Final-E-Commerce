@@ -46,6 +46,14 @@
             </div>
             <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
                 <b style="max-height:400px" class="col-2">
+                    Condition:
+                </b>
+                <div style="max-height:400px" class="col-9 flex-nowrap">
+                    @(Model.Product.IsNew ? "New" : "Used")
+                </div>
+            </div>
+            <div style="max-height:400px" class="col-12 d-flex flex-row p-2">
+                <b style="max-height:400px" class="col-2">
                     Price:
                 </b>
                 <div style="max-height:400px" class="col-9 flex-nowrap">

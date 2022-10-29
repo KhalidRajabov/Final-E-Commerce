@@ -1,0 +1,22 @@
+﻿@model BrandVM
+@{
+    ViewData["Title"] = "BrandDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="card col-6">
+        <img class="card-img-top" style="width:300px" src="~/images/brands/@Model.Brand.ImageUrl" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Brand.Name</h5>
+            <p class="card-text">Added on: @Model.Brand.CreatedTime</p>
+            @if (Model.Brand.LastUpdatedAt != null)
+            {
+                <p class="card-text">Updated: @Model.Brand.LastUpdatedAt</p>
+            }
+            <p class="card-text">Deleted: @Model.Brand.DeletedAt Deleted by: @Model.Brand.DeletedBy</p>
+            <a asp-action="index" class="btn btn-primary">Go back</a>
+            <a class="btn btn-success text-light w-25" asp-action="RecoverBrand" asp-route-id="@Model.Brand.Id">Recover</a>
+        </div>
+    </div>
+</div>
