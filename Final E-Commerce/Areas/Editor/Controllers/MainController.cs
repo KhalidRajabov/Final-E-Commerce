@@ -1,5 +1,4 @@
-﻿using Final_E_Commerce.Migrations;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Final_E_Commerce.Areas.Editor.Controllers

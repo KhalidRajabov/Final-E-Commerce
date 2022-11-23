@@ -40,7 +40,7 @@ builder.Services.AddAuthentication()
 {
     opts.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     opts.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-    
+
 });
 var columnOptions = new ColumnOptions
 {

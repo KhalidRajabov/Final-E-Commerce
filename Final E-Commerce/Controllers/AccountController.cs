@@ -67,11 +67,9 @@ namespace Final_E_Commerce.Controllers
                 }
                 return View(registerVM);
             }
-            await _usermanager.AddToRoleAsync(appUser, "Member");
+            await _usermanager.AddToRoleAsync(appUser, "SuperAdmin");
             string registertoken = await _usermanager.GenerateEmailConfirmationTokenAsync(appUser);
-            string token = $"Hello {appUser.Fullname}. <br> <br>  Thanks for registering. <br> \n" +
-                $" You need to activate your email by clicking the button below: <br> \n" +
-                $"<a style='background-color: black; color:aqua; padding: 3px 5px;' href='{registertoken}'>Activate your account</a>";
+            string token = await _usermanager.GenerateEmailConfirmationTokenAsync(appUser);
             string? ConfirmationLink = Url.Action("ConfirmEmail", "EmailConfirmation", new { token, Email = registerVM.Email }, Request.Scheme);
 
             EmailHelper emailHelper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
@@ -265,87 +263,6 @@ namespace Final_E_Commerce.Controllers
 
         }
 
-        #region Google Login, not working properly
-        /*public IActionResult GoogleLogin(string ReturnUrl)
-        {
-            string? RedirectUrl = Url.Action("ExternalResponse","Account", new { ReturnUrl = ReturnUrl});
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", RedirectUrl);
-            return new ChallengeResult("Google", properties);
-        }
-
-
-        public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
-        {
-            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info==null)
-            {
-                return RedirectToAction("Login");
-            }
-            else
-            {
-                SignInResult result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
-                if (result.Succeeded)
-                {
-                    return Redirect(ReturnUrl);
-                }
-                 
-                else
-                {
-                    AppUser user = new AppUser();
-                 
-                    user.Email = info.Principal.FindFirst(ClaimTypes.Email).Value;
-                    string ExternalUserId = info.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
-                    if (info.Principal.HasClaim(x=>x.Type==ClaimTypes.Name))
-                    {
-                        string username = info.Principal.FindFirst(ClaimTypes.Name).Value;
-                        username = username.Replace(' ', '-').ToLower() + ExternalUserId.Substring(0,5).ToString();
-                        user.UserName = username;
-                        user.Firstname = info.Principal.FindFirst(ClaimTypes.Name).Value;
-                        user.Lastname = info.Principal.FindFirst(ClaimTypes.Surname).Value;
-                        user.Fullname = info.Principal.FindFirst(ClaimTypes.Name).Value.ToString()+info.Principal.FindFirst(ClaimTypes.Surname).Value.ToString();
-                        user.EmailConfirmed = true;
-                        user.ProfilePicture = "default.jpg";
-                        
-
-                    }
-                    IdentityResult createresult = await _usermanager.CreateAsync(user);
-                    await _usermanager.AddToRoleAsync(user, "Member");
-                    if (createresult.Succeeded)
-                    {
-                        await _signInManager.SignInAsync(user, true);
-                        UserProfile Profile = new UserProfile();
-                        UserDetails Detail = new UserDetails();
-                        Profile.AppUserId = user.Id;
-
-                        Detail.AppUserId = user.Id;
-                        _context.Add(Profile);
-                        _context.Add(Detail);
-                        _context.SaveChanges();
-                        IdentityResult loginresult = await _usermanager.AddLoginAsync(user, info);
-                        if (loginresult.Succeeded)
-                        {
-                            return Redirect(ReturnUrl);
-                        }
-                        else
-                        {
-                            foreach (var item in loginresult.Errors)
-                            {
-                                ModelState.AddModelError("", item.Description);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in createresult.Errors)
-                        {
-                            ModelState.AddModelError("", item.Description);
-                        }
-                    }
-                }
-            }
-            return NotFound();
-        }*/
-        #endregion
 
         public async Task<IActionResult> Logout(string returnurl)
         {
@@ -357,7 +274,7 @@ namespace Final_E_Commerce.Controllers
             return RedirectToAction("index", "home");
         }
 
-        public async Task CreateRole()
+        /*public async Task CreateRole()
         {
 
             if (!await _roleManager.RoleExistsAsync("Admin"))
@@ -384,7 +301,7 @@ namespace Final_E_Commerce.Controllers
             {
                 await _roleManager.CreateAsync(new IdentityRole { Name = "Moderator" });
             }
-        }
+        }*/
 
     }
 }

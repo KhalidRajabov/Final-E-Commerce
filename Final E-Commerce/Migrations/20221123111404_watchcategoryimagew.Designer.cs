@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221123111404_watchcategoryimagew")]
+    partial class watchcategoryimagew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -920,7 +922,7 @@ namespace Final_E_Commerce.Migrations
                             Rating = 0.0,
                             RearCamera = "12 MP, f/1.9, 1/2.55, 1.4µm, dual pixel PDAF, 4K@30/60fps, 1080p@30fps (gyro-EIS), 1080p@240fps, 720p@960fps",
                             ReleaseDate = new DateTime(2018, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
+                            Status = 0,
                             Views = 0,
                             Weight = "182 g (6.42 oz)"
                         },
@@ -954,7 +956,7 @@ namespace Final_E_Commerce.Migrations
                             Rating = 0.0,
                             RearCamera = "108 MP, f/1.8, 23mm (wide), 1/1.33, 0.8µm, PDAF, Laser AF, OIS 10 MP, f/4.9, 230mm (periscope telephoto), 1/3.52\", 1.12µm, dual pixel PDAF, OIS, 10x optical zoom\r\n10 MP, f/2.4, 70mm (telephoto), 1/3.52\", 1.12µm, dual pixel PDAF, OIS, 3x optical zoom 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, Super Steady video",
                             ReleaseDate = new DateTime(2021, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
+                            Status = 0,
                             Views = 0,
                             Weight = "228 g / 229 g (mmWave) (8.04 oz)"
                         },
@@ -988,7 +990,7 @@ namespace Final_E_Commerce.Migrations
                             Rating = 0.0,
                             RearCamera = "48 MP, (wide), dual pixel PDAF, sensor-shift OIS 12 MP, f/2.8, 77mm (telephoto), PDAF, OIS, 3x optical zoom 12 MP, f/1.8, 13mm, 120˚ (ultrawide), 1.4µm, PDAF TOF 3D LiDAR scanner (depth)",
                             ReleaseDate = new DateTime(2022, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
+                            Status = 0,
                             Views = 0,
                             Weight = "228 g / 229 g (mmWave) (8.04 oz)"
                         });
