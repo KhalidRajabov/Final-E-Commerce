@@ -16,7 +16,7 @@ namespace Final_E_Commerce.SubscribeTableDependency
 
         public void SubscribeTableDependency()
         {
-            string connectionString= "Server=DESKTOP-PEBTDQ1\\SQLEXPRESS;Database=FinalProject;Trusted_Connection=True;MultipleActiveResultSets=true";
+            string connectionString= "Server=DESKTOP-PEBTDQ1\\SQLEXPRESS;Database=FinalProject;Trusted_Connection=True;TrustServerCertificate=true";
             tableDependency = new SqlTableDependency<Messages>(connectionString);
             tableDependency.OnChanged += TableDependency_OnChanged;
             tableDependency.OnError += TableDependency_OnError;

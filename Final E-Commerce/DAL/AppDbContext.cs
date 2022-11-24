@@ -171,6 +171,9 @@ namespace Final_E_Commerce.DAL
                     FrontCamera = "20 MP, f/2.0, (wide), 1/3, 0.9µm, 1080p@30fps",
                     Battery = "Li-Po 4000 mAh, non-removable, quick charge 3.0",
                     Count = 50,
+                    Sold=0,
+                    Profit=0,
+                    Views=0,
                     Status=ProductConfirmationStatus.Approved
                 },
                 new Products
@@ -196,6 +199,9 @@ namespace Final_E_Commerce.DAL
                     FrontCamera = "40 MP, f/2.2, 26mm (wide), 1/2.82, 0.7µm, PDAF",
                     Battery = "Li-Ion 5000 mAh, non-removable",
                     Count = 50,
+                    Sold = 0,
+                    Profit = 0,
+                    Views = 0,
                     Status = ProductConfirmationStatus.Approved
                 },
                 new Products
@@ -221,6 +227,9 @@ namespace Final_E_Commerce.DAL
                     FrontCamera = "12 MP, f/2.2, 23mm (wide), 1/3.6, 4K@24/25/30/60fps, 1080p@30/60/120fps, gyro-EIS",
                     Battery = "Li-Ion, non-removable",
                     Count = 50,
+                    Sold = 0,
+                    Profit = 0,
+                    Views = 0,
                     Status = ProductConfirmationStatus.Approved
                 }
                 );

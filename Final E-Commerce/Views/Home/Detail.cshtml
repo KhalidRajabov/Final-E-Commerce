@@ -145,7 +145,7 @@
                         <h4 style="color:black">$@Model.Product.Price</h4>
                     }
                     
-                    @if (User.Identity.IsAuthenticated && !ViewBag.IsRated)
+                    @if (User.Identity.IsAuthenticated && !ViewBag.IsRated && ViewBag.DidUserBuyThis)
                     {
                         <div class="d-flex flex-column mt-5">
                             <div style="display:flex;flex-direction:row !important">
@@ -157,6 +157,12 @@
                             </div>
                             <span class="text-danger" style="font-size: 150%" id="pro-rating-warning"></span>
                             <button id="rate-btn" class="btn btn-warning text-light col-5 mt-2"  data-id="@Model.Product.Id">Rate!</button>
+                        </div>
+                    }
+                    else if(User.Identity.IsAuthenticated && !ViewBag.IsRated && !ViewBag.DidUserBuyThis)
+                    {
+                        <div class="d-flex flex-column mt-5">
+                            <h4 class="text-danger">Sorry, you can not rate this item unless you buy it</h4>
                         </div>
                     }
                     

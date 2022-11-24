@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.CodeAnalysis;
-
+using System.Collections.Immutable;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -259,12 +259,12 @@ namespace Final_E_Commerce.Controllers
             product.CommentCount = _context.ProductComments.Where(p => p.ProductId == product.Id && !p.IsDeleted).ToList().Count;
             ViewBag.ExistWishlist = false;
             ViewBag.IsRated = false;
+            ViewBag.DidUserBuyThis = false;
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
                 bool IsExist = await _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).AnyAsync();
                 if (IsExist) ViewBag.ExistWishlist = true;
-                
                 bool IsRated = await _context.UserProductRatings
                     .Where(r => r.ProductId == product.Id && r.AppUserId == user.Id).AnyAsync();
                 if (IsRated) ViewBag.IsRated = true;
@@ -279,6 +279,17 @@ namespace Final_E_Commerce.Controllers
                     }
                 }
                 ViewBag.RightCounter = RightCounter;
+
+                List<Orders>? UserOrders = _context?.Orders?.Where(o=>o.AppUserId== user.Id).ToList();
+                foreach (var order in UserOrders)
+                {
+                    bool didUserBuuy =await _context?.OrderItems?.Where(o=> o.OrderId == order.Id&& o.ProductId==id).AnyAsync();
+                    if (didUserBuuy)
+                    {
+                        ViewBag.DidUserBuyThis = true;
+                        break;
+                    }
+                }
             }
             product.Views++;
             await _context.SaveChangesAsync();
