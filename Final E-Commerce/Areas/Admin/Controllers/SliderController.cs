@@ -132,7 +132,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     ModelState.AddModelError("Photo", "Image size can not be large");
                     return View();
                 }
-                NewSlider.ImageUrl = slider?.Photo?.SaveImage(_env, "images/hero-area");
+                NewSlider.ImageUrl = slider?.Photo?.SaveImage(_env, "images/slider");
             }
 
             NewSlider.Subtitle = slider.Subtitle;
