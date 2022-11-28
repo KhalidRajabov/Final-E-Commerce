@@ -95,6 +95,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAudit();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

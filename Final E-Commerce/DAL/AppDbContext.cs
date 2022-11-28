@@ -34,6 +34,7 @@ namespace Final_E_Commerce.DAL
         public DbSet<UserProductRatings>? UserProductRatings { get; set; }
         public DbSet<Messages>? Messages { get; set; }
         public DbSet<UserSubscription>? Subscription { get; set; }
+        public DbSet<AuditLog>? AuditLog { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
