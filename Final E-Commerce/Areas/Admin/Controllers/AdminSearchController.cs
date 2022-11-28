@@ -29,7 +29,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;

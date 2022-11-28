@@ -1,4 +1,6 @@
-﻿@model DetailVM
+﻿@using Final_E_Commerce.DAL;
+@model DetailVM
+@inject AppDbContext db
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,7 +15,7 @@
     string hours="";
 
     //2022/10/12 12:00:00
-    if (Model.Product.DiscountUntil > DateTime.Now && Model.Product.DiscountUntil != null && Model.Product.DiscountPercent > 0)
+    if (Model.Product.DiscountUntil > DateTime.Now.AddHours(12) && Model.Product.DiscountUntil != null && Model.Product.DiscountPercent > 0)
     {
         discountday = Model.Product.DiscountUntil.ToString().Split('/')[1];
         discountmonth = Model.Product.DiscountUntil.ToString().Split('/')[0];
@@ -136,7 +138,7 @@
                     {
                         <a asp-action="removerating" asp-controller="home" asp-route-id="@Model.Product.Id" asp-route-ReturnUrl="@Context.Request.Path" class="text-danger mb-2" style="font-weight: 700">Remove rating</a>
                     }
-                    @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.Now)
+                    @if (Model.Product.DiscountPercent>0&&Model.Product.DiscountUntil>DateTime.Now.AddHours(12))
                     {
                         <h4 class="text-primary h3">$@Model.Product.DiscountPrice <s class="text-color ml-2">$@Model.Product.Price</s></h4>
                         <h5 class="mb-4">You save: <span class="text-primary" style="color:green !important">$@(Model.Product.Price-@Model.Product.DiscountPrice) USD (@(Model.Product.DiscountPercent)%)</span></h5>
@@ -184,7 +186,7 @@
                         <a class="btn btn-success add-to-wishlist text-light" data-id="@Model.Product.Id" >Add to wishlist</a>
                     }
 
-                    @if (Model.Product.DiscountUntil>DateTime.Now&&Model.Product.DiscountPercent>0)
+                    @if (Model.Product.DiscountUntil>DateTime.Now.AddHours(12)&&Model.Product.DiscountPercent>0)
                     {
                         <h4 class="mb-3"><span class="text-primary">Hurry up!</span> Sale ends in</h4>
                         <!-- syo-timer -->
@@ -434,7 +436,26 @@
                                     <time>@comment.Date.ToString("dddd, dd MMMM yyyy HH:mm:ss")</time>
                                     @*<a class="comment-button" href="#"><i class="ti-comments"></i>Reply</a>*@
                                 </div>
-                                <h3 class="mt-3">
+                                    @if (comment.AppUserId != null)
+                                    {
+                                        int rated = 0;
+                                        bool didRateThis = db.UserProductRatings.Where(u => u.AppUserId == comment.AppUserId && u.ProductId == Model.Product.Id).Any();
+                                        if (didRateThis)
+                                        {
+
+                                            var rating = db.UserProductRatings.FirstOrDefault(u => u.AppUserId == comment.AppUserId && u.ProductId == Model.Product.Id);
+                                            rated = rating.Rating;
+                                            <span class="mt-3">
+                                            @for (int i = 0; i < rated; i++)
+                                            {
+                                                <i class="fa-solid fa-star text-warning"></i>
+                                            }
+                                            </span>
+                                        }
+                                    }
+                                    
+                                <h3 class="mt-1">
+                                    
                                     @comment.Content <br>
 
                                 </h3>
@@ -560,7 +581,7 @@
                                 </div>
                             }
                             @{
-                                TimeSpan? difference = DateTime.Now - product?.CreatedTime;
+                                TimeSpan? difference = DateTime.Now.AddHours(12) - product?.CreatedTime;
                             }
                             @if (difference?.Days < 5)
                             {

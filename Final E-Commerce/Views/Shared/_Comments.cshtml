@@ -19,6 +19,7 @@
                     @if (comment.AppUserId != null)
                     {
                         <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@comment.AppUserId">@comment.User.Fullname</a>
+                        
                     }
                     else
                     {

@@ -50,7 +50,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             Messages? message = await _context?.Messages?.FirstOrDefaultAsync(m => m.Id == id);
             message.Answer = messagevm.Reply;
-            message.AnsweredDate = DateTime.Now;
+            message.AnsweredDate = DateTime.Now.AddHours(12);
             message.AnsweredBy = user.Fullname;
             message.IsAnswered = true;
 
@@ -64,7 +64,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 token = $"Salam. {messageOwner.Fullname}. Göndərdiyiniz {message.Id} nömrəli mesaj {user.Fullname} tərəfindən cavablandırılmışdır.<br/> <br/> \n" +
                     $"{messagevm.Reply} <br/><br/> \n" +
                     $"Hörmətlə <br/>\n" +
-                    $"TechnoStore {DateTime.Now.Year}";
+                    $"TechnoStore {DateTime.Now.AddHours(12).Year}";
                 var emailResult = helper.SendNews(message.Email, token, subject);
 
                 string? discountemail = Url.Action("ConfirmEmail", "Account", new

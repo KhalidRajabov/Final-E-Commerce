@@ -409,7 +409,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -441,7 +441,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -476,7 +476,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -589,7 +589,7 @@ namespace Final_E_Commerce.Controllers
                 Count = vm.Count,
                 Sold = 0,
                 Profit = 0,
-                CreatedTime = DateTime.Now,
+                CreatedTime = DateTime.Now.AddHours(12),
                 InStock = true,
                 IsNew = vm.IsNew,
                 Views = 0
@@ -605,12 +605,12 @@ namespace Final_E_Commerce.Controllers
             }
 
 
-            if (vm.DiscountPercent > 0 && vm.DiscountUntil < DateTime.Now)
+            if (vm.DiscountPercent > 0 && vm.DiscountUntil < DateTime.Now.AddHours(12))
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
                 return View(vm);
             }
-            else if (vm.DiscountUntil > DateTime.Now && vm.DiscountUntil != null && vm.DiscountPercent > 0)
+            else if (vm.DiscountUntil > DateTime.Now.AddHours(12) && vm.DiscountUntil != null && vm.DiscountPercent > 0)
             {
                 product.DiscountUntil = vm.DiscountUntil;
                 product.DiscountPercent = vm.DiscountPercent;
@@ -694,7 +694,7 @@ namespace Final_E_Commerce.Controllers
             }
             Products? product = await _context?.Products?.FirstOrDefaultAsync(p=>p.Id==id);
             product.IsDeleted = true;
-            product.DeletedAt = DateTime.Now;
+            product.DeletedAt = DateTime.Now.AddHours(12);
             product.DeletedBy = AppUser.Fullname;
             await _context.SaveChangesAsync();
             return RedirectToAction("Products");
@@ -718,7 +718,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -877,12 +877,12 @@ namespace Final_E_Commerce.Controllers
                 dbProduct.DiscountPercent = 0;
                 dbProduct.DiscountPrice = 0;
             }
-            if(product.DiscountPercent>0&&product.DiscountUntil<DateTime.Now)
+            if(product.DiscountPercent>0&&product.DiscountUntil<DateTime.Now.AddHours(12))
             {
                 ModelState.AddModelError("DiscountUntil", "You can not set discount date for earlier than now");
                 return View(product);
             }
-            else if (product.DiscountUntil>DateTime.Now&&product.DiscountUntil!=null&&product.DiscountPercent>0)
+            else if (product.DiscountUntil>DateTime.Now.AddHours(12)&&product.DiscountUntil!=null&&product.DiscountPercent>0)
             {
                 dbProduct.DiscountUntil = product.DiscountUntil;
                 dbProduct.DiscountPercent = product.DiscountPercent;
@@ -898,7 +898,7 @@ namespace Final_E_Commerce.Controllers
                 dbProduct.CategoryId = product.SubCategory;
             }
             
-            dbProduct.LastUpdatedAt = DateTime.Now;
+            dbProduct.LastUpdatedAt = DateTime.Now.AddHours(12);
             if (dbProduct.DiscountPercent >= 70)
             {
                 List<Subscriber>? subscribers = await _context?.Subscribers?.ToListAsync();
@@ -989,7 +989,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -1029,7 +1029,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -1047,7 +1047,7 @@ namespace Final_E_Commerce.Controllers
             mainImage.IsMain = false;
 
             image.IsMain = true;
-            product.LastUpdatedAt = DateTime.Now;
+            product.LastUpdatedAt = DateTime.Now.AddHours(12);
             await _context.SaveChangesAsync();
             if (Returnurl!=null)
             {
@@ -1073,7 +1073,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -1090,7 +1090,7 @@ namespace Final_E_Commerce.Controllers
 
             _context.ProductImages.Remove(image);
             Products? product = await _context?.Products?.FirstOrDefaultAsync(p => p.Id == image.ProductId);
-            product.LastUpdatedAt = DateTime.Now;
+            product.LastUpdatedAt = DateTime.Now.AddHours(12);
             await _context.SaveChangesAsync();
 
             return Redirect(Returnurl);

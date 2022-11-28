@@ -39,6 +39,27 @@ namespace Final_E_Commerce.DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Subjects>().HasData(
+                new Subjects
+                {
+                    Id= 1,
+                    Name = "News",
+                    IsDeleted= false,
+                },
+                new Subjects
+                {
+                    Id= 2,
+                    Name = "Fashion",
+                    IsDeleted = false
+                },
+                new Subjects
+                {
+                    Id= 3,
+                    Name = "Life Style",
+                    IsDeleted= false,
+                }
+                );
             builder.Entity<Category>().HasData(
                 new Category
                 {

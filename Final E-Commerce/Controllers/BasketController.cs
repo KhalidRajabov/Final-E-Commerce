@@ -31,7 +31,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToList();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -99,7 +99,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -216,7 +216,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -286,7 +286,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -386,7 +386,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -455,7 +455,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -545,7 +545,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -581,7 +581,7 @@ namespace Final_E_Commerce.Controllers
                 order.Zipcode = newOrder.ZipCode;
                 order.Address = newOrder.Address;
                 order.Companyname = newOrder.Company;
-                order.OrderedAt = DateTime.Now;
+                order.OrderedAt = DateTime.Now.AddHours(12);
                 order.AppUserId = user.Id;
                 order.OrderStatus = OrderStatus.Pending;
 
@@ -610,7 +610,7 @@ namespace Final_E_Commerce.Controllers
                     orderItem.Count = basketProduct.ProductCount;
                     orderItem.OrderId = order.Id;
                     orderItem.Name = basketProduct.Name;
-                    if (dbProduct.DiscountUntil>DateTime.Now && dbProduct.DiscountPercent>0)
+                    if (dbProduct.DiscountUntil>DateTime.Now.AddHours(12) && dbProduct.DiscountPercent>0)
                     {
                         orderItem.Price = dbProduct.DiscountPrice;
                         orderItem.TotalPrice = dbProduct.DiscountPrice * basketProduct.ProductCount;

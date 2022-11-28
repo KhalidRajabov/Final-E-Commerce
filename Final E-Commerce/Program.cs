@@ -1,16 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 using Final_E_Commerce.DAL;
-using Final_E_Commerce.MiddlewareExtensions;
 using Final_E_Commerce.Entities;
-using Microsoft.AspNetCore.Identity;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.Hubs;
+using Final_E_Commerce.MiddlewareExtensions;
 using Final_E_Commerce.SubscribeTableDependency;
-using Serilog;
-using Serilog.Core;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,17 +29,17 @@ builder.Services.AddSingleton<MessagesHub>();
 builder.Services.AddSingleton<SubscribeMessagesTableDependency>();
 
 builder.Services.AddAuthentication()
-    .AddFacebook(opt =>
+    /*.AddFacebook(opt =>
     {
         opt.AppId = builder.Configuration["Authentication:Facebook:AppId"];
         opt.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
-    })
+    })*/
     .AddGoogle(opts =>
 {
-    opts.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-    opts.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-
-});
+    opts.ClientId = "595959956452-0go5q867ioab3hej30kr4qf4u4rl72sj.apps.googleusercontent.com";
+    opts.ClientSecret = "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";
+})
+    ;
 var columnOptions = new ColumnOptions
 {
     AdditionalColumns = new Collection<SqlColumn>
@@ -80,8 +78,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
     opt.Lockout.MaxFailedAccessAttempts = 3;
     opt.Lockout.AllowedForNewUsers = true;
     opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-
-
 
 }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders().AddErrorDescriber<RegisterErrorMessages>();
 var app = builder.Build();

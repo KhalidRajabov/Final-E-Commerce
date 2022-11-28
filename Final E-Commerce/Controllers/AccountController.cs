@@ -55,7 +55,7 @@ namespace Final_E_Commerce.Controllers
                 UserName = registerVM.Username,
                 Email = registerVM.Email,
                 ProfilePicture = "default.jpg",
-                DateRegistered = DateTime.Now
+                DateRegistered = DateTime.Now.AddHours(12)
             };
 
             IdentityResult result = await _usermanager.CreateAsync(appUser, registerVM.Password);
@@ -67,7 +67,7 @@ namespace Final_E_Commerce.Controllers
                 }
                 return View(registerVM);
             }
-            await _usermanager.AddToRoleAsync(appUser, "SuperAdmin");
+            await _usermanager.AddToRoleAsync(appUser, "Member");
             string registertoken = await _usermanager.GenerateEmailConfirmationTokenAsync(appUser);
             string token = await _usermanager.GenerateEmailConfirmationTokenAsync(appUser);
             string? ConfirmationLink = Url.Action("ConfirmEmail", "EmailConfirmation", new { token, Email = registerVM.Email }, Request.Scheme);
@@ -194,7 +194,7 @@ namespace Final_E_Commerce.Controllers
                 user.Lastname = info.Principal.FindFirstValue(ClaimTypes.Surname);
                 user.Fullname = $"{user.Firstname} {user.Lastname}";
                 user.ProfilePicture = "default.jpg";
-                user.DateRegistered = DateTime.Now;
+                user.DateRegistered = DateTime.Now.AddHours(12);
                 var result = await _usermanager.CreateAsync(user);
                 if (result.Succeeded)
                     await _usermanager.AddToRoleAsync(user, "Member");

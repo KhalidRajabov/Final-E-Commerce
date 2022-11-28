@@ -49,7 +49,7 @@
 									Age:
 								</b>
 								<div style="max-height:400px" class="col-9 flex-nowrap">
-									@(Int32.Parse(DateTime.Now.ToString("yyyy"))-Int32.Parse(Model.UserProfile.Birthdate?.ToString("yyyy")))
+									@(Int32.Parse(DateTime.Now.AddHours(12).ToString("yyyy"))-Int32.Parse(Model.UserProfile.Birthdate?.ToString("yyyy")))
 								</div>
 							</div>
 						}

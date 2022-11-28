@@ -133,7 +133,7 @@
                                         </div>
                                     }
                                     @{
-                                        TimeSpan? difference = DateTime.Now - product?.CreatedTime;
+                                        TimeSpan? difference = DateTime.Now.AddHours(12) - product?.CreatedTime;
                                     }
                                     @if (difference?.Days < 5)
                                     {

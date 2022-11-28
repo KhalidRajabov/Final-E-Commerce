@@ -139,7 +139,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 UserName = registerVM.Username,
                 Email = registerVM.Email,
                 ProfilePicture = "default.jpg",
-                DateRegistered = DateTime.Now
+                DateRegistered = DateTime.Now.AddHours(12)
             };
 
             IdentityResult result = await _userManager.CreateAsync(appUser, registerVM.Password);

@@ -204,7 +204,7 @@ namespace Final_E_Commerce.Controllers
             }
             NewComment.CommentContent = comment;
             NewComment.BlogId = blog.Id;
-            NewComment.Date = DateTime.Now;
+            NewComment.Date = DateTime.Now.AddHours(12);
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
             commentVM.Comment = NewComment;

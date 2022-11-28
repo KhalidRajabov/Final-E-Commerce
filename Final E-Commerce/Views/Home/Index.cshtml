@@ -128,7 +128,7 @@
                                         </div>
                                 }
                                     @{
-                                        TimeSpan? difference = DateTime.Now - item?.CreatedTime;
+                                        TimeSpan? difference = DateTime.Now.AddHours(12) - item?.CreatedTime;
                                     }
                                 @if (difference?.Days<5)
                                 {
@@ -209,7 +209,16 @@
                     <div class="card m-2 homeblog" style="width: 30%;">
                         <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark mt-2"><img width="150" height="250" src="~/images/blog/@blog.ImageUrl" class="card-img-top"></a>
                         <div class="card-body">
-                            <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark"><h5 class="card-title fw-bolder">@(blog.Title.Length > 29 ? blog.Title.Substring(0, 29) : blog.Title)</h5> </a>
+                            <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark"><h5 class="card-title fw-bolder">
+                                @if (blog.Title.Length>29)
+                                    {
+                                        blog.Title.Substring(0, 29);
+                                    }
+                                    else
+                                    {
+                                        blog.Title.ToString();
+                                    }
+                                </h5> </a>
                             <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark"><p style="height:10%; overflow:hidden;" class="card-text">@Html.Raw(blog.Content.Substring(0,90))...</p></a>
                         </div>
                     </div>
@@ -299,7 +308,7 @@
                                 </div>
                             }
                             @{
-                                TimeSpan? difference = DateTime.Now - product?.CreatedTime;
+                                TimeSpan? difference = DateTime.Now.AddHours(12) - product?.CreatedTime;
                             }
                             @if (difference?.Days < 5)
                             {

@@ -72,7 +72,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             }
             Brand NewBrand = new Brand();
             NewBrand.ImageUrl = brand.Photo.SaveImage(_env, "images/brands");
-            NewBrand.CreatedTime = DateTime.Now;
+            NewBrand.CreatedTime = DateTime.Now.AddHours(12);
             NewBrand.Name = brand.Name;
             await _context.AddAsync(NewBrand);
             await _context.SaveChangesAsync();
@@ -127,7 +127,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
             }
             dbBrand.Name = brand.Name;
-            dbBrand.LastUpdatedAt = DateTime.Now;
+            dbBrand.LastUpdatedAt = DateTime.Now.AddHours(12);
 
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
@@ -153,7 +153,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             Brand? brands = await _context.Brands.FindAsync(id);
             if (brands == null) return RedirectToAction("error", "home");
             brands.IsDeleted = true;
-            brands.DeletedAt = DateTime.Now;
+            brands.DeletedAt = DateTime.Now.AddHours(12);
             brands.DeletedBy = user.Fullname;
             await _context.SaveChangesAsync();
             return RedirectToAction("index");

@@ -29,7 +29,7 @@ namespace Final_E_Commerce.Controllers
 
             foreach (var product in AllProducts)
             {
-                if (product.DiscountUntil<DateTime.Now)
+                if (product.DiscountUntil<DateTime.Now.AddHours(12))
                 {
                     product.DiscountUntil = null;
                     product.DiscountPercent = 0;
@@ -41,7 +41,7 @@ namespace Final_E_Commerce.Controllers
             HomeVM? homeVM = new HomeVM();
             List<Products> Bestsellers = await _context.Products
                 .OrderByDescending(p => p.Sold).Take(8)
-                .Where(p => p.Status == ProductConfirmationStatus.Approved).Include(p => p.ProductImages).ToListAsync();
+                .Where(p => p.Status == ProductConfirmationStatus.Approved&&!p.IsDeleted).Include(p => p.ProductImages).ToListAsync();
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -73,7 +73,7 @@ namespace Final_E_Commerce.Controllers
             homeVM.Bio = await _context?.Bios?.FirstOrDefaultAsync();
             homeVM.Category =await _context.Categories?.FirstOrDefaultAsync(c=>c.Id==1);
             homeVM.MostPopularProduct = await _context.Products
-                .Where(p => p.Status == ProductConfirmationStatus.Approved)
+                .Where(p => p.Status == ProductConfirmationStatus.Approved&&!p.IsDeleted)
                 .OrderByDescending(p=>p.Rating).Take(1).Include(p=>p.ProductImages).FirstOrDefaultAsync();
             homeVM.PopularProducts = await _context.Products
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
@@ -94,7 +94,7 @@ namespace Final_E_Commerce.Controllers
 
                 foreach (var product in AllProducts)
                 {
-                    if (product.DiscountUntil < DateTime.Now)
+                    if (product.DiscountUntil < DateTime.Now.AddHours(12))
                     {
                         product.DiscountUntil = null;
                         product.DiscountPercent = 0;
@@ -201,7 +201,7 @@ namespace Final_E_Commerce.Controllers
                .Where(p => p.DiscountPercent > 0).ToListAsync();
             foreach (var item in AllProducts)
             {
-                if (item.DiscountUntil < DateTime.Now)
+                if (item.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     item.DiscountUntil = null;
                     item.DiscountPercent = 0;
@@ -433,7 +433,7 @@ namespace Final_E_Commerce.Controllers
             }
             NewComment.Content = comment;
             NewComment.ProductId = product.Id;
-            NewComment.Date = DateTime.Now;
+            NewComment.Date = DateTime.Now.AddHours(12);
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
             commentVM.ProductComment= NewComment;
@@ -599,7 +599,7 @@ namespace Final_E_Commerce.Controllers
             }
             message.Subject = contact.Subject;
             message.Content = contact.Message;
-            message.Date = DateTime.Now;
+            message.Date = DateTime.Now.AddHours(12);
             await _context.AddAsync(message);
             await _context.SaveChangesAsync();
             #region

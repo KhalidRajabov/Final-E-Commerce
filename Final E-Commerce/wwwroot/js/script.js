@@ -19,7 +19,7 @@
             
             if (quantity != undefined) {
                 if (quantity>0) {
-                    axios.post("/basket/additem?id=" + dataId + "&quantity=" + quantity)
+                    axios.post("http://rammkhalid-001-site1.itempurl.com/basket/additem?id=" + dataId + "&quantity=" + quantity)
                         .then(function (response) {
                             if (response.data.online) {
                                 if (response.data.productcount == 1) {
@@ -51,7 +51,7 @@
                                 }
                             }
                             else {
-                                window.location.href = "account/login"
+                                window.location.href = "http://rammkhalid-001-site1.itempurl.com/account/login"
                             }
                             //console.log(response);
                         })
@@ -69,7 +69,7 @@
                 }
             }
             else if(quantity==undefined) {
-                axios.post("/basket/additem?id=" + dataId + "&quantity=" + quantity)
+                axios.post("http://rammkhalid-001-site1.itempurl.com/basket/additem?id=" + dataId + "&quantity=" + quantity)
                     .then(function (response) {
                         // handle success
                         //console.log(response.data.count)
@@ -125,7 +125,7 @@
             let dataId = this.getAttribute("data-id")
             let span = this.previousElementSibling;
             let tabletotalprice = this.parentElement.parentElement.parentElement.nextElementSibling;
-            axios.post("/basket/plus?id=" + dataId)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/basket/plus?id=" + dataId)
                 .then(function (response) {
 
                     // handle success
@@ -241,7 +241,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
 
-                    axios.post("/basket/RemoveItem?id=" + dataId)
+                    axios.post("http://rammkhalid-001-site1.itempurl.com/basket/RemoveItem?id=" + dataId)
                         .then(function (response) {
 
 
@@ -285,7 +285,7 @@
         let commentCount = this.getAttribute("com-count")
         console.log(commentCount)
         $.ajax({
-            url: "/blog/loadcomments?skip=" + skip + "&BlogId="+blogId,
+            url: "http://rammkhalid-001-site1.itempurl.com/blog/loadcomments?skip=" + skip + "&BlogId="+blogId,
             method: "get",
             success: function (res) {
                 commentSection.append(res)
@@ -297,7 +297,7 @@
 
                     del.addEventListener("click", function () {
                         let dataId = this.getAttribute("data-id")
-                        axios.post("/blog/DeleteComment?id=" + dataId)
+                        axios.post("http://rammkhalid-001-site1.itempurl.com/blog/DeleteComment?id=" + dataId)
                             .then(function (response) {
                                 console.log(response)
                                 del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -331,7 +331,7 @@
         
         del.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
-            axios.post("/blog/DeleteComment?id=" + dataId)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/blog/DeleteComment?id=" + dataId)
                 .then(function (response) {
                     console.log(response)
                     del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -378,7 +378,7 @@
         add.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
             
-            axios.post("/wishlist/add?id=" + dataId)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/wishlist/add?id=" + dataId)
                 .then(function (response) {
                     if (response.data.online) {
                         add.remove();
@@ -393,7 +393,7 @@
                         }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
-                                location.replace("account/login")
+                                location.replace("http://rammkhalid-001-site1.itempurl.com/account/login")
                             }
                         })
                     }
@@ -438,7 +438,7 @@
             let dataId = this.getAttribute("data-id");
             let icon = document.createElement("i");
             let parent = this.parentElement;
-            axios.post("/wishlist/add?id=" + dataId)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/wishlist/add?id=" + dataId)
                 .then(function (response) {
                     add.innerHTML = "";
 
@@ -485,7 +485,7 @@
 
             // console.log(dataId, modalAdd, productName, productPrice, productDesc)
             //console.log(dataId)
-            axios.post("/search/GetProductForModal?id=" + dataId)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/search/GetProductForModal?id=" + dataId)
                 .then(function (response) {
                     modalAdd.attr(`href`, `home/detail/${dataId}`);
                     productName.text(response.data.name)
@@ -512,7 +512,7 @@
     $("#getsubbed").click(function () {
         let email = $("#mail").val()
         if (regexExp.test(email)) {
-            axios.post("/Subscription/Subscribe?email=" + email)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/Subscription/Subscribe?email=" + email)
                 .then(function (response) {
                     Swal.fire({
                         position: 'center',
@@ -564,7 +564,7 @@
         if (comment.length > 3) {
             if (author != undefined || author != null) {
                 if (author.length > 3) {
-                    axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment + "&author=" + author)
+                    axios.post("http://rammkhalid-001-site1.itempurl.com/blog/PostComment?id=" + blogId + "&comment=" + comment + "&author=" + author)
                         .then(function (response) {
                             $("#comment-area").prepend(response.data)
                             let numb = document.getElementById("comment-area").childElementCount;
@@ -582,7 +582,7 @@
 
                                 del.addEventListener("click", function () {
                                     let dataId = this.getAttribute("data-id")
-                                    axios.post("/blog/DeleteComment?id=" + dataId)
+                                    axios.post("http://rammkhalid-001-site1.itempurl.com/blog/DeleteComment?id=" + dataId)
                                         .then(function (response) {
                                             console.log(response)
                                             del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -603,7 +603,7 @@
                 }
             }
             else {
-                axios.post("/blog/PostComment?id=" + blogId + "&comment=" + comment)
+                axios.post("http://rammkhalid-001-site1.itempurl.com/blog/PostComment?id=" + blogId + "&comment=" + comment)
                     .then(function (response) {
                         $("#comment-area").prepend(response.data)
                         let numb = document.getElementById("comment-area").childElementCount;
@@ -621,7 +621,7 @@
 
                             del.addEventListener("click", function () {
                                 let dataId = this.getAttribute("data-id")
-                                axios.post("/blog/DeleteComment?id=" + dataId)
+                                axios.post("http://rammkhalid-001-site1.itempurl.com/blog/DeleteComment?id=" + dataId)
                                     .then(function (response) {
                                         console.log(response)
                                         del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -665,7 +665,7 @@
         if (procomment.length > 3) {
             if (proauthor != undefined || proauthor != null ) {
                 if (proauthor.length > 3) {
-                    axios.post("/home/PostComment?ProductId=" + problogId + "&comment=" + procomment +"&author=" + proauthor)
+                    axios.post("http://rammkhalid-001-site1.itempurl.com/home/PostComment?ProductId=" + problogId + "&comment=" + procomment +"&author=" + proauthor)
                         .then(function (response) {
                             $("#pro-comment-area").prepend(response.data)
                             let numb = document.getElementById("pro-comment-area").childElementCount;
@@ -683,7 +683,7 @@
 
                                 del.addEventListener("click", function () {
                                     let dataId = this.getAttribute("data-id")
-                                    axios.post("/home/DeleteComment?id=" + dataId)
+                                    axios.post("http://rammkhalid-001-site1.itempurl.com/home/DeleteComment?id=" + dataId)
                                         .then(function (response) {
                                             console.log(response)
                                             del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -705,7 +705,7 @@
                 }
             }
             else {
-                axios.post("/home/PostComment?ProductId=" + problogId + "&comment=" + procomment)
+                axios.post("http://rammkhalid-001-site1.itempurl.com/home/PostComment?ProductId=" + problogId + "&comment=" + procomment)
                     .then(function (response) {
                         $("#pro-comment-area").prepend(response.data)
                         let numb = document.getElementById("pro-comment-area").childElementCount;
@@ -724,7 +724,7 @@
 
                             del.addEventListener("click", function () {
                                 let dataId = this.getAttribute("data-id")
-                                axios.post("/home/DeleteComment?id=" + dataId)
+                                axios.post("http://rammkhalid-001-site1.itempurl.com/home/DeleteComment?id=" + dataId)
                                     .then(function (response) {
                                         console.log(response)
                                         del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -756,7 +756,7 @@
         let commentCount = this.getAttribute("com-count")
         console.log(commentCount)
         $.ajax({
-            url: "/home/loadcomments?skip=" + proSkip + "&BlogId=" + blogId,
+            url: "http://rammkhalid-001-site1.itempurl.com/home/loadcomments?skip=" + proSkip + "&BlogId=" + blogId,
             method: "get",
             success: function (res) {
                 commentSection.append(res)
@@ -768,7 +768,7 @@
 
                     del.addEventListener("click", function () {
                         let dataId = this.getAttribute("data-id")
-                        axios.post("/home/DeleteComment?id=" + dataId)
+                        axios.post("http://rammkhalid-001-site1.itempurl.com/home/DeleteComment?id=" + dataId)
                             .then(function (response) {
                                 console.log(response)
                                 del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -800,7 +800,7 @@
 
         del.addEventListener("click", function () {
             let dataId = this.getAttribute("data-id")
-            axios.post("/home/DeleteComment?id=" + dataId)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/home/DeleteComment?id=" + dataId)
                 .then(function (response) {
                     console.log(response)
                     del.parentElement.parentElement.parentElement.parentElement.remove()
@@ -822,7 +822,7 @@
         let rating = this.getAttribute("rating")
         let productId = this.getAttribute("data-id")
         if (rating!=null||rating!=undefined) {
-            axios.post("/Home/Rate?Rating=" + rating + "&ProductId=" + productId)
+            axios.post("http://rammkhalid-001-site1.itempurl.com/Home/Rate?Rating=" + rating + "&ProductId=" + productId)
                 .then(function (response) {
                     console.log(response.data)
                     if (response.data.result) {
@@ -831,7 +831,7 @@
                             timerProgressBar: true,
                             title: 'Thanks for rating!',
                             text: `${response.data.name}`,
-                            imageUrl: `/images/products/${response.data.image}`,
+                            imageUrl: `http://rammkhalid-001-site1.itempurl.com/images/products/${response.data.image}`,
                             imageWidth: 400,
                             imageHeight: 200,
                             imageAlt: 'Custom image',
@@ -853,13 +853,13 @@
 
   //search
 
-    var searchUrl = `https://localhost:44393/`
+    
     $(document).on("keyup", "#search", function () {
         let inputValue = $(this).val();
         $("#SearchList li").slice(1).remove();
         $("#SearchList").html()
         $.ajax({
-            url: `${searchUrl}search/searchProduct?search=` + inputValue,
+            url: `http://rammkhalid-001-site1.itempurl.com/search/searchProduct?search=` + inputValue,
             method: "get",
             success: function (res) {
                 $("#SearchList").append(res);
@@ -874,7 +874,7 @@
             $("#SearchList li").slice(1).remove();
             $("#SearchList").html()
             $.ajax({
-                url: `${searchUrl}search/PopularProducts/`,
+                url: `http://rammkhalid-001-site1.itempurl.com/search/PopularProducts/`,
                 method: "get",
                 success: function (res) {
                     $("#SearchList").append(res);
