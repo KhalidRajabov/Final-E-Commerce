@@ -5,17 +5,17 @@ TechnoShop is an commercial project where users can post their product they wish
 <h3> What I used: </h3>
 <ul>
   <li>C#</li>
-	<li>ASP.NET</li>
-	<li>EF Core 6</li>
-	<li>MVC</li>
+  <li>ASP.NET</li>
+  <li>EF Core 6</li>
+  <li>MVC</li>
   <li>MsSQL as database</li>
   <li>Javascript (ES6)</li>
   <li>JQuery</li>
   <li>Ajax</li>
   <li>Axios</li>
-  <li>Slick/Splide</li>
-  <li></li>
-  <li>MVC</li>
+  <li>Slick/Splide (Carousel, effects)</li>
+  <li>HTML/CSS</li>
+  <li>SCSS</li>
   <li>Bootstrap</li>
 </ul>
 
