@@ -26,6 +26,8 @@ First of all, everyone should be registered. Registration will require a unique 
 <ol>
 	<li>Products</li>
 	<li>Blogs</li>
+	<li>Categories</li>
+	<li>Brands</li>
 	<li>Subscription</li>
   	<li>Commenting</li>
   	<li>User profile</li>
@@ -40,7 +42,7 @@ First of all, everyone should be registered. Registration will require a unique 
 	
 1.2 You can update your product at anytime. You can update anything on your product. When you succesfully updated a product, it gets a status of "Pending", and it will not be visible to any user until an admin confirms it. You will get email updates about process.
 
-1.3 If you have a follower, they will get an email notification about your new product or discounts of your products. 
+1.3 If you have a follower, they will get an email notification about your new product or any discounts of your products. 
 
 1.4 Anyone can see products' some details like its rating, how many people wishlisted it, how many times it has been viewed and etc. but only owners or admins can see how many times it has been sold.
 
@@ -54,15 +56,62 @@ First of all, everyone should be registered. Registration will require a unique 
 
 1.9 Discounts are shown with discount icon on product cards, and "new" icon will be shown on product card until the product is 3 days old.
 
+1.10 Products marked "Deleted" when deleted. Only admins and superadmin can recover it from "Recycle Bin/Products" Admin area.
+
 <h4>2. Blogs</h4>
 
-2.1 Blogs can only be written by editors or higher level roles (admins and superadmin)
+2.1 Blogs can only be written by editors or higher level roles (admins and superadmin) and only they can update or delete blogs.
 
 2.2 Posting a new blog automatically sends email notification to site's subscribers. (No notification for updates on blogs)
 
 2.3 Blogs can be commented by anyone and comments can be deleted by comment owners or anyone that has right (moderators, editors, admins, superadmin) to delete it. For blogs, editors can delete any comment on any bloge they want. Editors can not delete any comment on products.
 
 2.4 Comments by people without account will be marked as "Not a member" and it can be deleted by anyone that has right to delete a comment on blogs.
+
+2.5 Blogs marked "Deleted" when deleted. Users with right to recover can recover it from Editor area.
+
+
+
+<h4>3. Categories</h4>
+
+3.1 Main categories and subcategories for main categories only can be created by admins or superadmin.
+
+3.2 A product can have one category or a subcategory.
+
+3.3 Categories must have an image and description for users to understand what they can find within it.
+
+3.4 Admins can see how many products a category has.
+
+3.5 Categories can not be deleted if they have at least one product or a subcategory.
+
+3.6 Categories marked "Deleted" when deleted. Admins or superadmin can recover it from Admin area.
+
+
+<h4>4. Brands</h4>
+
+4.1 Brands can be created only by admins or superadmin.
+
+4.2 Brands must have an image and description for users to understand what they can find within it.
+
+4.3 Brands can not be deleted if they have at least one product.
+
+4.4 Brands can be updated or deleted by admins or superadmin.
+
+4.5 When a brand is deleted, it gets marked as "deleted" and can be recovered from Admin area.
+
+
+<h4>5. Subscription</h4>
+
+5.1 Google mail service is used for sending emails.
+
+5.2 When a user subscribes, user gets an email about their subscription. They never see subscription banner again, until they unsubscribe again. Not logged in users will see it every damn page :)
+
+5.3 Admins or superadmin can unsubscribe subscribers.
+
+5.4 Any new blogs added sends an email about it to subscribers.
+
+5.5 A discount more than 70% on a product, automatically sends an email to all subscribers about it.
+
 
 
 
