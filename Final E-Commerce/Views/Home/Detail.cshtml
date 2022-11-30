@@ -121,6 +121,13 @@
                             {
                                 <li class="list-inline-item"> <i class="fa fa-star fa-2x" style="color:orange;"></i></li>
                             }
+                            if (Math.Floor(Model.Product.Rating)<5)
+                            {
+                                @for (int i = 0; i < 5-Math.Floor(Model.Product.Rating); i++)
+                                {
+                                    <li class="list-inline-item"> <i class="fa fa-star fa-2x"></i></li>
+                                }
+                            }
                             <li class="list-inline-item" style="font-size: 120%">(@decimalString) Rated by @ViewBag.RatedBy users</li>
                         }
                         else{
@@ -147,7 +154,7 @@
                         <h4 style="color:black">$@Model.Product.Price</h4>
                     }
                     
-                    @if (User.Identity.IsAuthenticated && !ViewBag.IsRated && ViewBag.DidUserBuyThis)
+                    @if (User.Identity.IsAuthenticated && User.Identity.Name!=Model.Product.AppUser.UserName && !ViewBag.IsRated && ViewBag.DidUserBuyThis)
                     {
                         <div class="d-flex flex-column mt-5">
                             <div style="display:flex;flex-direction:row !important">
@@ -161,7 +168,7 @@
                             <button id="rate-btn" class="btn btn-warning text-light col-5 mt-2"  data-id="@Model.Product.Id">Rate!</button>
                         </div>
                     }
-                    else if(User.Identity.IsAuthenticated && !ViewBag.IsRated && !ViewBag.DidUserBuyThis)
+                    else if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Product.AppUser.UserName && ViewBag.DidUserBuyThis==false)
                     {
                         <div class="d-flex flex-column mt-1">
                             <h4 class="text-danger">Sorry, you can not rate this item unless you buy it</h4>
@@ -449,6 +456,13 @@
                                             @for (int i = 0; i < rated; i++)
                                             {
                                                 <i class="fa-solid fa-star text-warning"></i>
+                                            }
+                                            @if (rated<5)
+                                            {
+                                                @for (int i = 0; i < 5-rated; i++)
+                                                {
+                                                    <i class="fa-solid fa-star"></i>
+                                                }
                                             }
                                             </span>
                                         }
