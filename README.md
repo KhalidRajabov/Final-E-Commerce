@@ -1,4 +1,4 @@
-# Final-E-Commerce
+# TechoShop E-Commerce
 
 TechnoShop is an commercial project where users can post their product they wish to sell. Project has 5 roles and all of them have their specific skills (Higher level role has the ability of lower level roles).
 
