@@ -50,7 +50,9 @@ First of all, everyone should be registered. Registration will require a unique 
 
 1.7 Comments by people without account will be marked as "Not a member" and it can be deleted by anyone that has right to delete a comment on products.
 
-1.8 If people comment for a product which they have rated, their rate (with stars) will be shown on their comments only on that product.
+1.8 If people comment for a product which they have rated, their rate (with stars) will be shown on their comments on that product.
+
+1.9 Discounts are shown with discount icon on product cards, and "new" icon will be shown on product card until the product is 3 days old.
 
 <h4>2. Blogs</h4>
 
