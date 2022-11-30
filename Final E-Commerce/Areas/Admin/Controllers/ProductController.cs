@@ -600,7 +600,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                 EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
                 token = $"Hello {user.Fullname}. We've finished rewieving {product.Name}, now it is available on the site. \n" +
-                    $"Review your <a href='https://localhost:44393/home/detail/{product.Id}' style='color:red'>{product.Name} </a>";
+                    $"Review your <a href='http://rammkhalid-001-site1.itempurl.com/home/detail/{product.Id}' style='color:red'>{product.Name} </a>";
                 var emailResult = helper.SendNews(user.Email, token, subject);
 
                 string? discountemail = Url.Action("ConfirmEmail", "Account", new
@@ -620,7 +620,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
                     EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
                     token = $"Hello {follower.Fullname}. {user.Fullname} Just added a new item. <br> \n" +
-                        $"{product.Name} for the price of {product.Price}. <a href='https://localhost:44393/home/detail/{product.Id}' style='color:red'>Check i </a>";
+                        $"{product.Name} for the price of {product.Price}. <a href='http://rammkhalid-001-site1.itempurl.com/home/detail/{product.Id}' style='color:red'>Check i </a>";
                     var emailResult = helper.SendNews(follower.Email, token, subject);
 
                     string? discountemail = Url.Action("ConfirmEmail", "Account", new

@@ -638,7 +638,7 @@ namespace Final_E_Commerce.Controllers
             token = $"Hello {user.Firstname}.<br> <br> You recently added {product.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
                 $"It will be posted on site and you will get notified\n"+
                 $"You can still see details of your product: \n" +
-                $" <a href='https://localhost:44393/User/productdetail/{product.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
+                $" <a href='http://rammkhalid-001-site1.itempurl.com/User/productdetail/{product.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
             var emailResult = helper.SendNews(user.Email, token, subject);
 
             string? discountemail = Url.Action("ConfirmEmail", "Account", new
@@ -961,7 +961,7 @@ namespace Final_E_Commerce.Controllers
             token2 = $"Hello {CurrentUser.Fullname}. <br> <br> You recently updated {dbProduct.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
                 $"It will be posted on site and you will get notified\n" +
                 $"You can still see details of your product: \n" +
-                $" <a href='https://localhost:44393/User/productdetail/{dbProduct.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
+                $" <a href='http://rammkhalid-001-site1.itempurl.com/User/productdetail/{dbProduct.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
             var emailResult = helper2.SendNews(CurrentUser.Email, token2, subject2);
 
             string? discountemail = Url.Action("ConfirmEmail", "Account", new

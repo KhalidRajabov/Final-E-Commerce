@@ -321,10 +321,18 @@
                 }
                 </div>
             }
-            else
+            else if (User.Identity.IsAuthenticated && Model.Following.Count == 0)
             {
                 <div class="col-lg-12 d-flex flex-row justify-content-center">
                     <h2 class="mb-4">Nothing in your Feed...</h2>
+                    <h3 class="mb-4">You are not following anyone....</h3>
+                </div>
+            }
+            else if(!User.Identity.IsAuthenticated)
+            {
+                <div class="col-lg-12 d-flex flex-row justify-content-center">
+                    <h2 class="mb-4">Nothing in your Feed...</h2>
+                    <h3 class="mb-4">You might want to <a asp-action="login" asp-controller="account">log in</a> to see your feed</h3>
                 </div>
             }
         </div>

@@ -421,6 +421,7 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             Products? product = await _context?.Products?
+                .Include(p=>p.AppUser)
                 .FirstOrDefaultAsync(p=>p.Id == ProductId);
             ProductComment NewComment = new ProductComment();
             CommentsVM commentVM = new CommentsVM();
@@ -430,57 +431,10 @@ namespace Final_E_Commerce.Controllers
                 NewComment.AppUserId = user.Id;
                 commentVM.UserId = user.Id;
                 commentVM.User = user;
-                if (product.AppUserId != null && user.Id != product.AppUserId)
-                {
-                    AppUser productOwner = await _usermanager.FindByIdAsync(product.AppUserId);
-                    var token = "";
-                    string? subject = $"New comment on {product.Name}!";
-                    EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
-
-                    token = $"Hi {productOwner.Fullname} <br> \n" +
-                        $"{user.Fullname} just commented for {product.Name}. <br> \n" +
-                        $"<br> \n" +
-                        $"Content: <br> \n" +
-                        $"{comment}<br> \n" +
-                        $"<br>\n" +
-                        $"Would you like to reply? <a href='http://rammkhalid-001-site1.itempurl.com/home/detail/{product.Id}'></a>";
-
-                    var emailResult = helper.SendNews(productOwner.Email, token, subject);
-
-
-                    string? discountemail = Url.Action("ConfirmEmail", "Account", new
-                    {
-                        token
-                    }, Request.Scheme);
-                }
             }
             else
             {
                 NewComment.Author = author;
-
-                if (product.AppUserId != null)
-                {
-                    AppUser productOwner = await _usermanager.FindByIdAsync(product.AppUserId);
-                    var token = "";
-                    string? subject = $"New comment on {product.Name}!";
-                    EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
-
-                    token = $"Hi {productOwner.Fullname} <br> \n" +
-                        $"{author} just commented for {product.Name}. <br> \n" +
-                        $"<br> \n" +
-                        $"Content: <br> \n" +
-                        $"{comment}<br> \n" +
-                        $"<br>\n" +
-                        $"Would you like to reply? <a href='http://rammkhalid-001-site1.itempurl.com/home/detail/{product.Id}'></a>";
-
-                    var emailResult = helper.SendNews(productOwner.Email, token, subject);
-
-
-                    string? discountemail = Url.Action("ConfirmEmail", "Account", new
-                    {
-                        token
-                    }, Request.Scheme);
-                }
             }
             NewComment.Content = comment;
             NewComment.ProductId = product.Id;
@@ -488,7 +442,6 @@ namespace Final_E_Commerce.Controllers
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
             commentVM.ProductComment= NewComment;
-            
             return PartialView("_ProductSingleComment", commentVM);
         }
         [Authorize]
