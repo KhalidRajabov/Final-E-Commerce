@@ -14,9 +14,9 @@ TechnoShop is a commercial project where users can post their product they wish 
   	<li>MsSQL as database</li>
   	<li>Javascript (ES6)</li>
   	<li>JQuery</li>
-  	<li>Ajax (GET/POST Requests)</li>
-  	<li>Axios (GET/POST Requests)</li>
-  	<li>Slick/Splide (Carousel, effects)</li>
+  	<li>Ajax (GET, POST, PUT, DELETE, PATCH Requests)</li>
+  	<li>Axios (GET, POST, PUT, DELETE, PATCH Requests)</li>
+  	<li>Slick/Splide (Carousel, other effects)</li>
   	<li>HTML/CSS</li>
   	<li>SCSS</li>
   	<li>Bootstrap</li>
