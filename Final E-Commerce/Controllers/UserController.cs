@@ -903,7 +903,7 @@ namespace Final_E_Commerce.Controllers
             {
                 List<Subscriber>? subscribers = await _context?.Subscribers?.ToListAsync();
                 var token = "";
-                string subject = "Big discount!";
+                string subject = "Huge discount!";
                 EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
                 foreach (var receiver in subscribers)
                 {   

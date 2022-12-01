@@ -46,7 +46,7 @@
 
 <!-- navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white w-100" id="navbar">
-    <a class="navbar-brand order-2 order-lg-1" href="~/index.html"><img width="150" class="img-fluid" src="~/images/@Model.Bio.Logo" alt="logo"></a>
+    <a class="navbar-brand order-2 order-lg-1" asp-action="index" asp-controller="home"><img width="150" class="img-fluid" src="~/images/@Model.Bio.Logo" alt="logo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -93,6 +93,12 @@
             <li class="nav-item">
                 <a class="nav-link" asp-action="contact" asp-controller="home">Contact Us</a>
             </li>
+            @if (!User.Identity.IsAuthenticated)
+            {
+            <li class="nav-item">
+                <a class="nav-link" asp-action="login" asp-controller="account">Account</a>
+            </li>
+            }
             @if (ViewBag.UserRole=="admin")
             {    
                 <li class="nav-item">

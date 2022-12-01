@@ -200,25 +200,29 @@
     <div class="container">
         <div class="row d-flex flex-column justify-content-center align-items-center">
             
-                <div class="col-lg-12 d-flex flex-row justify-content-center">
+                <div class="col-lg-12  d-flex flex-row justify-content-center">
                     <h2 class="mb-4 ">Blogs</h2>
                 </div>
                 <div class="row d-flex flex-row flex-wrap justify-content-around">
                     @foreach (var blog in Model.Blogs)
                     {
-                    <div class="card m-2 homeblog" style="width: 30%;">
+                    <div class="card col-sm-6 col-md-4 m-2 homeblog">
                         <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark mt-2"><img width="150" height="250" src="~/images/blog/@blog.ImageUrl" class="card-img-top"></a>
                         <div class="card-body">
-                            <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark"><h5 class="card-title fw-bolder">
+                            <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark">
                                 @if (blog.Title.Length>29)
-                                    {
-                                        blog.Title.Substring(0, 29);
-                                    }
-                                    else
-                                    {
-                                        blog.Title.ToString();
-                                    }
-                                </h5> </a>
+                                {
+                                    <h5 class="card-title fw-bolder" style="text-align: center">
+                                        @blog.Title.Substring(0, 29);
+                                    </h5>
+                                }
+                                else
+                                {
+                                    <h5 class="card-title fw-bolder" style="text-align: center">
+                                        @blog.Title
+                                    </h5>
+                                }
+                                </a>
                             <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark"><p style="height:10%; overflow:hidden;" class="card-text">@Html.Raw(blog.Content.Substring(0,90))...</p></a>
                         </div>
                     </div>
@@ -324,14 +328,13 @@
             else if (User.Identity.IsAuthenticated && Model.Following.Count == 0)
             {
                 <div class="col-lg-12 d-flex flex-row justify-content-center">
-                    <h2 class="mb-4">Nothing in your Feed...</h2>
-                    <h3 class="mb-4">You are not following anyone....</h3>
+                    <h2 class="mb-4" style="text-align: center">Nothing in your Feed because you are not following anyone</h2><br>
                 </div>
             }
             else if(!User.Identity.IsAuthenticated)
             {
-                <div class="col-lg-12 d-flex flex-row justify-content-center">
-                    <h2 class="mb-4">Nothing in your Feed...</h2>
+                <div class="col-lg-12 d-flex flex-column justify-content-around">
+                    <h2 class="mb-4">Feed is Empty...</h2> <br> <br>
                     <h3 class="mb-4">You might want to <a asp-action="login" asp-controller="account">log in</a> to see your feed</h3>
                 </div>
             }
