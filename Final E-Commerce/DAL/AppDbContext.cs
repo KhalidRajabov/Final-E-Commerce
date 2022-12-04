@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace Final_E_Commerce.DAL
 {
@@ -34,11 +35,21 @@ namespace Final_E_Commerce.DAL
         public DbSet<UserProductRatings>? UserProductRatings { get; set; }
         public DbSet<Messages>? Messages { get; set; }
         public DbSet<UserSubscription>? Subscription { get; set; }
-        public DbSet<AuditLog>? AuditLog { get; set; }
 
+        StreamWriter log = new("logs.txt", append: true);
+
+        
+
+
+        protected override async void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.LogTo(async m=>await log.WriteLineAsync(m)).EnableSensitiveDataLogging().EnableDetailedErrors();
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            
             base.OnModelCreating(builder);
 
             builder.Entity<Subjects>().HasData(

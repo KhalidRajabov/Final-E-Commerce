@@ -6,6 +6,7 @@ using Final_E_Commerce.MiddlewareExtensions;
 using Final_E_Commerce.SubscribeTableDependency;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
@@ -15,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
+
+
+
 builder.Services.AddSignalR(c =>
 {
     c.EnableDetailedErrors = true;
@@ -47,10 +51,7 @@ var columnOptions = new ColumnOptions
         new SqlColumn("UserId", System.Data.SqlDbType.VarChar)
     }
 };
-/*Logger log = new LoggerConfiguration()
-    .
-    .CreateLogger();
-builder.Host.UseSerilog(log);*/
+
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -95,7 +96,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAudit();
 
 app.UseAuthentication();
 app.UseAuthorization();

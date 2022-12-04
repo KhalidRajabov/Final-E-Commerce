@@ -16,15 +16,18 @@ namespace Final_E_Commerce.Controllers
         private readonly AppDbContext? _context;
         private readonly UserManager<AppUser>? _usermanager;
         private readonly SignInManager<AppUser>? _signInManager;
+        private readonly ILogger<HomeController> _logger;
         private IConfiguration _config { get; }
-        public HomeController(AppDbContext? context, UserManager<AppUser>? usermanager, SignInManager<AppUser>? signInManager)
+        public HomeController(AppDbContext? context, UserManager<AppUser>? usermanager, SignInManager<AppUser>? signInManager, ILogger<HomeController> logger)
         {
             _context = context;
             _usermanager = usermanager;
             _signInManager = signInManager;
+            _logger = logger;
         }
         public async Task<IActionResult> Index()
         {
+            _logger.LogInformation($"executed {User.Identity.Name}");
             List<Products>? AllProducts = await _context.Products?
                 .Where(p=>p.DiscountPercent>0).ToListAsync();
 

@@ -18,39 +18,38 @@ namespace Final_E_Commerce.MiddlewareExtensions
 
         public async Task Invoke(HttpContext httpContext)
         {
-            using(var scope = httpContext.RequestServices.CreateScope())
+            using var scope = httpContext.RequestServices.CreateScope();
+            AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var routeData = httpContext.GetRouteData();
+
+            var log = new AuditLog();
+            log.CreatedDate = log.RequestTime = DateTime.Now.AddHours(12);
+            log.IsHttps = httpContext.Request.IsHttps;
+            log.Path = httpContext.Request.Path;
+
+            if (routeData.Values.TryGetValue("area", out object area))
             {
-                AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-                var routeData = httpContext.GetRouteData();
-
-                var log = new AuditLog();
-                log.CreatedDate = log.RequestTime = DateTime.Now.AddHours(12);
-                log.IsHttps=httpContext.Request.IsHttps;
-                log.Path = httpContext.Request.Path;
-                
-                if (routeData.Values.TryGetValue("area", out object area)){
-                    log.Area = area.ToString();
-                }
-                if (routeData.Values.TryGetValue("controller", out object controller))
-                {
-                    log.Controller = controller.ToString();
-                }
-                if (routeData.Values.TryGetValue("action", out object action))
-                {
-                    log.Action = action.ToString();
-                }
-                if (!string.IsNullOrWhiteSpace(httpContext.Request.QueryString.Value))
-                {
-                    log.QueryString = httpContext.Request.QueryString.Value;
-                }
-                await _next(httpContext);
-                log.StatusCode=httpContext.Response.StatusCode;
-                log.RespondTime= DateTime.Now.AddHours(12);
-
-                await db.AuditLog.AddAsync(log);
-                db.SaveChangesAsync();
+                log.Area = area.ToString();
             }
+            if (routeData.Values.TryGetValue("controller", out object controller))
+            {
+                log.Controller = controller.ToString();
+            }
+            if (routeData.Values.TryGetValue("action", out object action))
+            {
+                log.Action = action.ToString();
+            }
+            if (!string.IsNullOrWhiteSpace(httpContext.Request.QueryString.Value))
+            {
+                log.QueryString = httpContext.Request.QueryString.Value;
+            }
+            await _next(httpContext);
+            log.StatusCode = httpContext.Response.StatusCode;
+            log.RespondTime = DateTime.Now.AddHours(12);
+
+            await db.AuditLog.AddAsync(log);
+            db.SaveChangesAsync();
         }
     }
 
