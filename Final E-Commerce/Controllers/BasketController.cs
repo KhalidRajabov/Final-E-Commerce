@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NuGet.ContentModel;
 namespace Final_E_Commerce.Controllers
 {
     [Authorize]
-    public class BasketController:Controller
+    public class BasketController : Controller
     {
         private readonly AppDbContext? _context;
         private readonly SignInManager<AppUser>? _signInManager;
@@ -27,7 +26,7 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            List<Products>? AllProducts =  _context?.Products?
+            List<Products>? AllProducts = _context?.Products?
                .Where(p => p.DiscountPercent > 0).ToList();
             foreach (var item in AllProducts)
             {
@@ -92,7 +91,7 @@ namespace Final_E_Commerce.Controllers
             return View(basketVM);
         }
 
-    
+
         public async Task<IActionResult> AddItem(int? id, int? quantity)
         {
             List<Products>? AllProducts = await _context?.Products?
@@ -130,7 +129,7 @@ namespace Final_E_Commerce.Controllers
             }
             if (id == null)
                 if (id == null) return RedirectToAction("error", "home");
-            Products? dbProduct = await _context?.Products?.Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id ==id);
+            Products? dbProduct = await _context?.Products?.Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
             if (dbProduct == null) return RedirectToAction("error", "home");
             List<BasketVM>? products;
             if (Request.Cookies[$"basket{username}"] == null)
@@ -163,9 +162,9 @@ namespace Final_E_Commerce.Controllers
                 }
                 products.Add(basketvm);
             }
-            else if(quantity>=0)
+            else if (quantity >= 0)
             {
-                IsExist.ProductCount+= quantity;
+                IsExist.ProductCount += quantity;
                 ProductCount = IsExist.ProductCount;
             }
             else
@@ -176,7 +175,7 @@ namespace Final_E_Commerce.Controllers
 
             double? price = 0;
             double? count = 0;
-            
+
 
             foreach (var product in products)
             {
@@ -201,14 +200,14 @@ namespace Final_E_Commerce.Controllers
                 Image = mainimage,
                 itemprice = dbProduct.Price,
                 productcount = ProductCount,
-                id=dbProduct.Id
+                id = dbProduct.Id
             };
             //obj data-id ile baghlidir. response "obj" obyektidir,
             //Ok'in icnde return edilmelidir ki API'de response gorsun
             return Ok(obj);
         }
 
-        
+
 
         public async Task<IActionResult> RemoveItem(int? id, string returnurl)
         {
@@ -486,11 +485,11 @@ namespace Final_E_Commerce.Controllers
             ViewBag.TotalPrice = 0;
             string? basket = Request.Cookies[$"basket{username}"];
             List<BasketVM>? products = new List<BasketVM>();
-            if (basket!=null)
+            if (basket != null)
             {
                 products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
             }
-            if (products==null||products.Count<=0)
+            if (products == null || products.Count <= 0)
             {
                 return RedirectToAction("index", "home");
             }
@@ -523,7 +522,7 @@ namespace Final_E_Commerce.Controllers
             UserDetails? userDetails = await _context.UserDetails?.FirstOrDefaultAsync(u => u.AppUserId == user.Id);
 
             CheckoutVM checkoutVM = new CheckoutVM();
-            checkoutVM.Firstname=userDetails.Firstname;
+            checkoutVM.Firstname = userDetails.Firstname;
             checkoutVM.Lastname = userDetails.Lastname;
             checkoutVM.Country = userDetails.Country;
             checkoutVM.City = userDetails.City;
@@ -533,7 +532,7 @@ namespace Final_E_Commerce.Controllers
             checkoutVM.PhoneNumber = userDetails.PhoneNumber;
             checkoutVM.Company = userDetails.Company;
             checkoutVM.Baskets = products;
-            
+
             return View(checkoutVM);
         }
 
@@ -590,7 +589,7 @@ namespace Final_E_Commerce.Controllers
 
 
                 List<BasketVM>? basketProducts = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies[$"basket{userName}"]);
-                if (basketProducts==null)
+                if (basketProducts == null)
                 {
                     return RedirectToAction("index");
                 }
@@ -610,7 +609,7 @@ namespace Final_E_Commerce.Controllers
                     orderItem.Count = basketProduct.ProductCount;
                     orderItem.OrderId = order.Id;
                     orderItem.Name = basketProduct.Name;
-                    if (dbProduct.DiscountUntil>DateTime.Now.AddHours(12) && dbProduct.DiscountPercent>0)
+                    if (dbProduct.DiscountUntil > DateTime.Now.AddHours(12) && dbProduct.DiscountPercent > 0)
                     {
                         orderItem.Price = dbProduct.DiscountPrice;
                         orderItem.TotalPrice = dbProduct.DiscountPrice * basketProduct.ProductCount;
@@ -629,7 +628,7 @@ namespace Final_E_Commerce.Controllers
                 order.OrderItems = orderItems;
                 order.Price = total;
                 //List<string> roles = new List<string>();
-                var roles =await _usermanager.GetRolesAsync(user);
+                var roles = await _usermanager.GetRolesAsync(user);
                 foreach (var item in roles)
                 {
                     if (item.ToLower().Contains("admin"))

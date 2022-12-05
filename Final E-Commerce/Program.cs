@@ -1,8 +1,10 @@
-using Final_E_Commerce.DAL;
+﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.Hubs;
+using Final_E_Commerce.İnterfaces;
 using Final_E_Commerce.MiddlewareExtensions;
+using Final_E_Commerce.Repositories;
 using Final_E_Commerce.SubscribeTableDependency;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 
-
 builder.Services.AddSignalR(c =>
 {
     c.EnableDetailedErrors = true;
@@ -29,8 +30,7 @@ builder.Services.AddSingleton<DashboardHub>();
 builder.Services.AddSingleton<SubscribeProductTableDependency>();
 builder.Services.AddSingleton<PendingsHub>();
 builder.Services.AddSingleton<SubscribePendingsTableDependency>();
-builder.Services.AddSingleton<MessagesHub>();
-builder.Services.AddSingleton<SubscribeMessagesTableDependency>();
+builder.Services.AddScoped<IHomeRepository, HomeRepository>();
 
 builder.Services.AddAuthentication()
     /*.AddFacebook(opt =>
@@ -101,9 +101,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
+
 app.MapHub<DashboardHub>("/dashboardHub");
 app.MapHub<PendingsHub>("/pendingsHub");
-app.MapHub<MessagesHub>("/messagesHub");
+app.MapHub<ChatHub>("/chatHub");
+
 
 app.UseEndpoints(endpoints =>
 {
@@ -118,5 +120,4 @@ app.UseEndpoints(endpoints =>
 
 app.UseProductTableDependency();
 app.UsePendingsTableDependency();
-app.UseMessagesTableDependency();
 app.Run();

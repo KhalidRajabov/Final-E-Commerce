@@ -35,17 +35,9 @@ namespace Final_E_Commerce.DAL
         public DbSet<UserProductRatings>? UserProductRatings { get; set; }
         public DbSet<Messages>? Messages { get; set; }
         public DbSet<UserSubscription>? Subscription { get; set; }
-
-        StreamWriter log = new("logs.txt", append: true);
-
-        
+        public DbSet<ChatMessage>? ChatMessages { get; set; }
 
 
-        protected override async void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.LogTo(async m=>await log.WriteLineAsync(m)).EnableSensitiveDataLogging().EnableDetailedErrors();
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -70,6 +62,12 @@ namespace Final_E_Commerce.DAL
                     Id= 3,
                     Name = "Life Style",
                     IsDeleted= false,
+                },
+                new Subjects
+                {
+                    Id = 4,
+                    Name = "Gaming",
+                    IsDeleted = false,
                 }
                 );
             builder.Entity<Category>().HasData(

@@ -4,6 +4,7 @@ using Final_E_Commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221204175450_auditdelete")]
+    partial class auditdelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -481,33 +483,6 @@ namespace Final_E_Commerce.Migrations
                             Name = "TV/Audio Video Accessories",
                             ParentId = 3
                         });
-                });
-
-            modelBuilder.Entity("Final_E_Commerce.Entities.ChatMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReceiverId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Messages", b =>
@@ -1117,12 +1092,6 @@ namespace Final_E_Commerce.Migrations
                             Id = 3,
                             IsDeleted = false,
                             Name = "Life Style"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            IsDeleted = false,
-                            Name = "Gaming"
                         });
                 });
 
@@ -1562,15 +1531,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Final_E_Commerce.Entities.ChatMessage", b =>
-                {
-                    b.HasOne("Final_E_Commerce.Entities.AppUser", "User")
-                        .WithMany("ChatMessages")
-                        .HasForeignKey("AppUserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Final_E_Commerce.Entities.Messages", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.AppUser", "User")
@@ -1787,8 +1747,6 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("BlogComment");
 
                     b.Navigation("Blogs");
-
-                    b.Navigation("ChatMessages");
 
                     b.Navigation("Messages");
 

@@ -198,15 +198,15 @@
 
 <section class="section">
     <div class="container">
-        <div class="row d-flex flex-column justify-content-center align-items-center">
+        <div class="row col-12 d-flex flex-column justify-content-center align-items-center">
             
                 <div class="col-lg-12  d-flex flex-row justify-content-center">
                     <h2 class="mb-4 ">Blogs</h2>
                 </div>
-                <div class="row d-flex flex-row flex-wrap justify-content-around">
+            <div class="row col-12 d-flex flex-row flex-wrap justify-content-around">
                     @foreach (var blog in Model.Blogs)
                     {
-                    <div class="card col-sm-6 col-md-4 m-2 homeblog">
+                    <div class="card col-sm-9 col-md-6 col-lg-4 m-2 homeblog">
                         <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark mt-2"><img width="150" height="250" src="~/images/blog/@blog.ImageUrl" class="card-img-top"></a>
                         <div class="card-body">
                             <a asp-action="detail" asp-controller="blog" asp-route-id="@blog.Id" class="text-dark">

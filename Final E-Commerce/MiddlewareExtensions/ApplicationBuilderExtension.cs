@@ -17,12 +17,6 @@ namespace Final_E_Commerce.MiddlewareExtensions
             service.SubscribeTableDependency();
         }
 
-        public static void UseMessagesTableDependency(this IApplicationBuilder applicationBuilder)
-        {
-            var serviceProvider = applicationBuilder.ApplicationServices;
-            var service = serviceProvider.GetService<SubscribeMessagesTableDependency>();
-            service.SubscribeTableDependency();
-        }
 
     }
 }

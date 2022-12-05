@@ -8,32 +8,50 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using Final_E_Commerce.Helper;
+using Final_E_Commerce.İnterfaces;
 
 namespace Final_E_Commerce.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext? _context;
+        
+        private readonly IHomeRepository _homeRepository;
+        private readonly AppDbContext _context;
         private readonly UserManager<AppUser>? _usermanager;
         private readonly SignInManager<AppUser>? _signInManager;
-        private readonly ILogger<HomeController> _logger;
         private IConfiguration _config { get; }
-        public HomeController(AppDbContext? context, UserManager<AppUser>? usermanager, SignInManager<AppUser>? signInManager, ILogger<HomeController> logger)
+        public HomeController(IHomeRepository homeRepository, AppDbContext context, UserManager<AppUser>? usermanager, SignInManager<AppUser>? signInManager, IConfiguration config)
         {
+            _homeRepository = homeRepository;
             _context = context;
             _usermanager = usermanager;
             _signInManager = signInManager;
-            _logger = logger;
+            _config = config;
         }
         public async Task<IActionResult> Index()
         {
-            _logger.LogInformation($"executed {User.Identity.Name}");
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(_homeRepository.Index(User.Identity.Name.ToString()));
+            }
+            else
+            {
+                string str = null;
+                return View(_homeRepository.Index(str));
+            }
+        }
+
+
+        public async Task<IActionResult> Shop(ShopVM? filter)
+        {
+
+            #region Discount/Ban operation
             List<Products>? AllProducts = await _context.Products?
-                .Where(p=>p.DiscountPercent>0).ToListAsync();
+              .Where(p => p.DiscountPercent > 0).ToListAsync();
 
             foreach (var product in AllProducts)
             {
-                if (product.DiscountUntil<DateTime.Now.AddHours(12))
+                if (product.DiscountUntil < DateTime.Now.AddHours(12))
                 {
                     product.DiscountUntil = null;
                     product.DiscountPercent = 0;
@@ -41,11 +59,6 @@ namespace Final_E_Commerce.Controllers
                     await _context?.SaveChangesAsync();
                 }
             }
-            
-            HomeVM? homeVM = new HomeVM();
-            List<Products> Bestsellers = await _context.Products
-                .OrderByDescending(p => p.Sold).Take(8)
-                .Where(p => p.Status == ProductConfirmationStatus.Approved&&!p.IsDeleted).Include(p => p.ProductImages).ToListAsync();
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -58,80 +71,20 @@ namespace Final_E_Commerce.Controllers
                         return RedirectToAction("error", "home");
                     }
                 }
-                homeVM.User = user;
-                homeVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToListAsync();
-                List<Products> Following = new List<Products>();
-                List<UserSubscription>? followings = _context?.Subscription?.Where(s=>s.SubscriberId==user.Id).ToList();
-                foreach (var item in followings)
-                {
-                    AppUser profile = await _usermanager.FindByIdAsync(item.ProfileId);
-                    List<Products>? ProfileProducts =await _context.Products.Where(p => p.AppUserId == profile.Id)
-                        .Include(p=>p.ProductImages).ToListAsync();
-                    foreach (var products in ProfileProducts)
-                    {
-                        Following.Add(products);
-                    }
-                }
-                homeVM.Following = Following;
             }
-            homeVM.Bio = await _context?.Bios?.FirstOrDefaultAsync();
-            homeVM.Category =await _context.Categories?.FirstOrDefaultAsync(c=>c.Id==1);
-            homeVM.MostPopularProduct = await _context.Products
-                .Where(p => p.Status == ProductConfirmationStatus.Approved&&!p.IsDeleted)
-                .OrderByDescending(p=>p.Rating).Take(1).Include(p=>p.ProductImages).FirstOrDefaultAsync();
-            homeVM.PopularProducts = await _context.Products
-                .Where(p => p.Status == ProductConfirmationStatus.Approved)
-                .OrderByDescending(p=>p.Rating).Skip(1).Take(3).Include(p=>p.ProductImages).ToListAsync();
-            homeVM.BestSellerProducts = Bestsellers;
-            homeVM.Sliders = await _context?.Sliders?.ToListAsync();
-            homeVM.Blogs = await _context?.Blogs?.Where(b=>!b.IsDeleted).OrderByDescending(b=>b.ViewCount).Take(6).ToListAsync();
-            return View(homeVM);
-        }
-
-
-        public async Task<IActionResult> Shop(ShopVM? filter)
-        {
-
-            #region Discount/Ban operation
-                List<Products>? AllProducts = await _context.Products?
-                  .Where(p => p.DiscountPercent > 0).ToListAsync();
-
-                foreach (var product in AllProducts)
-                {
-                    if (product.DiscountUntil < DateTime.Now.AddHours(12))
-                    {
-                        product.DiscountUntil = null;
-                        product.DiscountPercent = 0;
-                        product.DiscountPrice = 0;
-                        await _context?.SaveChangesAsync();
-                    }
-                }
-                if (User.Identity.IsAuthenticated)
-                {
-                    AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                    var userroles = await _usermanager.GetRolesAsync(user);
-                    foreach (var item in userroles)
-                    {
-                        if (item.ToLower() == "ban" || userroles == null)
-                        {
-                            await _signInManager.SignOutAsync();
-                            return RedirectToAction("error", "home");
-                        }
-                    }
-                }
             #endregion
 
             #region SelectItems
-                ViewBag.AlphabeticOrder = new List<string>() { "A-Z", "Z-A" };
-                ViewBag.DateOrder = new List<string>() { "New to Old", "Old to New" };
-                ViewBag.SpecialOrder = new List<string>() { "Populars", "Top sellers" };
-                ViewBag.Price = new List<string>() { "Low", "High" };
+            ViewBag.AlphabeticOrder = new List<string>() { "A-Z", "Z-A" };
+            ViewBag.DateOrder = new List<string>() { "New to Old", "Old to New" };
+            ViewBag.SpecialOrder = new List<string>() { "Populars", "Top sellers" };
+            ViewBag.Price = new List<string>() { "Low", "High" };
             #endregion
             List<Products> Products = new List<Products>();
             if (filter != null)
             {
                 Products = await _context?.Products?
-                    .Include(p=>p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
+                    .Include(p => p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
                 if (filter.Search != null)
                 {
                     Products.Where(p => p.Name.ToLower().Contains(filter.Search.ToLower()));
@@ -158,7 +111,7 @@ namespace Final_E_Commerce.Controllers
                         Products.OrderBy(p => p.CreatedTime);
                     }
                 }
-                if (filter.Speciality!=null)
+                if (filter.Speciality != null)
                 {
                     if (filter.Speciality == "Populars")
                     {
@@ -169,7 +122,7 @@ namespace Final_E_Commerce.Controllers
                         Products.OrderByDescending(p => p.Sold);
                     }
                 }
-                if (filter.Price!=null)
+                if (filter.Price != null)
                 {
                     if (filter.Speciality == "Low")
                     {
@@ -184,7 +137,7 @@ namespace Final_E_Commerce.Controllers
             else
             {
                 Products = await _context?.Products?
-                    .Include(p=>p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
+                    .Include(p => p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
             }
             ShopVM shopVM = new ShopVM
             {
@@ -228,35 +181,35 @@ namespace Final_E_Commerce.Controllers
             }
             DetailVM? detailVM = new DetailVM();
             Products? product = await _context?.Products?
-                .Where(p=>p.Status==ProductConfirmationStatus.Approved)
+                .Where(p => p.Status == ProductConfirmationStatus.Approved)
                 ?.Include(p => p.ProductImages)
                 ?.Include(c => c.Category)
                 ?.Include(p => p.Brand)
                 ?.Include(p => p.ProductTags)
                 ?.ThenInclude(t => t.Tags)
-                ?.Include(r=>r.UserProductRatings)
+                ?.Include(r => r.UserProductRatings)
                 .FirstOrDefaultAsync(p => p.Id == id);
-            if (product==null)
+            if (product == null)
             {
                 return RedirectToAction("error");
             }
             double rates = 0;
             List<UserProductRatings>? ratings = await _context?.UserProductRatings?
                 .Where(r => r.ProductId == product.Id).ToListAsync();
-            if (ratings.Count>=1)
+            if (ratings.Count >= 1)
             {
                 foreach (var item in ratings)
                 {
                     rates += item.Rating;
                 }
-                product.Rating = rates /ratings.Count;
+                product.Rating = rates / ratings.Count;
                 ViewBag.Just = rates / ratings.Count;
                 ViewBag.RatedBy = ratings.Count;
                 await _context.SaveChangesAsync();
             }
             if (product == null) return RedirectToAction("Error", "home");
-            AppUser ProductOwner =await _usermanager.FindByIdAsync(product.AppUserId);
-            if (ProductOwner!=null)
+            AppUser ProductOwner = await _usermanager.FindByIdAsync(product.AppUserId);
+            if (ProductOwner != null)
             {
                 detailVM.Owner = ProductOwner;
             }
@@ -284,10 +237,10 @@ namespace Final_E_Commerce.Controllers
                 }
                 ViewBag.RightCounter = RightCounter;
 
-                List<Orders>? UserOrders = _context?.Orders?.Where(o=>o.AppUserId== user.Id).ToList();
+                List<Orders>? UserOrders = _context?.Orders?.Where(o => o.AppUserId == user.Id).ToList();
                 foreach (var order in UserOrders)
                 {
-                    bool didUserBuuy =await _context?.OrderItems?.Where(o=> o.OrderId == order.Id&& o.ProductId==id).AnyAsync();
+                    bool didUserBuuy = await _context?.OrderItems?.Where(o => o.OrderId == order.Id && o.ProductId == id).AnyAsync();
                     if (didUserBuuy)
                     {
                         ViewBag.DidUserBuyThis = true;
@@ -297,7 +250,7 @@ namespace Final_E_Commerce.Controllers
             }
             product.Views++;
             await _context.SaveChangesAsync();
-            var UsersWantThis = await _context.Wishlists?.Where(p=>p.ProductId==id).ToListAsync();
+            var UsersWantThis = await _context.Wishlists?.Where(p => p.ProductId == id).ToListAsync();
             detailVM.Product = product;
 
             List<Products> related = await _context.Products
@@ -307,11 +260,11 @@ namespace Final_E_Commerce.Controllers
                 .ToListAsync();
 
             detailVM.RelatedProducts = related;
-            
+
 
             detailVM.UsersWantIt = UsersWantThis.Count;
-            
-            detailVM.Comments= await _context.ProductComments
+
+            detailVM.Comments = await _context.ProductComments
                 .Include(b => b.User)
                 .Where(c => c.ProductId == id && !c.IsDeleted)
                 .OrderByDescending(b => b.Id)
@@ -341,16 +294,16 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             Products? product = await _context?.Products?
-                .Include(p=>p.ProductImages).FirstOrDefaultAsync(p=>p.Id == ProductId);
+                .Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.Id == ProductId);
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                if (product.AppUserId!=user.Id)
+                if (product.AppUserId != user.Id)
                 {
                     UserProductRatings userProductRating = new UserProductRatings
                     {
                         AppUserId = user.Id,
-                        ProductId=product.Id,
+                        ProductId = product.Id,
                         Rating = Rating
                     };
                     _context.Add(userProductRating);
@@ -424,8 +377,8 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             Products? product = await _context?.Products?
-                .Include(p=>p.AppUser)
-                .FirstOrDefaultAsync(p=>p.Id == ProductId);
+                .Include(p => p.AppUser)
+                .FirstOrDefaultAsync(p => p.Id == ProductId);
             ProductComment NewComment = new ProductComment();
             CommentsVM commentVM = new CommentsVM();
             if (User.Identity.IsAuthenticated)
@@ -444,7 +397,7 @@ namespace Final_E_Commerce.Controllers
             NewComment.Date = DateTime.Now.AddHours(12);
             await _context.AddAsync(NewComment);
             await _context.SaveChangesAsync();
-            commentVM.ProductComment= NewComment;
+            commentVM.ProductComment = NewComment;
             return PartialView("_ProductSingleComment", commentVM);
         }
         [Authorize]
@@ -556,14 +509,14 @@ namespace Final_E_Commerce.Controllers
                 }
             }
             List<Products>? products = await _context?.Products?
-                .Where(p=>p.BrandId==id)
+                .Where(p => p.BrandId == id)
                 .Include(p => p.ProductImages)
-                .Include(p=>p.Brand)
+                .Include(p => p.Brand)
                 .ToListAsync();
             ListProductsVM listProducts = new ListProductsVM
             {
                 Products = products,
-                Brand = await _context?.Brands?.FirstOrDefaultAsync(b=>b.Id==id)
+                Brand = await _context?.Brands?.FirstOrDefaultAsync(b => b.Id == id)
             };
             return View(listProducts);
         }
@@ -583,7 +536,7 @@ namespace Final_E_Commerce.Controllers
                     }
                 }
             }
-            
+
             return View();
         }
         [HttpPost]
@@ -610,20 +563,20 @@ namespace Final_E_Commerce.Controllers
             await _context.AddAsync(message);
             await _context.SaveChangesAsync();
             #region
-            /*List<AppUser> AppUsers = await _usermanager.Users.ToListAsync();
+            List<AppUser> AppUsers = await _usermanager.Users.ToListAsync();
             foreach (var user in AppUsers)
             {
                 var userroles = await _usermanager.GetRolesAsync(user);
                 foreach (var item in userroles)
                 {
-                    if (item.ToLower() == "admin" )
+                    if (item.ToLower() == "admin")
                     {
                         var token = "";
                         string subject = $"New message about {contact.Subject}";
                         EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
                         token = $"Hello {user.Fullname}. {contact.Firstname} {contact.Lastname} asked something <br> <br> \n" +
-                            "Message: <br>\n"+
+                            "Message: <br>\n" +
                             $"<p style='align-text: center'>{contact.Message}</p> <br>\n" +
                             $"Go to the app: <a href='https://localhost:44393/admin/message/detail/{message.Id}' style='color:red'>{message.Subject} </a>";
                         var emailResult = helper.SendNews(user.Email, token, subject);
@@ -634,7 +587,7 @@ namespace Final_E_Commerce.Controllers
                         }, Request.Scheme);
                     }
                 }
-            }*/
+            }
             #endregion
             return View();
         }

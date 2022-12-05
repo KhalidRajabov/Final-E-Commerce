@@ -1,6 +1,4 @@
-﻿using Microsoft.Build.Framework;
-
-namespace Final_E_Commerce.ViewModels
+﻿namespace Final_E_Commerce.ViewModels
 {
     public class UserPhotoVM
     {
