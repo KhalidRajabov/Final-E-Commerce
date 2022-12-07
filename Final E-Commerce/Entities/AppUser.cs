@@ -23,6 +23,7 @@ namespace Final_E_Commerce.Entities
         public List<UserProductRatings>? UserProductRatings { get; set; }
         public List<Messages>? Messages { get; set; }
         public List<UserSubscription>? Subscription { get; set; }
+        public List<Communication>? Communications { get; set; }
         public List<ChatMessage>? ChatMessages { get; set; }
         //public List<BasketItem> BasketItems { get; set; }
     }

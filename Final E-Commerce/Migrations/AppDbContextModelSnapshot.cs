@@ -22,6 +22,21 @@ namespace Final_E_Commerce.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("AppUserCommunication", b =>
+                {
+                    b.Property<int>("CommunicationsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CommunicationsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("AppUserCommunication");
+                });
+
             modelBuilder.Entity("AppUserUserSubscription", b =>
                 {
                     b.Property<string>("AppUsersId")
@@ -491,8 +506,11 @@ namespace Final_E_Commerce.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AppUserId")
+                    b.Property<string>("AppuserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CommunicationId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -500,14 +518,35 @@ namespace Final_E_Commerce.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ReceiverId")
+                    b.Property<string>("OtherId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppuserId");
+
+                    b.HasIndex("CommunicationId");
 
                     b.ToTable("ChatMessages");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Communication", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherAppUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Communications");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Messages", b =>
@@ -1493,6 +1532,21 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("ProductsWishlist");
                 });
 
+            modelBuilder.Entity("AppUserCommunication", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.Communication", null)
+                        .WithMany()
+                        .HasForeignKey("CommunicationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AppUserUserSubscription", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.AppUser", null)
@@ -1564,11 +1618,19 @@ namespace Final_E_Commerce.Migrations
 
             modelBuilder.Entity("Final_E_Commerce.Entities.ChatMessage", b =>
                 {
-                    b.HasOne("Final_E_Commerce.Entities.AppUser", "User")
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
                         .WithMany("ChatMessages")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppuserId");
 
-                    b.Navigation("User");
+                    b.HasOne("Final_E_Commerce.Entities.Communication", "Communication")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("CommunicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Communication");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Messages", b =>
@@ -1824,6 +1886,11 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("Children");
 
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Communication", b =>
+                {
+                    b.Navigation("ChatMessages");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Orders", b =>

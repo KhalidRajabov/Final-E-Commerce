@@ -6,8 +6,12 @@
         public string? Message { get; set; }
         public DateTime Date { get; set; }
 
-        public string? ReceiverId { get; set; }
-        public string? AppUserId { get; set; }
-        public AppUser? User { get; set; }
+        public string? OtherId { get; set; }
+        public string? AppuserId { get; set; }
+        public AppUser? AppUser { get; set; }
+
+
+        public int CommunicationId { get; set; }
+        public Communication? Communication { get; set; }
     }
 }

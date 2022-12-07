@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Final_E_Commerce.Migrations
 {
-    public partial class @new : Migration
+    public partial class chatmessagesrelation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -122,6 +122,20 @@ namespace Final_E_Commerce.Migrations
                         column: x => x.ParentId,
                         principalTable: "Categories",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Communications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AppUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherAppUserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Communications", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -528,6 +542,58 @@ namespace Final_E_Commerce.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppUserCommunication",
+                columns: table => new
+                {
+                    CommunicationsId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUserCommunication", x => new { x.CommunicationsId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_AppUserCommunication_AspNetUsers_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppUserCommunication_Communications_CommunicationsId",
+                        column: x => x.CommunicationsId,
+                        principalTable: "Communications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OtherId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AppuserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CommunicationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_AspNetUsers_AppuserId",
+                        column: x => x.AppuserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_Communications_CommunicationId",
+                        column: x => x.CommunicationId,
+                        principalTable: "Communications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppUserUserSubscription",
                 columns: table => new
                 {
@@ -777,9 +843,20 @@ namespace Final_E_Commerce.Migrations
                 values: new object[,]
                 {
                     { 1, null, null, null, null, "tabletsandphones.jpg", false, null, "Phones and Tablets", null },
-                    { 2, null, null, null, null, null, false, null, "Watches", null },
+                    { 2, null, null, null, null, "product-sm-8.jpg", false, null, "Watches", null },
                     { 3, null, null, null, null, "tv.jpg", false, null, "TV, Audio and Video", null },
                     { 4, null, null, null, null, "computers.jpg", false, null, "Computers and accessories", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Subjects",
+                columns: new[] { "Id", "IsDeleted", "Name" },
+                values: new object[,]
+                {
+                    { 1, false, "News" },
+                    { 2, false, "Fashion" },
+                    { 3, false, "Life Style" },
+                    { 4, false, "Gaming" }
                 });
 
             migrationBuilder.InsertData(
@@ -812,17 +889,17 @@ namespace Final_E_Commerce.Migrations
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "AppUserId", "Battery", "Bestseller", "Body", "BrandId", "CategoryId", "Chipset", "CommentCount", "Count", "CreatedTime", "DeletedAt", "DeletedBy", "Description", "DiscountPercent", "DiscountPrice", "DiscountUntil", "Display", "FrontCamera", "GPU", "InStock", "IsDeleted", "IsFeatured", "IsNew", "LastUpdatedAt", "Memory", "Name", "NewArrival", "OperationSystem", "Price", "Profit", "Rating", "RearCamera", "ReleaseDate", "Sold", "Status", "Views", "Weight" },
-                values: new object[] { 1, null, "Li-Po 4000 mAh, non-removable, quick charge 3.0", false, "155.5 x 75.3 x 8.8 mm (6.12 x 2.96 x 0.35 in)", 1, 5, "Qualcomm SDM845 Snapdragon 845 (10 nm)", 0, 50, null, null, null, "POCO F1 (Rosso Red, 128 GB) (6 GB RAM) Meet the POCO F1 - the first flagship smartphone from POCO by Xiaomi. The POCO F1 sports Qualcomm flagship Snapdragon 845 processor, an octa-core CPU with a maximum clock speed of 2.8 GHz which is supported by 6 GB of LPDDR4X RAM.", null, null, null, "6.18 inches, 96.2 cm2 (~82.2% screen-to-body ratio),1080 x 2246 pixels, 18.7:9 ratio (~403 ppi density)", "20 MP, f/2.0, (wide), 1/3, 0.9µm, 1080p@30fps", "Adreno 630", false, false, false, false, null, "64GB 6GB RAM, 128GB 6GB RAM, 256GB 8GB RAM", "Xiaomi Pocophone F1", false, "Android 8.1 (Oreo), upgradable to Android 10, MIUI 12", 750.0, null, 0.0, "12 MP, f/1.9, 1/2.55, 1.4µm, dual pixel PDAF, 4K@30/60fps, 1080p@30fps (gyro-EIS), 1080p@240fps, 720p@960fps", new DateTime(2018, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 0, 0, "182 g (6.42 oz)" });
+                values: new object[] { 1, null, "Li-Po 4000 mAh, non-removable, quick charge 3.0", false, "155.5 x 75.3 x 8.8 mm (6.12 x 2.96 x 0.35 in)", 1, 5, "Qualcomm SDM845 Snapdragon 845 (10 nm)", 0, 50, null, null, null, "POCO F1 (Rosso Red, 128 GB) (6 GB RAM) Meet the POCO F1 - the first flagship smartphone from POCO by Xiaomi. The POCO F1 sports Qualcomm flagship Snapdragon 845 processor, an octa-core CPU with a maximum clock speed of 2.8 GHz which is supported by 6 GB of LPDDR4X RAM.", null, null, null, "6.18 inches, 96.2 cm2 (~82.2% screen-to-body ratio),1080 x 2246 pixels, 18.7:9 ratio (~403 ppi density)", "20 MP, f/2.0, (wide), 1/3, 0.9µm, 1080p@30fps", "Adreno 630", false, false, false, false, null, "64GB 6GB RAM, 128GB 6GB RAM, 256GB 8GB RAM", "Xiaomi Pocophone F1", false, "Android 8.1 (Oreo), upgradable to Android 10, MIUI 12", 750.0, 0.0, 0.0, "12 MP, f/1.9, 1/2.55, 1.4µm, dual pixel PDAF, 4K@30/60fps, 1080p@30fps (gyro-EIS), 1080p@240fps, 720p@960fps", new DateTime(2018, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 2, 0, "182 g (6.42 oz)" });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "AppUserId", "Battery", "Bestseller", "Body", "BrandId", "CategoryId", "Chipset", "CommentCount", "Count", "CreatedTime", "DeletedAt", "DeletedBy", "Description", "DiscountPercent", "DiscountPrice", "DiscountUntil", "Display", "FrontCamera", "GPU", "InStock", "IsDeleted", "IsFeatured", "IsNew", "LastUpdatedAt", "Memory", "Name", "NewArrival", "OperationSystem", "Price", "Profit", "Rating", "RearCamera", "ReleaseDate", "Sold", "Status", "Views", "Weight" },
-                values: new object[] { 2, null, "Li-Ion 5000 mAh, non-removable", false, "163.3 x 77.9 x 8.9 mm (6.43 x 3.07 x 0.35 in)", 1, 5, "Exynos 2200 (4 nm) - Europe", 0, 50, null, null, null, "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.", 5.0, 1900.0, new DateTime(2023, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Dynamic AMOLED 2X, 120Hz, HDR10+, 1750 nits (peak)", "40 MP, f/2.2, 26mm (wide), 1/2.82, 0.7µm, PDAF", "Xclipse 920 - Europe", false, false, false, false, null, "128GB 8GB RAM, 256GB 12GB RAM, 512GB 12GB RAM, 1TB 12GB RAM", "Samsung Galaxy S22 Ultra", false, "Android", 2000.0, null, 0.0, "108 MP, f/1.8, 23mm (wide), 1/1.33, 0.8µm, PDAF, Laser AF, OIS 10 MP, f/4.9, 230mm (periscope telephoto), 1/3.52\", 1.12µm, dual pixel PDAF, OIS, 10x optical zoom\r\n10 MP, f/2.4, 70mm (telephoto), 1/3.52\", 1.12µm, dual pixel PDAF, OIS, 3x optical zoom 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, Super Steady video", new DateTime(2021, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 0, 0, "228 g / 229 g (mmWave) (8.04 oz)" });
+                values: new object[] { 2, null, "Li-Ion 5000 mAh, non-removable", false, "163.3 x 77.9 x 8.9 mm (6.43 x 3.07 x 0.35 in)", 1, 5, "Exynos 2200 (4 nm) - Europe", 0, 50, null, null, null, "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.", 5.0, 1900.0, new DateTime(2023, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Dynamic AMOLED 2X, 120Hz, HDR10+, 1750 nits (peak)", "40 MP, f/2.2, 26mm (wide), 1/2.82, 0.7µm, PDAF", "Xclipse 920 - Europe", false, false, false, false, null, "128GB 8GB RAM, 256GB 12GB RAM, 512GB 12GB RAM, 1TB 12GB RAM", "Samsung Galaxy S22 Ultra", false, "Android", 2000.0, 0.0, 0.0, "108 MP, f/1.8, 23mm (wide), 1/1.33, 0.8µm, PDAF, Laser AF, OIS 10 MP, f/4.9, 230mm (periscope telephoto), 1/3.52\", 1.12µm, dual pixel PDAF, OIS, 10x optical zoom\r\n10 MP, f/2.4, 70mm (telephoto), 1/3.52\", 1.12µm, dual pixel PDAF, OIS, 3x optical zoom 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, Super Steady video", new DateTime(2021, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 2, 0, "228 g / 229 g (mmWave) (8.04 oz)" });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "AppUserId", "Battery", "Bestseller", "Body", "BrandId", "CategoryId", "Chipset", "CommentCount", "Count", "CreatedTime", "DeletedAt", "DeletedBy", "Description", "DiscountPercent", "DiscountPrice", "DiscountUntil", "Display", "FrontCamera", "GPU", "InStock", "IsDeleted", "IsFeatured", "IsNew", "LastUpdatedAt", "Memory", "Name", "NewArrival", "OperationSystem", "Price", "Profit", "Rating", "RearCamera", "ReleaseDate", "Sold", "Status", "Views", "Weight" },
-                values: new object[] { 3, null, "Li-Ion, non-removable", false, "160.7 x 77.6 x 7.9 mm (6.33 x 3.06 x 0.31 in)", 2, 5, "Apple A16 Bionic (5 nm)", 0, 50, null, null, null, "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.", 25.0, 1125.0, new DateTime(2022, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision, 1000 nits (HBM), 1200 nits (peak)", "12 MP, f/2.2, 23mm (wide), 1/3.6, 4K@24/25/30/60fps, 1080p@30/60/120fps, gyro-EIS", "Apple GPU", false, false, false, false, null, "128GB 6GB RAM, 256GB 6GB RAM, 512GB 6GB RAM, 1TB 6GB RAM", "Apple iPhone 14 Pro Max", false, "IOS", 1500.0, null, 0.0, "48 MP, (wide), dual pixel PDAF, sensor-shift OIS 12 MP, f/2.8, 77mm (telephoto), PDAF, OIS, 3x optical zoom 12 MP, f/1.8, 13mm, 120˚ (ultrawide), 1.4µm, PDAF TOF 3D LiDAR scanner (depth)", new DateTime(2022, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 0, 0, "228 g / 229 g (mmWave) (8.04 oz)" });
+                values: new object[] { 3, null, "Li-Ion, non-removable", false, "160.7 x 77.6 x 7.9 mm (6.33 x 3.06 x 0.31 in)", 2, 5, "Apple A16 Bionic (5 nm)", 0, 50, null, null, null, "The Samsung Galaxy S22 Ultra is the headliner of the S22 series. It's the first S series phone to include Samsung's S Pen. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 1 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage. In the camera department, a quad-camera setup is presented with two telephoto sensors.", 25.0, 1125.0, new DateTime(2022, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision, 1000 nits (HBM), 1200 nits (peak)", "12 MP, f/2.2, 23mm (wide), 1/3.6, 4K@24/25/30/60fps, 1080p@30/60/120fps, gyro-EIS", "Apple GPU", false, false, false, false, null, "128GB 6GB RAM, 256GB 6GB RAM, 512GB 6GB RAM, 1TB 6GB RAM", "Apple iPhone 14 Pro Max", false, "IOS", 1500.0, 0.0, 0.0, "48 MP, (wide), dual pixel PDAF, sensor-shift OIS 12 MP, f/2.8, 77mm (telephoto), PDAF, OIS, 3x optical zoom 12 MP, f/1.8, 13mm, 120˚ (ultrawide), 1.4µm, PDAF TOF 3D LiDAR scanner (depth)", new DateTime(2022, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 2, 0, "228 g / 229 g (mmWave) (8.04 oz)" });
 
             migrationBuilder.InsertData(
                 table: "ProductImages",
@@ -842,6 +919,11 @@ namespace Final_E_Commerce.Migrations
                     { 11, "gsmarena_000.jpg", false, 3 },
                     { 12, "32ff69fafded8e6b986bc76f410e0ce5.jpg", false, 3 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUserCommunication_UsersId",
+                table: "AppUserCommunication",
+                column: "UsersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppUserUserSubscription_SubscriptionId",
@@ -916,6 +998,16 @@ namespace Final_E_Commerce.Migrations
                 name: "IX_Categories_ParentId",
                 table: "Categories",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_AppuserId",
+                table: "ChatMessages",
+                column: "AppuserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_CommunicationId",
+                table: "ChatMessages",
+                column: "CommunicationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_AppUserId",
@@ -1010,6 +1102,9 @@ namespace Final_E_Commerce.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AppUserCommunication");
+
+            migrationBuilder.DropTable(
                 name: "AppUserUserSubscription");
 
             migrationBuilder.DropTable(
@@ -1035,6 +1130,9 @@ namespace Final_E_Commerce.Migrations
 
             migrationBuilder.DropTable(
                 name: "BlogSubjects");
+
+            migrationBuilder.DropTable(
+                name: "ChatMessages");
 
             migrationBuilder.DropTable(
                 name: "Messages");
@@ -1080,6 +1178,9 @@ namespace Final_E_Commerce.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subjects");
+
+            migrationBuilder.DropTable(
+                name: "Communications");
 
             migrationBuilder.DropTable(
                 name: "Orders");

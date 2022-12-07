@@ -104,7 +104,6 @@ app.UseAuthorization();
 
 app.MapHub<DashboardHub>("/dashboardHub");
 app.MapHub<PendingsHub>("/pendingsHub");
-app.MapHub<ChatHub>("/chatHub");
 
 
 app.UseEndpoints(endpoints =>
@@ -116,6 +115,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapHub<ChatHub>("/chatHub");
 });
 
 app.UseProductTableDependency();

@@ -36,6 +36,7 @@ namespace Final_E_Commerce.DAL
         public DbSet<Messages>? Messages { get; set; }
         public DbSet<UserSubscription>? Subscription { get; set; }
         public DbSet<ChatMessage>? ChatMessages { get; set; }
+        public DbSet<Communication>? Communications { get; set; }
 
 
 

@@ -1,0 +1,13 @@
+﻿@model List<AppUser>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model!=null)
+{
+    foreach (var user in Model)
+    {
+        <a asp-action="chat" asp-controller="messages" asp-route-receiverId="@user.Id">@user.Fullname</a>
+    }
+}
