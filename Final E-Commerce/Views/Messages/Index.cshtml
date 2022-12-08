@@ -8,6 +8,10 @@
 {
     foreach (var user in Model)
     {
-        <a asp-action="chat" asp-controller="messages" asp-route-receiverId="@user.Id">@user.Fullname</a>
+        <a class="text-dark" asp-action="chat" asp-controller="messages" asp-route-receiverId="@user.Id">@user.Fullname</a>
     }
+}
+else
+{
+    <h3>Your message box is empty</h3>
 }

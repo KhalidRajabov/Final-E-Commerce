@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221207195855_chatmessagesrelation")]
-    partial class chatmessagesrelation
+    [Migration("20221207215825_chat_read")]
+    partial class chat_read
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -522,6 +522,9 @@ namespace Final_E_Commerce.Migrations
 
                     b.Property<string>("OtherId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ReadByReceiver")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

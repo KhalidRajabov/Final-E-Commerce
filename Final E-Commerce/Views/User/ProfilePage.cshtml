@@ -21,10 +21,14 @@
 							{
 								<p class="mb-0">@Model.UserProfile.AboutMe</p>
 							}
+
+						@if (User.Identity.IsAuthenticated)
+							{
+								<a class="text-info" asp-action="chat" asp-controller="messages" asp-route-receiverId="@Model.User.Id">Message</a>
+							}
 						</div>
 					</div>
 					<div class="row">
-
 						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
 							    <b style="max-height:400px" class="col-2">
 							        Username:

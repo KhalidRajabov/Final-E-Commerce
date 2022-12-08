@@ -7,21 +7,53 @@
 <div class="container">
 <h3>Messages</h3>
 <div class="row d-flex flex-column">
-    @foreach (var item in Model)
+    @if (Model!=null)
         {
-            <p>@item.Message</p>
+            <div class="row">
+                <div class="col-12">
+                    <ul id="messagesList" class="col-12" >
+                        @foreach (var item in Model)
+                        {
+                            if (ViewBag.CurrentUserId==item.AppuserId)
+                            {
+                                <li class="col-12 mt-1 d-flex flex-column text-end " >
+                                    <div class="d-flex flex-column bg-success col-8 text-light p-2 align-self-end" style="border-radius:10px;">
+                                        <span>@item.Message</span>
+                                        <span style="font-size:70%">@item.Date</span>
+                                    </div>
+                                </li>
+                            }
+                            else{
+                                <li class="col-12 d-flex mt-1 flex-column text-start " >
+                                    <div class="d-flex flex-column bg-secondary col-8 text-info p-2" style="border-radius:10px;">
+                                        <span>@item.Message</span>
+                                        <span style="font-size:70%">@item.Date</span>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
         }
-</div>
+        else
+        {
+            <h4 id="zeroMessage">You have not started a conversation yet</h4>
+            <div class="row">
+                <div class="col-12">
+                    <ul id="messagesList" class="col-12" >
+                           </ul>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 <div class="container">
-    <div class="row">
-        <div class="col-3">Connection Id</div>
-        <div class="col-6"><span id="connectionId" /></div>
-    </div>
     <div class="row">&nbsp;</div>
     <div class="row">
         <div class="col-2">User</div>
         <div class="col-4">@User.Identity.Name</div>
+        <div class="col-4"><input type="hidden" id="userInput" value="@User.Identity.Name" /></div>
     </div>
     <div class="row">
         <div class="col-2">Receiver</div>
@@ -45,12 +77,9 @@
         <hr />
     </div>
 </div>
-<div class="row">
-    <div class="col-6">
-        <ul id="messagesList"></ul>
-    </div>
-</div>
 
+<audio id="incomingMsg" src="~/sounds/WhatsApp.mp3"></audio>
+<audio id="outMsg" src="~/sounds/WhatsappSent .mp3"></audio>
 @section Scripts{
                 <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
                 <script src="~/js/Chat.js"></script>

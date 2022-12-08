@@ -8,6 +8,14 @@
     <UserSecretsId>2182ec51-9232-4a74-a3ba-5d97b25e9863</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.10" />

@@ -34,7 +34,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("AppUserCommunication");
+                    b.ToTable("AppUserCommunication", (string)null);
                 });
 
             modelBuilder.Entity("AppUserUserSubscription", b =>
@@ -49,7 +49,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("SubscriptionId");
 
-                    b.ToTable("AppUserUserSubscription");
+                    b.ToTable("AppUserUserSubscription", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.AppUser", b =>
@@ -181,7 +181,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bios");
+                    b.ToTable("Bios", (string)null);
 
                     b.HasData(
                         new
@@ -234,7 +234,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("BlogComments");
+                    b.ToTable("BlogComments", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>
@@ -282,7 +282,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.BlogSubject", b =>
@@ -305,7 +305,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("SubjectsId");
 
-                    b.ToTable("BlogSubjects");
+                    b.ToTable("BlogSubjects", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Brand", b =>
@@ -342,7 +342,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands");
+                    b.ToTable("Brands", (string)null);
 
                     b.HasData(
                         new
@@ -402,7 +402,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -521,13 +521,16 @@ namespace Final_E_Commerce.Migrations
                     b.Property<string>("OtherId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("ReadByReceiver")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppuserId");
 
                     b.HasIndex("CommunicationId");
 
-                    b.ToTable("ChatMessages");
+                    b.ToTable("ChatMessages", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Communication", b =>
@@ -546,7 +549,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Communications");
+                    b.ToTable("Communications", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Messages", b =>
@@ -594,7 +597,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
@@ -627,7 +630,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Orders", b =>
@@ -681,7 +684,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.ProductComment", b =>
@@ -716,7 +719,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductComments");
+                    b.ToTable("ProductComments", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.ProductImage", b =>
@@ -740,7 +743,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
 
                     b.HasData(
                         new
@@ -956,7 +959,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
@@ -1086,7 +1089,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ProductTags");
+                    b.ToTable("ProductTags", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Slider", b =>
@@ -1117,7 +1120,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders");
+                    b.ToTable("Sliders", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Subjects", b =>
@@ -1136,7 +1139,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
 
                     b.HasData(
                         new
@@ -1178,7 +1181,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subscribers");
+                    b.ToTable("Subscribers", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Tag", b =>
@@ -1197,7 +1200,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
 
                     b.HasData(
                         new
@@ -1270,7 +1273,7 @@ namespace Final_E_Commerce.Migrations
                         .IsUnique()
                         .HasFilter("[AppUserId] IS NOT NULL");
 
-                    b.ToTable("UserDetails");
+                    b.ToTable("UserDetails", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.UserProductRatings", b =>
@@ -1297,7 +1300,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("UserProductRatings");
+                    b.ToTable("UserProductRatings", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.UserProfile", b =>
@@ -1341,7 +1344,7 @@ namespace Final_E_Commerce.Migrations
                         .IsUnique()
                         .HasFilter("[AppUserId] IS NOT NULL");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.UserSubscription", b =>
@@ -1360,7 +1363,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subscription");
+                    b.ToTable("Subscription", (string)null);
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Wishlist", b =>
@@ -1381,7 +1384,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlists", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1529,7 +1532,7 @@ namespace Final_E_Commerce.Migrations
 
                     b.HasIndex("WishlistsId");
 
-                    b.ToTable("ProductsWishlist");
+                    b.ToTable("ProductsWishlist", (string)null);
                 });
 
             modelBuilder.Entity("AppUserCommunication", b =>

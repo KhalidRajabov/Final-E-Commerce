@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string? Message { get; set; }
         public DateTime Date { get; set; }
+        public bool ReadByReceiver { get; set; }
 
         public string? OtherId { get; set; }
         public string? AppuserId { get; set; }
