@@ -14,6 +14,6 @@ namespace Final_E_Commerce.Hubs
             await Clients.User(receiverConnectionId).SendAsync("ReceiveMessage", user, message);
         }
 
-      /*  public string GetConnectionId() => Context.ConnectionId;*/
+        public string GetConnectionId() => Context.ConnectionId;
     }
 }

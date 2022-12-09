@@ -28,6 +28,7 @@ namespace Final_E_Commerce.ViewComponents
             ViewBag.UserId = "";
             ViewBag.UserRole = "";
             ViewBag.User = "Login";
+            ViewBag.UnreadMessageCount = 0;
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -47,7 +48,18 @@ namespace Final_E_Commerce.ViewComponents
                     }
                 }
                 ViewBag.RightCounter = RightCounter;
-
+                int unreadMessagesCount = 0;
+                bool comExist = await _context.Communications.AnyAsync(c=>c.AppUserId==user.Id||c.OtherAppUserId==user.Id);
+                if (comExist)
+                {
+                    var coms = await _context.Communications.Where(c=> c.AppUserId == user.Id || c.OtherAppUserId == user.Id).ToListAsync();
+                    foreach (var com in coms)
+                    {
+                        var unreadMessagesInThisCom = _context.ChatMessages.Where(c => c.OtherId == user.Id && c.ReadByReceiver != true &&c.CommunicationId==com.Id).Count();
+                        unreadMessagesCount+= unreadMessagesInThisCom;
+                    }
+                    ViewBag.UnreadMessagesCount = unreadMessagesCount;
+                }
             }
             ViewBag.BasketCount = 0;
             ViewBag.TotalPrice = 0;

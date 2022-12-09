@@ -4,14 +4,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (Model!=null)
-{
-    foreach (var user in Model)
+<div class="container">
+    @if (Model!=null)
     {
-        <a class="text-dark" asp-action="chat" asp-controller="messages" asp-route-receiverId="@user.Id">@user.Fullname</a>
+        foreach (var user in Model)
+        {
+            <div class="d-flex flex-row col-sm-12 col-md-6 col-lg-4">
+                <a class="text-dark col-12" asp-action="chat" asp-controller="messages" asp-route-receiverId="@user.Id"><span>@user.Fullname</span>
+                @if (ViewBag.UnreadMessagesCount>0)
+                {
+                    <span class="text-danger" style="margin-left: 10%">@ViewBag.UnreadMessagesCount</span>
+                }    
+                </a>
+                
+            </div>
+        }
     }
-}
-else
-{
-    <h3>Your message box is empty</h3>
-}
+    else
+    {
+        <h3>Your message box is empty</h3>
+    }
+</div>

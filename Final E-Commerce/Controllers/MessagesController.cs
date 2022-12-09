@@ -26,12 +26,14 @@ namespace Final_E_Commerce.Controllers
         {
             var currentUser=await _usermanager.GetUserAsync(User);
             ViewBag.everMessaged = false;
+            ViewBag.UnreadMessagesCount = 0;
             bool everMessaged = _context.Communications.Any(c=>c.AppUserId==currentUser.Id||c.OtherAppUserId==currentUser.Id);
             if (everMessaged)
             {
                 ViewBag.everMessaged = true;
                 List<AppUser> messagedWith = new List<AppUser>();
                 List<Communication> communication = await _context.Communications.Where(c => c.AppUserId == currentUser.Id || c.OtherAppUserId== currentUser.Id).ToListAsync();
+                int unreadMessagesCount = 0;
                 foreach (var msg in communication)
                 {
                     if (msg.AppUserId==currentUser.Id)
@@ -44,7 +46,11 @@ namespace Final_E_Commerce.Controllers
                         AppUser user = await _usermanager.FindByIdAsync(msg.AppUserId);
                         messagedWith.Add(user);
                     }
+                    var unreadMessagesInThisCom = _context.ChatMessages.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).Count();
+                    unreadMessagesCount += unreadMessagesInThisCom;
+                    ViewBag.UnreadMessagesCount = unreadMessagesCount;
                 }
+                
                 return View(messagedWith);
             }
             return View();
@@ -63,19 +69,20 @@ namespace Final_E_Commerce.Controllers
             Communication? communication = await _context?.Communications?.FirstOrDefaultAsync(c => (c.AppUserId == currentUser.Id && c.OtherAppUserId == receiverId) || (c.OtherAppUserId == currentUser.Id && c.AppUserId == receiverId));
             if (communication != null)
             {
-                List<ChatMessage>? messages = await _context?.ChatMessages?.OrderBy(c => c.Date).Where(c=>c.CommunicationId==communication.Id).ToListAsync();
+                List<ChatMessage>? messages = await _context?.ChatMessages?.OrderByDescending(c => c.Date).Where(c=>c.CommunicationId==communication.Id).ToListAsync();
                 bool unreadMessages = await _context?.ChatMessages?.OrderByDescending(c => c.Date)
                     .Where(c => c.CommunicationId == communication.Id && c.OtherId == currentUser.Id && c.ReadByReceiver != true)
                     .AnyAsync();
                 if (unreadMessages)
                 {
-                    var unreadMessagesByThisUser = await _context?.ChatMessages?.OrderByDescending(c => c.Date)
+                    var unreadMessagesByThisUser = await _context?.ChatMessages?
                         .Where(c => c.CommunicationId == communication.Id && c.OtherId == currentUser.Id && c.ReadByReceiver != true)
                         .ToListAsync();
                     foreach (var item in unreadMessagesByThisUser)
                     {
                         item.ReadByReceiver = true;
                     }
+                    await _context.SaveChangesAsync();
                 }
                 return View(messages);
             }

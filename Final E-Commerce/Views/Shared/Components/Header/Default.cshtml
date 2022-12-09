@@ -26,12 +26,25 @@
                                 else{
                                     <button class="btn-dark dropdown-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @ViewBag.User
+                                    @if (ViewBag.UnreadMessagesCount>0)
+                                    {
+                                        <span class="text-danger">@ViewBag.UnreadMessagesCount</span>
+                                    }
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                                     <a class="dropdown-item text-dark" asp-action="index" asp-controller="user">Profile</a>
                                     <a class="dropdown-item text-dark" asp-action="index" asp-controller="basket">Basket</a>
-                                    <a class="dropdown-item text-dark" asp-action="index" asp-controller="messages">Messages</a>
+                                    <a class="dropdown-item text-dark d-flex flex-row justify-content-between" asp-action="index" asp-controller="messages"><span>Messages</span>  
+                                        @if (ViewBag.UnreadMessagesCount>0)
+                                        {
+                                            <span class="text-danger">@ViewBag.UnreadMessagesCount</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@ViewBag.UnreadMessagesCount</span>
+                                        }
+                                    </a>
                                     <a class="dropdown-item text-dark" asp-action="logout" asp-controller="account" asp-route-ReturnUrl="@Context.Request.Path">Logout</a>
                                     </div>
                                 }
@@ -150,7 +163,7 @@
                                 </li>
                             }
                         }
-                        else{
+                        else if(Model.BasketProducts.Count<=0){
                             <li>Your basket is empty</li>
                         }
                     </ul>

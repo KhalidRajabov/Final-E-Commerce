@@ -12,8 +12,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
         span.innerText = message;
         div.append(span);
         li.append(div);
-        document.getElementById("messagesList").appendChild(li);
-        document.getElementById("messagesList").appendChild(li);
+        document.getElementById("messagesList").prepend(li);
         let audio = document.getElementById("incomingMsg");
         audio.play();
         console.log("receive message method")
@@ -21,7 +20,11 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 
 
-
+    connection.start().then(function () {
+        connection.invoke("GetConnectionId");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
 
 document.getElementById("sendToUser").addEventListener("click", function (event) {
     var user = document.getElementById("userInput").value;
@@ -36,7 +39,7 @@ document.getElementById("sendToUser").addEventListener("click", function (event)
     span.innerText = message.value;
     div.append(span);
     li.append(div);
-    document.getElementById("messagesList").appendChild(li);
+    document.getElementById("messagesList").prepend(li);
     connection.invoke("SendToUser", user, receiverConnectionId, message.value).catch(function (err) {
         return console.error(err.toString());
     });
