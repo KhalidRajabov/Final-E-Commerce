@@ -7,7 +7,8 @@ namespace Final_E_Commerce.ViewModels
 	{
 		[Required, MinLength(8), MaxLength(16), DataType(DataType.Password),]
 		public string? NewPassword { get; set; }
-        [Required,MinLength(8), MaxLength(16), DataType(DataType.Password), Compare("Password", ErrorMessage = "Confirmation password is wrong")]
+        [Required,MinLength(8), MaxLength(16), DataType(DataType.Password), Compare("NewPassword", ErrorMessage = "Confirmation password is wrong")]
         public string? ConfirmPassword { get; set; }
-    }
+		public string? UserId { get; set; }
+	}
 }

@@ -2640,9 +2640,13 @@ label {
 
 
 #messagesList {
-    max-height: 450px;
+    max-height: 290px;
+    min-height:290px;
     overflow: scroll;
     overflow-x: hidden;
+    transition: 0.3s;
+    background-color: black;
+    scroll-behavior:smooth;
 }
     #messagesList::-webkit-scrollbar-track {
         box-shadow: inset 0 0 5px grey;
@@ -2654,7 +2658,10 @@ label {
     }
 /* Handle */
     #messagesList::-webkit-scrollbar-thumb {
-        background: rgb(255,65,53);
+        background: grey;
         height: 15px;
         border-radius: 10px;
     }
+.message{
+    word-wrap: break-word;
+}

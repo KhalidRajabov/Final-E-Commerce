@@ -1,4 +1,4 @@
-﻿@model List<AppUser>
+﻿@model List<ReceivedMsgVM>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,13 +7,13 @@
 <div class="container">
     @if (Model!=null)
     {
-        foreach (var user in Model)
+        foreach (var item in Model.OrderByDescending(c=>c.LastMessageDate))
         {
             <div class="d-flex flex-row col-sm-12 col-md-6 col-lg-4">
-                <a class="text-dark col-12" asp-action="chat" asp-controller="messages" asp-route-receiverId="@user.Id"><span>@user.Fullname</span>
-                @if (ViewBag.UnreadMessagesCount>0)
+                <a class="text-dark col-12" asp-action="chat" asp-controller="messages" asp-route-receiverId="@item.Sender.Id"><span>@item.Sender.Fullname</span>
+                @if (item.UnreadMessageCount>0)
                 {
-                    <span class="text-danger" style="margin-left: 10%">@ViewBag.UnreadMessagesCount</span>
+                    <span class="text-danger" style="margin-left: 10%">@item.UnreadMessageCount</span>
                 }    
                 </a>
                 

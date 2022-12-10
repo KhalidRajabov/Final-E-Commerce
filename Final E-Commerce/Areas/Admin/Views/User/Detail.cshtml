@@ -39,6 +39,7 @@
             <li class="list-group-item">Email: @Model.Email</li>
             <li class="list-group-item">Phone number: @(Model.Phone == null ? "Not entered" : $"{Model.Phone}")</li>
             <li class="list-group-item">Account activated: @(Model.EmailConfirmed == false ? "Not activated yet" : "Activated")</li>
+            <li class="list-group-item"><a asp-action="ChangePassword" asp-route-userId="@Model.Id">Change password</a></li>
         </ul>
 
         @if (Model.Orders.Count < 1)

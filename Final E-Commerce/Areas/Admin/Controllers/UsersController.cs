@@ -94,6 +94,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             UserInfoVM? userVM = new UserInfoVM();
             var roles = await _userManager.GetRolesAsync(user);
             userVM.Role = roles.ToList();
+            userVM.Id= id;
             userVM.Fullname = user.Fullname;
             userVM.Email = user.Email;
             userVM.Phone = user.PhoneNumber;
@@ -189,7 +190,45 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
             return PartialView("_Users", userVM);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword(string userId)
+        {
+            ViewBag.UserId = userId;
+            return View();
+        }
 
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM password)
+        {
+            AppUser user = await _userManager.FindByIdAsync(password.UserId);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, token, password.NewPassword);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View();
+            }
+            var token2 = "";
+            string subject = "Şifrə yenilənməsi!";
+            EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+            token2 = $"Salam {user.Fullname}. Parolunuz admin tərəfindən yeniləndi. <br>\n" +
+                $"Yeni parol: {password.NewPassword}\n" +
+                $"Hesaba keçid üçün <a href='http://rammkhalid-001-site1.itempurl.com/account/login'>Login ol</a>";
+            var emailResult = helper.SendNews(user.Email, token2, subject);
+
+            string? discountemail = Url.Action("ConfirmEmail", "Account", new
+            {
+                token2
+            }, Request.Scheme);
+
+
+            return RedirectToAction("index");
+        }
 
     }
 }

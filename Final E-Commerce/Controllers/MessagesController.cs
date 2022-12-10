@@ -1,5 +1,6 @@
 ﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
+using Final_E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,33 +26,36 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> Index()
         {
             var currentUser=await _usermanager.GetUserAsync(User);
-            ViewBag.everMessaged = false;
-            ViewBag.UnreadMessagesCount = 0;
-            bool everMessaged = _context.Communications.Any(c=>c.AppUserId==currentUser.Id||c.OtherAppUserId==currentUser.Id);
+            bool everMessaged = await _context?.Communications.AnyAsync(c=>c.AppUserId==currentUser.Id||c.OtherAppUserId==currentUser.Id);
             if (everMessaged)
             {
-                ViewBag.everMessaged = true;
-                List<AppUser> messagedWith = new List<AppUser>();
+                everMessaged = true;
+                List<ReceivedMsgVM> receivedMsgVMs= new List<ReceivedMsgVM>();
                 List<Communication> communication = await _context.Communications.Where(c => c.AppUserId == currentUser.Id || c.OtherAppUserId== currentUser.Id).ToListAsync();
-                int unreadMessagesCount = 0;
+                
                 foreach (var msg in communication)
                 {
+                    ReceivedMsgVM receivedVM = new ReceivedMsgVM();
                     if (msg.AppUserId==currentUser.Id)
                     {
-                        AppUser user = await _usermanager.FindByIdAsync(msg.OtherAppUserId);
-                        messagedWith.Add(user);
+                        receivedVM.Sender = await _usermanager.FindByIdAsync(msg.OtherAppUserId);
                     }
                     else if (msg.OtherAppUserId==currentUser.Id)
                     {
-                        AppUser user = await _usermanager.FindByIdAsync(msg.AppUserId);
-                        messagedWith.Add(user);
+                        receivedVM.Sender= await _usermanager.FindByIdAsync(msg.AppUserId);
+                        
                     }
-                    var unreadMessagesInThisCom = _context.ChatMessages.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).Count();
-                    unreadMessagesCount += unreadMessagesInThisCom;
-                    ViewBag.UnreadMessagesCount = unreadMessagesCount;
+                    int unreadMessagesInThisCom = _context.ChatMessages.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).Count();
+                    ChatMessage? lastUnreadMsg=await _context.ChatMessages.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).OrderByDescending(c=>c.Date).Take(1).FirstOrDefaultAsync();
+                    
+                    receivedVM.UnreadMessageCount = unreadMessagesInThisCom;
+                    if (unreadMessagesInThisCom > 0)
+                    {
+                        receivedVM.LastMessageDate = lastUnreadMsg.Date;
+                    }
+                    receivedMsgVMs.Add(receivedVM);
                 }
-                
-                return View(messagedWith);
+                return View(receivedMsgVMs);
             }
             return View();
         }
@@ -66,10 +70,11 @@ namespace Final_E_Commerce.Controllers
             ViewBag.CurrentUserId = currentUser.Id;
             ViewBag.ReceiverId = receiverId;
             ViewBag.ReceiverName = receiver.Fullname;
+            ChatVM chatVM = new ChatVM();
             Communication? communication = await _context?.Communications?.FirstOrDefaultAsync(c => (c.AppUserId == currentUser.Id && c.OtherAppUserId == receiverId) || (c.OtherAppUserId == currentUser.Id && c.AppUserId == receiverId));
             if (communication != null)
             {
-                List<ChatMessage>? messages = await _context?.ChatMessages?.OrderByDescending(c => c.Date).Where(c=>c.CommunicationId==communication.Id).ToListAsync();
+                List<ChatMessage>? messages = await _context?.ChatMessages?.OrderBy(c => c.Date).Where(c=>c.CommunicationId==communication.Id).ToListAsync();
                 bool unreadMessages = await _context?.ChatMessages?.OrderByDescending(c => c.Date)
                     .Where(c => c.CommunicationId == communication.Id && c.OtherId == currentUser.Id && c.ReadByReceiver != true)
                     .AnyAsync();
@@ -84,9 +89,10 @@ namespace Final_E_Commerce.Controllers
                     }
                     await _context.SaveChangesAsync();
                 }
-                return View(messages);
+                chatVM.ChatMessages = messages;
+                return View(chatVM);
             }
-            return View();
+            return View(chatVM);
         }
 
 

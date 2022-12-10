@@ -1,56 +1,48 @@
-﻿@model List<ChatMessage>
+﻿@model ChatVM
 @{
     ViewData["Title"] = "Chat";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container">
-<h3>Messages</h3>
+    <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@ViewBag.ReceiverId">
+        <h3>@ViewBag.ReceiverName</h3>
+    </a>
 
-<div class="container">
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-2">User</div>
-        <div class="col-4">@User.Identity.Name</div>
-        <div class="col-4"><input type="hidden" id="userInput" value="@User.Identity.Name" /></div>
-    </div>
-    <div class="row">
-        <div class="col-2">Receiver</div>
-        <div class="col-4">@ViewBag.ReceiverName</div>
-        <div class="col-4"><input type="hidden" id="receiverId" value="@ViewBag.ReceiverId"/></div>
-    </div>
 
-    <div class="row">
-        <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">
-            <input type="button" id="sendToUser" value="Send Message" />&nbsp;&nbsp;
-        </div>
-    </div>
-</div>
 <div class="row d-flex flex-column">
-    @if (Model!=null)
+    @if (Model.ChatMessages!=null)
         {
             <div class="row">
                 <div class="col-12">
                     <ul id="messagesList" class="col-12" >
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.ChatMessages)
                         {
                             if (ViewBag.CurrentUserId==item.AppuserId)
                             {
                                 <li class="col-12 mt-1 d-flex flex-column text-end " >
-                                    <div class="d-flex flex-column bg-success col-8 text-light p-2 align-self-end" style="border-radius:10px;">
-                                        <span>@item.Message</span>
-                                        <span style="font-size:70%">@item.Date</span>
+                                    <div class="message d-flex flex-column bg-success col-8 text-light p-1 align-self-end " style="border-radius:10px;">
+                                        <span style="margin-right:15px;">@item.Message</span>
+                                        <div class="col-12">
+                                            <span style="font-size:70%">@item.Date</span>
+                                            
+                                                @if (!item.ReadByReceiver)
+                                                {
+                                                    <i class="fa-solid fa-eye-slash"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa-solid fa-eye align-self-end"></i>
+                                                }
+                                            </div>
+                                        
+
                                     </div>
                                 </li>
                             }
                             else{
                                 <li class="col-12 d-flex mt-1 flex-column text-start " >
-                                    <div class="d-flex flex-column bg-secondary col-8 text-info p-2" style="border-radius:10px;">
+                                    <div class="message d-flex flex-column bg-secondary col-8 text-info p-1 " style="border-radius:10px;">
                                         <span>@item.Message</span>
                                         <span style="font-size:70%">@item.Date</span>
                                     </div>
@@ -71,6 +63,32 @@
                 </div>
             </div>
         }
+    </div>
+
+    <div class="container">
+        <div class="row" id="typing"></div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-2">User</div>
+            <div class="col-4">@User.Identity.Name</div>
+            <div class="col-4"><input type="hidden" id="userInput" value="@User.Identity.Name" /></div>
+        </div>
+        <div class="row">
+            <div class="col-2">Receiver</div>
+            <div class="col-4">@ViewBag.ReceiverName</div>
+            <div class="col-4"><input type="hidden" id="receiverId" value="@ViewBag.ReceiverId" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2">Message</div>
+            <div class="col-4"><input type="text" id="messageInput" /></div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">
+                <input type="button" id="sendToUser" value="Send Message" />&nbsp;&nbsp;
+            </div>
+        </div>
     </div>
 </div>
 
