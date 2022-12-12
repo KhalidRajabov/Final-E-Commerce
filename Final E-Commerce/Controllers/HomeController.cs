@@ -36,7 +36,7 @@ namespace Final_E_Commerce.Controllers
             }
             else
             {
-                string str = null;
+                string? str = null;
                 return View(_homeRepository.Index(str));
             }
         }

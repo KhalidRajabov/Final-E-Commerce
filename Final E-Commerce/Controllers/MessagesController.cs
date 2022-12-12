@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -66,6 +67,10 @@ namespace Final_E_Commerce.Controllers
         {
             var currentUser = await _usermanager.GetUserAsync(User);
             var receiver = await _usermanager.FindByIdAsync(receiverId);
+            if (receiver==null||receiverId==null)
+            {
+                return Ok($"User with the id of {receiverId} not found");
+            }
             ViewBag.Username = currentUser.UserName;
             ViewBag.CurrentUserId = currentUser.Id;
             ViewBag.ReceiverId = receiverId;
@@ -94,6 +99,26 @@ namespace Final_E_Commerce.Controllers
             }
             return View(chatVM);
         }
+
+        //realkhalid 887?
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> MessageRead(string username, string receiverId)
+        {
+            AppUser user = await _usermanager.FindByNameAsync(username);
+            Communication? communication = await _context?.Communications?
+                .FirstOrDefaultAsync(c => (c.AppUserId == user.Id && c.OtherAppUserId == receiverId) || (c.OtherAppUserId == user.Id && c.AppUserId == receiverId));
+            var unreadMessagesByThisUser = await _context?.ChatMessages?
+                        .Where(c => c.CommunicationId == communication.Id && c.OtherId == user.Id && c.ReadByReceiver != true)
+                        .ToListAsync();
+            foreach (var item in unreadMessagesByThisUser)
+            {
+                item.ReadByReceiver = true;
+            }
+            await _context.SaveChangesAsync();
+            return Ok("Last message read by user is set to be 'read' and saved in database");
+        }
+
 
 
         [Authorize]
@@ -134,7 +159,7 @@ namespace Final_E_Commerce.Controllers
                 message.OtherId= receiverId;
                 await _context.ChatMessages.AddAsync(message);
                 await _context.SaveChangesAsync();
-                return Ok("successfull attached to existing communication");
+                return Ok("message successfully attached to the existing communication");
             }
         }
     }

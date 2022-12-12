@@ -9,14 +9,21 @@
     {
         foreach (var item in Model.OrderByDescending(c=>c.LastMessageDate))
         {
-            <div class="d-flex flex-row col-sm-12 col-md-6 col-lg-4">
-                <a class="text-dark col-12" asp-action="chat" asp-controller="messages" asp-route-receiverId="@item.Sender.Id"><span>@item.Sender.Fullname</span>
+            <div class="d-flex flex-row col-sm-12 col-md-6 col-lg-4 mt-2 ">
                 @if (item.UnreadMessageCount>0)
                 {
-                    <span class="text-danger" style="margin-left: 10%">@item.UnreadMessageCount</span>
-                }    
-                </a>
-                
+                    <a class="col-12 p-3 messageSender d-flex justify-content-between" asp-action="chat" asp-controller="messages" asp-route-receiverId="@item.Sender.Id">
+                        <span>@item.Sender.Fullname</span>
+                        <span class="text-danger" style="font-weight:600; font-size:130%;">@item.UnreadMessageCount</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="col-12 p-3 messageSender " asp-action="chat" asp-controller="messages" asp-route-receiverId="@item.Sender.Id">
+                        <span>@item.Sender.Fullname</span>
+                    </a>
+                }
+
             </div>
         }
     }
