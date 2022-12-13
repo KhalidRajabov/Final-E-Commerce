@@ -13,6 +13,13 @@ namespace Final_E_Commerce.ViewModels
         public List<ProductComment>? Comments { get; set; }
         public List<AppUser>? Users { get; set; }
         public int UsersWantIt { get; set; }
+        public double Just { get; set; }
+        public int RatedBy { get; set; }
+        public bool ExistWishlist { get; set; }
+        public bool IsRated { get; set; }
+        public bool DidUserBuyThis { get; set; }
+        public string AppUserId { get; set; }
+        public int RightCounter { get; set; }
 
     }
 }

@@ -5,7 +5,7 @@
 }
 
 <div class="container">
-    <a asp-action="ProfilePage" asp-controller="user" asp-route-id="@ViewBag.ReceiverId">
+    <a class="receiverName" asp-action="ProfilePage" asp-controller="user" asp-route-id="@ViewBag.ReceiverId">
         <h3>@ViewBag.ReceiverName</h3>
     </a>
 
@@ -22,7 +22,7 @@
                             {
                                 <li class="col-12 mt-1 d-flex flex-column text-end " >
                                     <div class="message d-flex flex-column bg-success col-8 text-light p-1 align-self-end " style="border-radius:10px;">
-                                        <span style="margin-right:15px;">@item.Message</span>
+                                        <span style="margin-right:15px; text-align: justify">@item.Message</span>
                                         <div class="col-12">
                                             <span style="font-size:70%">@item.Date</span>
                                             

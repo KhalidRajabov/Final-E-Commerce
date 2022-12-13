@@ -128,7 +128,7 @@
                                     <li class="list-inline-item"> <i class="fa fa-star fa-2x"></i></li>
                                 }
                             }
-                            <li class="list-inline-item" style="font-size: 120%">(@decimalString) Rated by @ViewBag.RatedBy users</li>
+                            <li class="list-inline-item" style="font-size: 120%">(@decimalString) Rated by @Model.RatedBy users</li>
                         }
                         else{
                             <span>0 Rating</span>
@@ -141,7 +141,7 @@
                             <li class="list-inline-item" style="font-size: 120%"><a href="#comment-section" class="text-gray ml-3">( 0 Comments)</a></li>
                         }
                     </ul>
-                    @if (User.Identity.IsAuthenticated && ViewBag.IsRated)
+                    @if (User.Identity.IsAuthenticated && Model.IsRated)
                     {
                         <a asp-action="removerating" asp-controller="home" asp-route-id="@Model.Product.Id" asp-route-ReturnUrl="@Context.Request.Path" class="text-danger mb-2" style="font-weight: 700">Remove rating</a>
                     }
@@ -154,7 +154,7 @@
                         <h4 style="color:black">$@Model.Product.Price</h4>
                     }
                     
-                    @if (User.Identity.IsAuthenticated && User.Identity.Name!=Model.Product.AppUser.UserName && !ViewBag.IsRated && ViewBag.DidUserBuyThis)
+                    @if (User.Identity.IsAuthenticated && User.Identity.Name!=Model.Product.AppUser.UserName && !Model.IsRated && Model.DidUserBuyThis)
                     {
                         <div class="d-flex flex-column mt-5">
                             <div style="display:flex;flex-direction:row !important">
@@ -168,7 +168,7 @@
                             <button id="rate-btn" class="btn btn-warning text-light col-5 mt-2"  data-id="@Model.Product.Id">Rate!</button>
                         </div>
                     }
-                    else if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Product.AppUser.UserName && ViewBag.DidUserBuyThis==false)
+                    else if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Product.AppUser.UserName && Model.DidUserBuyThis==false)
                     {
                         <div class="d-flex flex-column mt-1">
                             <h4 class="text-danger">Sorry, you can not rate this item unless you buy it</h4>
@@ -188,7 +188,7 @@
                         <br>
                         <a class="btn btn-danger text-light mb-4 add" data-id="@Model.Product.Id" > add to cart</a>
                     </div>
-                    @if (!ViewBag.ExistWishlist)
+                    @if (!Model.ExistWishlist)
                     {
                         <a class="btn btn-success add-to-wishlist text-light" data-id="@Model.Product.Id" >Add to wishlist</a>
                     }
@@ -434,7 +434,7 @@
                                             <a >@comment.Author <span class="text-danger">(Not a member) </span>
                                             </a>
                                         }
-                                        @if (ViewBag.RightCounter > 0 || (User.Identity.IsAuthenticated && comment.AppUserId == ViewBag.AppUserId))
+                                        @if (Model.RightCounter > 0 || (User.Identity.IsAuthenticated && comment.AppUserId == Model.AppUserId))
                                         {
                                             <a class="text-danger mr-3 pro-deleteComment" style="cursor: pointer" data-id="@comment.Id">Delete</a>
                                         }

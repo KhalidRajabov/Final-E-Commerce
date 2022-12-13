@@ -11,5 +11,6 @@ namespace Final_E_Commerce.ViewModels
         public ProductComment? ProductComment { get; set; }
         public int RightCounter { get; set; }
         public string? UserId { get; set; }
+        public string? AppUserId { get; set; }
     }
 }

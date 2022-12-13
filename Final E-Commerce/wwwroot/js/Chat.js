@@ -10,8 +10,8 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
     
 
     //if other user is typing, we should know that he is typing.
-    //we need a global sign in functions to know whether user is still typing or not.
-    //we have a variable named typeCount, everytime other user is pressing a key, variable becomes 1
+    //we need a global sign for functions to know whether user is still typing or not.
+    //we declare a variable named typeCount, everytime other user is pressing a key, variable becomes 1
     //after each key pressed, we start counting down to 5 seconds
     //after 5 seconds if no key wa pressed by other user, we make the variable 0
     // if the value of variable is 1, it means other user is typing, so we add "typing" message to the chat
@@ -69,6 +69,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
         div.classList.add("d-flex", "flex-column", "bg-secondary", "col-8", "text-info", "p-2", "align-self-start")
         var span = document.createElement("span");
         span.style.wordBreak = "break-word";
+        span.style.textAlign = "justify";
         span.innerText = message;
         var span2 = document.createElement("span");
 
@@ -120,7 +121,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
         //now we send message to our controller which will save messages, time and relation between users.
         var myUserName = document.getElementById("userInput").value;
-        axios.post("https://localhost:44393/messages/MessageRead?username=" + myUserName + "&receiverId=" + receiverId)
+        axios.post("http://rammkhalid-001-site1.itempurl.com/messages/MessageRead?username=" + myUserName + "&receiverId=" + receiverId)
             .then(function (response) {
                 console.log(response)
             })
@@ -229,6 +230,7 @@ document.getElementById("sendToUser").addEventListener("click", function (event)
     span.style.wordBreak = "break-word";
     span.innerText = message.value;
     span.style.marginRight = "15px";
+    span.style.textAlign = "justify";
     var span2 = document.createElement("span");
     var m = new Date();
     var dateString =
@@ -295,7 +297,7 @@ document.getElementById("sendToUser").addEventListener("click", function (event)
 
 
         //now we send message to our controller which will save messages, time and relation between users.
-        axios.post("https://localhost:44393/messages/send?text=" + message.value + "&receiverId=" + receiverConnectionId)
+        axios.post("http://rammkhalid-001-site1.itempurl.com/messages/send?text=" + message.value + "&receiverId=" + receiverConnectionId)
             .then(function (response) {
                 console.log(response)
             })
