@@ -121,9 +121,13 @@
                             {
                                 <li class="list-inline-item"> <i class="fa fa-star fa-2x" style="color:orange;"></i></li>
                             }
-                            if (Math.Floor(Model.Product.Rating)<5)
+                            @if (Math.Floor(Model.Product.Rating)/Model.Product.Rating!=1)
                             {
-                                @for (int i = 0; i < 5-Math.Floor(Model.Product.Rating); i++)
+                                <li class="list-inline-item"> <i class="fa-solid fa-star-half-stroke" style="color:orange; font-size:200%"></i></li>
+                            }
+                            if (Math.Ceiling(Model.Product.Rating)<5)
+                            {
+                                @for (int i = 0; i < 5-Math.Ceiling(Model.Product.Rating); i++)
                                 {
                                     <li class="list-inline-item"> <i class="fa fa-star fa-2x"></i></li>
                                 }
@@ -131,7 +135,8 @@
                             <li class="list-inline-item" style="font-size: 120%">(@decimalString) Rated by @Model.RatedBy users</li>
                         }
                         else{
-                            <span>0 Rating</span>
+                            <li class="list-inline-item"> <span>0 Rating</span></li>
+                            
                         }
                         @if (Model.Product.ProductComment!=null)
                         {

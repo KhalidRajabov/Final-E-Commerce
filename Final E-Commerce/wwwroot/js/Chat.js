@@ -1,8 +1,8 @@
 ﻿(function ($) {
     //defineing connection
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-    //var siteUrl = `http://rammkhalid-001-site1.itempurl.com/`;
-    var siteUrl = `https://localhost:44393/`;
+    var siteUrl = `http://rammkhalid-001-site1.itempurl.com/`;
+    //var siteUrl = `https://localhost:44393/`;
 
 
     var element = document.getElementById("messagesList");
