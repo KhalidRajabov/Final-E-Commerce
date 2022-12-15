@@ -1,14 +1,13 @@
 ﻿using Final_E_Commerce.DAL;
 using Final_E_Commerce.Entities;
-using Final_E_Commerce.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Final_E_Commerce.Helper;
 using Final_E_Commerce.İnterfaces;
+using Final_E_Commerce.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 namespace Final_E_Commerce.Controllers
 {
@@ -28,34 +27,62 @@ namespace Final_E_Commerce.Controllers
             _signInManager = signInManager;
             _config = config;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(_homeRepository.Index(User.Identity.Name.ToString()));   
+            string? username=null;
+            if (User.Identity.IsAuthenticated)
+                username = User.Identity.Name;
+            return View(_homeRepository.Index(username));
         }
 
 
-        public async Task<IActionResult> Detail(int? id)
+        public IActionResult Detail(int? id)
         {
-            if (_homeRepository.ExistProducts(id))
-            {
-                return View(_homeRepository.Detail(id, User.Identity.Name.ToString()));
-            }
-            else
+            string? username = null;
+            if (User.Identity.IsAuthenticated)
+                username = User.Identity.Name;
+            if (!_homeRepository.ExistProducts(id))
             {
                 return RedirectToAction("error");
             }
+            return View(_homeRepository.Detail(id, username));
+            
         }
 
 
         [Authorize]
-        public async Task<IActionResult> Rate(int Rating, int ProductId)
+        public IActionResult Rate(int Rating, int ProductId)
         {
-            return Ok(_homeRepository.Rate(Rating, ProductId, User.Identity.Name.ToString()));
+            string? username = null;
+            if (User.Identity.IsAuthenticated)
+                username = User.Identity.Name;
+            return Ok(_homeRepository.Rate(Rating, ProductId, username));
         }
         [Authorize]
-        public async Task<IActionResult> RemoveRating(int id, string ReturnUrl)
+        public IActionResult RemoveRating(int id, string ReturnUrl)
         {
-            return Redirect(_homeRepository.RemoveRating(id, ReturnUrl, User.Identity.Name.ToString()));
+            string? username = null;
+            if (User.Identity.IsAuthenticated)
+                username = User.Identity.Name;
+            return Redirect(_homeRepository.RemoveRating(id, ReturnUrl, username));
+        }
+
+        [Authorize]
+        public IActionResult DeleteComment(int id)
+        {
+            string? username = null;
+            if (User.Identity.IsAuthenticated)
+                username = User.Identity.Name;
+            
+            return Ok(_homeRepository.DeleteComment(id, username));
+        }
+        public IActionResult Brands(int id)
+        {
+            string? username = null;
+            if (User.Identity.IsAuthenticated)
+                username = User.Identity.Name;
+            
+            return View(_homeRepository.Brands(id, username));
         }
 
         public IActionResult Error()
@@ -64,37 +91,10 @@ namespace Final_E_Commerce.Controllers
         }
 
 
+
         public async Task<IActionResult> Shop(ShopVM? filter)
         {
 
-            #region Discount/Ban operation
-            List<Products>? AllProducts = await _context.Products?
-              .Where(p => p.DiscountPercent > 0).ToListAsync();
-
-            foreach (var product in AllProducts)
-            {
-                if (product.DiscountUntil < DateTime.Now.AddHours(12))
-                {
-                    product.DiscountUntil = null;
-                    product.DiscountPercent = 0;
-                    product.DiscountPrice = 0;
-                    await _context?.SaveChangesAsync();
-                }
-            }
-            if (User.Identity.IsAuthenticated)
-            {
-                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                var userroles = await _usermanager.GetRolesAsync(user);
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        await _signInManager.SignOutAsync();
-                        return RedirectToAction("error", "home");
-                    }
-                }
-            }
-            #endregion
 
             #region SelectItems
             ViewBag.AlphabeticOrder = new List<string>() { "A-Z", "Z-A" };
@@ -180,121 +180,29 @@ namespace Final_E_Commerce.Controllers
 
      
         [HttpPost]
-        public async Task<IActionResult> PostComment(int ProductId, string comment, string? author)
+        public IActionResult PostComment(int ProductId, string comment, string? author)
         {
+            string? username = null;
             if (User.Identity.IsAuthenticated)
-            {
-                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-                var userroles = await _usermanager.GetRolesAsync(AppUser);
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        await _signInManager.SignOutAsync();
-                        return RedirectToAction("error", "home");
-                    }
-                }
-            }
-            Products? product = await _context?.Products?
-                .Include(p => p.AppUser)
-                .FirstOrDefaultAsync(p => p.Id == ProductId);
-            ProductComment NewComment = new ProductComment();
-            CommentsVM commentVM = new CommentsVM();
-            if (User.Identity.IsAuthenticated)
-            {
-                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                NewComment.AppUserId = user.Id;
-                commentVM.UserId = user.Id;
-                commentVM.User = user;
-            }
-            else
-            {
-                NewComment.Author = author;
-            }
-            NewComment.Content = comment;
-            NewComment.ProductId = product.Id;
-            NewComment.Date = DateTime.Now.AddHours(12);
-            await _context.AddAsync(NewComment);
-            await _context.SaveChangesAsync();
-            commentVM.ProductComment = NewComment;
-            return PartialView("_ProductSingleComment", commentVM);
+                username = User.Identity.Name;
+            
+            return PartialView("_ProductSingleComment", _homeRepository.PostComment(ProductId, comment, author, username));
         }
-        [Authorize]
-        public async Task<IActionResult> DeleteComment(int id)
+        
+        public IActionResult LoadComments(int skip, int? BlogId)
         {
-            return Ok(_homeRepository.DeleteComment(id, User.Identity.Name.ToString()));
+            string? username = null;
+            if (User.Identity.IsAuthenticated)
+                username = User.Identity.Name;
+            
+            return PartialView("_ProductComments", _homeRepository.LoadComments(skip, BlogId, username));
         }
 
-        public async Task<IActionResult> LoadComments(int skip, int? BlogId)
+        
+
+        public IActionResult Contact()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-                var userroles = await _usermanager.GetRolesAsync(AppUser);
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        await _signInManager.SignOutAsync();
-                        return RedirectToAction("error", "home");
-                    }
-                }
-            }
-
-            List<ProductComment>? comments = await _context?.ProductComments?
-                .Include(b => b.User)
-                .Where(bc => bc.ProductId == BlogId && !bc.IsDeleted)
-                .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToListAsync();
-            CommentsVM commentsVM = new CommentsVM
-            {
-                ProductComments = comments
-            };
-            if (User.Identity.IsAuthenticated)
-            {
-                AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
-                ViewBag.AppUserId = user.Id;
-                int RightCounter = 0;
-                var roles = await _usermanager.GetRolesAsync(user);
-                //if requester is an admin or editor, he will be able to delete comment
-                foreach (var item in roles)
-                {
-                    if (item.ToLower().Contains("admin") || item.ToLower().Contains("editor") || item.ToLower().Contains("moderator"))
-                    {
-                        RightCounter++;
-                    }
-                }
-
-                //if requester is not an admin but a user and finds any of his comment among those,
-                //he will be able to delete his own comment
-                commentsVM.UserId = user.Id;
-
-
-                commentsVM.RightCounter = RightCounter;
-            }
-            return PartialView("_ProductComments", commentsVM);
-        }
-
-        public async Task<IActionResult> Brands(int id)
-        {
-            return View(_homeRepository.Brands(id, User.Identity.Name.ToString()));
-        }
-
-        public async Task<IActionResult> Contact()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
-                var userroles = await _usermanager.GetRolesAsync(AppUser);
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        await _signInManager.SignOutAsync();
-                        return RedirectToAction("error", "home");
-                    }
-                }
-            }
-
+            //need to test if user is banned or not
             return View();
         }
         [HttpPost]

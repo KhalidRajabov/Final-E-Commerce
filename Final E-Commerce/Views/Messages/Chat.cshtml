@@ -20,9 +20,9 @@
                         {
                             if (ViewBag.CurrentUserId==item.AppuserId)
                             {
-                                <li class="col-12 mt-1 d-flex flex-column text-end " >
-                                    <div class="message d-flex flex-column bg-success col-8 text-light p-1 align-self-end " style="border-radius:10px;">
-                                        <span style="margin-right:15px; text-align: justify">@item.Message</span>
+                                <li class="mt-1 d-flex flex-column text-end " >
+                                    <div class="message d-flex flex-column bg-success text-light p-1 align-self-end " style="border-radius:10px; max-width:60%;min-width:20%">
+                                        <span style="margin-right:15px; text-align: right">@item.Message</span>
                                         <div class="col-12">
                                             <span style="font-size:70%">@item.Date</span>
                                             
@@ -41,8 +41,8 @@
                                 </li>
                             }
                             else{
-                                <li class="col-12 d-flex mt-1 flex-column text-start " >
-                                    <div class="message d-flex flex-column bg-secondary col-8 text-info p-1 " style="border-radius:10px;">
+                                <li class=" d-flex mt-1 flex-column text-start " >
+                                    <div class="message d-flex flex-column bg-secondary align-self-start text-info p-1 " style="border-radius:10px; max-width:60%;min-width:20%">
                                         <span>@item.Message</span>
                                         <span style="font-size:70%">@item.Date</span>
                                     </div>
@@ -80,10 +80,14 @@
 
         <div class="row">
             <div class="col-2">Message</div>
-            <div class="col-4"><input type="text" id="messageInput" /></div>
+            <div class="col-7">
+                <textarea class="col-12" type="text" id="messageInput"></textarea>
+                </div>
         </div>
-        <div class="row">&nbsp;</div>
-        <div class="row">
+        <div class="row col-5 justify-content-between mt-2">
+            <div class="col-6">
+                <a class="p-2 bg-info text-light col-6" asp-action="index">Go back</a>
+            </div>
             <div class="col-6">
                 <input type="button" id="sendToUser" value="Send Message" />&nbsp;&nbsp;
             </div>

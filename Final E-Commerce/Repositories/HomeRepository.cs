@@ -22,36 +22,15 @@ namespace Final_E_Commerce.Repositories
             _config = config;
         }
         public HomeVM Index(string? userName)
-        { 
-            List<Products>? AllProducts = _context.Products?
-                .Where(p => p.DiscountPercent > 0).ToList();
-
-            foreach (var product in AllProducts)
-            {
-                if (product.DiscountUntil < DateTime.Now.AddHours(12))
-                {
-                    product.DiscountUntil = null;
-                    product.DiscountPercent = 0;
-                    product.DiscountPrice = 0;
-                    _context?.SaveChanges();
-                }
-            }
-
+        {
+            CorrectDiscountTime();
             HomeVM? homeVM = new HomeVM();
             List<Products> Bestsellers = _context.Products
                 .OrderByDescending(p => p.Sold).Take(8)
                 .Where(p => p.Status == ProductConfirmationStatus.Approved && !p.IsDeleted).Include(p => p.ProductImages).ToList();
-            if (userName!=null)
+            if (userName!=null&&!UserBanned(userName))
             {
                 AppUser user = _usermanager.FindByNameAsync(userName).GetAwaiter().GetResult();
-                var userroles = _usermanager.GetRolesAsync(user).GetAwaiter().GetResult();
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        _signInManager.SignOutAsync().GetAwaiter().GetResult();
-                    }
-                }
                 homeVM.User = user;
                 homeVM.Wishlists = _context?.Wishlists?.Where(w => w.AppUserId == user.Id).ToList();
                 List<Products> Following = new List<Products>();
@@ -82,32 +61,9 @@ namespace Final_E_Commerce.Repositories
             return homeVM;
         }
 
-        public DetailVM Detail(int? id, string username)
+        public DetailVM Detail(int? id, string? username)
         {
-            List<Products>? AllProducts =  _context.Products?
-               .Where(p => p.DiscountPercent > 0).ToListAsync().GetAwaiter().GetResult();
-            foreach (var item in AllProducts)
-            {
-                if (item.DiscountUntil < DateTime.Now.AddHours(12))
-                {
-                    item.DiscountUntil = null;
-                    item.DiscountPercent = 0;
-                    item.DiscountPrice = 0;
-                    _context.SaveChangesAsync();
-                }
-            }
-            if (username!=null)
-            {
-                AppUser AppUser = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
-                var userroles = _usermanager.GetRolesAsync(AppUser).GetAwaiter().GetResult();
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        _signInManager.SignOutAsync().GetAwaiter().GetResult();
-                    }
-                }
-            }
+            CorrectDiscountTime();
             DetailVM? detailVM = new DetailVM();
             Products? product = _context?.Products?
                 .Where(p => p.Status == ProductConfirmationStatus.Approved)
@@ -141,7 +97,7 @@ namespace Final_E_Commerce.Repositories
             bool ExistWishlist = false;
             bool IsRated = false;
             detailVM.DidUserBuyThis = false;
-            if (username!=null)
+            if (username!=null&& !UserBanned(username))
             {
                 AppUser user = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
                 bool IsExist = _context.Wishlists.Where(w => w.AppUserId == user.Id && w.ProductId == id).AnyAsync().GetAwaiter().GetResult();
@@ -217,20 +173,10 @@ namespace Final_E_Commerce.Repositories
             return false;
         }
 
-        public ListProductsVM Brands(int? id, string username)
+        public ListProductsVM Brands(int? id, string? username)
         {
-            if (username!=null)
-            {
-                AppUser AppUser = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
-                var userroles = _usermanager.GetRolesAsync(AppUser).GetAwaiter().GetResult();
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        _signInManager.SignOutAsync().GetAwaiter().GetResult();
-                    }
-                }
-            }
+
+            UserBanned(username);
             List<Products>? products = _context?.Products?
                 .Where(p => p.BrandId == id)
                 .Include(p => p.ProductImages)
@@ -245,26 +191,14 @@ namespace Final_E_Commerce.Repositories
             return listProducts;
         }
 
-        public object Rate(int Rating, int ProductId, string username)
+        public object Rate(int Rating, int ProductId, string? username)
         {
             bool result = false;
             string? ProductName = "";
             string? ProductImage = "";
-            if (username!=null)
-            {
-                AppUser AppUser = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
-                var userroles = _usermanager.GetRolesAsync(AppUser).GetAwaiter().GetResult();
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        _signInManager.SignOutAsync().GetAwaiter().GetResult();
-                    }
-                }
-            }
             Products? product = _context?.Products?
                 .Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.Id == ProductId).GetAwaiter().GetResult();
-            if (username!=null)
+            if (username != null && !UserBanned(username))
             {
                 AppUser user = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
                 if (product.AppUserId != user.Id)
@@ -302,19 +236,11 @@ namespace Final_E_Commerce.Repositories
             return obj;
         }
 
-        public string RemoveRating(int id, string ReturnUrl, string username)
+        public string RemoveRating(int id, string ReturnUrl, string? username)
         {
-            if (username!=null)
+            if (username!= null&&!UserBanned(username))
             {
                 AppUser AppUser = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
-                var userroles = _usermanager.GetRolesAsync(AppUser).GetAwaiter().GetResult();
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        _signInManager.SignOutAsync().GetAwaiter().GetResult();
-                    }
-                }
                 UserProductRatings? rating = _context?.UserProductRatings?.Where(r => r.AppUserId == AppUser.Id && r.ProductId == id).FirstOrDefaultAsync().GetAwaiter().GetResult();
                 _context.UserProductRatings.Remove(rating);
                 _context?.SaveChangesAsync().GetAwaiter().GetResult();
@@ -322,20 +248,8 @@ namespace Final_E_Commerce.Repositories
             return ReturnUrl;
         }
 
-        public object DeleteComment(int id, string username)
+        public object DeleteComment(int id, string? username)
         {
-            if (username!=null)
-            {
-                AppUser AppUser = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
-                var userroles = _usermanager.GetRolesAsync(AppUser).GetAwaiter().GetResult();
-                foreach (var item in userroles)
-                {
-                    if (item.ToLower() == "ban" || userroles == null)
-                    {
-                        _signInManager.SignOutAsync().GetAwaiter().GetResult();
-                    }
-                }
-            }
             AppUser user = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
             ProductComment? comment = _context?.ProductComments?
                 .FirstOrDefaultAsync(bc => bc.Id == id).GetAwaiter().GetResult();
@@ -363,6 +277,106 @@ namespace Final_E_Commerce.Repositories
             };
 
             return obj;
+        }
+
+        public CommentsVM LoadComments(int skip, int? BlogId, string? username)
+        {
+
+            List<ProductComment>? comments = _context?.ProductComments?
+                .Include(b => b.User)
+                .Where(bc => bc.ProductId == BlogId && !bc.IsDeleted)
+                .OrderByDescending(b => b.Id).Skip(skip).Take(2).ToListAsync().GetAwaiter().GetResult();
+            CommentsVM commentsVM = new CommentsVM
+            {
+                ProductComments = comments
+            };
+            if (username != null && !UserBanned(username))
+            {
+                AppUser user = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
+                //seems like this comment is useless, I don't know whether delete it or not
+                commentsVM.AppUserId = user.Id;
+                int RightCounter = 0;
+                var roles = _usermanager.GetRolesAsync(user).GetAwaiter().GetResult();
+                //if requester is an admin or editor, he will be able to delete comment
+                foreach (var item in roles)
+                {
+                    if (item.ToLower().Contains("admin") || item.ToLower().Contains("editor") || item.ToLower().Contains("moderator"))
+                    {
+                        RightCounter++;
+                    }
+                }
+
+                //if the user is not an admin but a user and he finds any of his comment among those,
+                //he will be able to delete his own comment
+                commentsVM.UserId = user.Id;
+
+                commentsVM.RightCounter = RightCounter;
+            }
+            return commentsVM;
+        }
+
+        public CommentsVM PostComment(int ProductId, string comment, string? author, string? username)
+        {
+            Products? product = _context?.Products?
+                .Include(p => p.AppUser)
+                .FirstOrDefaultAsync(p => p.Id == ProductId).GetAwaiter().GetResult();
+            ProductComment NewComment = new ProductComment();
+            CommentsVM commentVM = new CommentsVM();
+            if (username != null && !UserBanned(username))
+            {
+                AppUser user = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
+                NewComment.AppUserId = user.Id;
+                commentVM.UserId = user.Id;
+                commentVM.User = user;
+            }
+            else
+            {
+                NewComment.Author = author;
+            }
+            NewComment.Content = comment;
+            NewComment.ProductId = product.Id;
+            NewComment.Date = DateTime.Now.AddHours(12);
+            _context.AddAsync(NewComment).GetAwaiter().GetResult();
+            _context.SaveChangesAsync().GetAwaiter().GetResult();
+            commentVM.ProductComment = NewComment;
+
+            return commentVM;
+        }
+
+
+
+
+
+        public bool UserBanned(string? username)
+        {
+            AppUser user = _usermanager.FindByNameAsync(username).GetAwaiter().GetResult();
+            var userroles = _usermanager.GetRolesAsync(user).GetAwaiter().GetResult();
+            foreach (var item in userroles)
+            {
+                if (item.ToLower() == "ban" || userroles == null)
+                {
+                    _signInManager.SignOutAsync().GetAwaiter().GetResult();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void CorrectDiscountTime()
+        {
+            List<Products>? AllProducts = _context.Products?
+                .Where(p => p.DiscountPercent > 0).ToList();
+
+            foreach (var product in AllProducts)
+            {
+                if (product.DiscountUntil < DateTime.Now.AddHours(12))
+                {
+                    product.DiscountUntil = null;
+                    product.DiscountPercent = 0;
+                    product.DiscountPrice = 0;
+                    _context?.SaveChanges();
+                }
+            }
         }
     }
 }

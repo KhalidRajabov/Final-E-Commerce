@@ -1,7 +1,8 @@
 ﻿(function ($) {
     //defineing connection
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+    //var siteUrl = `http://rammkhalid-001-site1.itempurl.com/`;
+    var siteUrl = `https://localhost:44393/`;
 
 
     var element = document.getElementById("messagesList");
@@ -31,10 +32,12 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
             //add "typing" to somewhere
             var li = document.createElement("li");
             
-            li.classList.add("col-12", "mt-1", "d-flex", "flex-column", "text-start")
+            li.classList.add( "mt-1", "d-flex", "flex-column", "text-start")
             var div = document.createElement("div");
-            div.classList.add("d-flex", "flex-column", "bg-secondary", "col-8", "text-info", "p-2", "align-self-start");
+            div.classList.add("d-flex", "flex-column", "bg-secondary", "text-info", "p-2", "align-self-start");
             let span = document.createElement("span");
+            div.style.maxWidth = "60%";
+            div.style.minWidth = "20%";
             span.innerText = user + " typing...";
             div.appendChild(span);
             div.style.borderRadius = "10px";
@@ -57,16 +60,22 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
     connection.on("ReceiveMessage", function (user, message) {
 
         //first we delete
+        
         var typing = document.getElementById("typing");
-        typing.remove();
+        if (typing!=undefined||typing!=null) {
+            typing.remove();
+        }
+        
 
         //dessigning the message, adding bootstrap classes and css style
 
         /*designing message starts*/
         var li = document.createElement("li");
-        li.classList.add("col-12", "mt-1", "d-flex", "flex-column", "text-start")
+        li.classList.add( "mt-1", "d-flex", "flex-column", "text-start")
         var div = document.createElement("div");
-        div.classList.add("d-flex", "flex-column", "bg-secondary", "col-8", "text-info", "p-2", "align-self-start")
+        div.classList.add("d-flex", "flex-column", "bg-secondary", "text-info", "p-2", "align-self-start")
+        div.style.maxWidth = "60%";
+        div.style.minWidth = "20%";
         var span = document.createElement("span");
         span.style.wordBreak = "break-word";
         span.style.textAlign = "justify";
@@ -115,13 +124,13 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 
 
-        //https://localhost:44393/
-        //http://rammkhalid-001-site1.itempurl.com/
+        
+        
 
 
         //now we send message to our controller which will save messages, time and relation between users.
         var myUserName = document.getElementById("userInput").value;
-        axios.post("http://rammkhalid-001-site1.itempurl.com/messages/MessageRead?username=" + myUserName + "&receiverId=" + receiverId)
+        axios.post(`${siteUrl}messages/MessageRead?username=` + myUserName + "&receiverId=" + receiverId)
             .then(function (response) {
                 console.log(response)
             })
@@ -206,10 +215,6 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 document.getElementById("sendToUser").addEventListener("click", function (event) {
     var user = document.getElementById("userInput").value;
 
-    //this variable is the name of html section which means that there is no message between two users yet.
-    //we will delete it when we send our message
-    var noMessage = document.getElementById("zeroMessage");
-
 
     //getting other user's id from hidden html input element
     var receiverConnectionId = document.getElementById("receiverId").value;
@@ -218,101 +223,112 @@ document.getElementById("sendToUser").addEventListener("click", function (event)
     var message = document.getElementById("messageInput");
 
 
-    //designing our message to be directly show in our message list
-
-
-    /*designing message starts*/
-    var li = document.createElement("li");
-    li.classList.add("col-12", "mt-1", "d-flex", "flex-column", "text-end")
-    var div = document.createElement("div");
-    div.classList.add("d-flex", "flex-column", "bg-success", "col-8", "text-light", "p-2", "align-self-end")
-    var span = document.createElement("span");
-    span.style.wordBreak = "break-word";
-    span.innerText = message.value;
-    span.style.marginRight = "15px";
-    span.style.textAlign = "justify";
-    var span2 = document.createElement("span");
-    var m = new Date();
-    var dateString =
-        m.getUTCFullYear() + "/" +
-        ("0" + (m.getUTCMonth() + 1)).slice(-2) + "/" +
-        ("0" + m.getUTCDate()).slice(-2) + " " +
-        ("0" + m.getHours()).slice(-2) + ":" +
-        ("0" + m.getUTCMinutes()).slice(-2) + ":" +
-        ("0" + m.getUTCSeconds()).slice(-2);
-    span2.innerText = dateString;
-    span2.style.fontSize = "70%";
-    var div2 = document.createElement("div");
-    div.append(span);
-    div2.append(span2);
-    div2.classList.add("col-12");
-    var unreadIcon = document.createElement("i");
-    unreadIcon.classList.add("fa-solid", "fa-eye-slash");
-    div2.appendChild(unreadIcon);
-    div.appendChild(div2);
-    div.style.borderRadius = "10px";
-    li.append(div);
-    //adding message to message list
-    document.getElementById("messagesList").appendChild(li);
-    /*designing the message ends*/
-
-
-    //keeps scroll on the last message in the chat
-    element.scrollTop = element.scrollHeight;
-
-
-    //the method for sending other user from hub is invoking
-    //we send to the hub our username, our message and other user's Id. Hub sends our message to...
-    //the user with the same id we sent to hub and also the user which is connected to the chat page
-    //If other user is connected he will directly see, if no, will see when they join, becase...
-    //our messages and receiver Id are also send to the controller which will save it to database..
-    //so anytime user opens chat page, he will see our messages.
-    
-    connection.invoke("SendToUser", user, receiverConnectionId, message.value).catch(function (err) {
-        return console.error(err.toString());
-    });
-
-    //"message sent" sound is being played when we send the message
-    let audio = document.getElementById("outMsg");
-    audio.play();
-
-    //for us not to be redirected to anywhere.
-    event.preventDefault();
-
 
     //if we have our receiverId and message in input, we send the message
-    if (receiverConnectionId.length > 0 && message.value.length>0) {
+    if (receiverConnectionId.length > 0 && message.value.length > 0) {
 
+
+        //designing our message to be directly show in our message list
+
+
+        /*designing message starts*/
+        var li = document.createElement("li");
+        li.classList.add("mt-1", "d-flex", "flex-column", "text-end")
+        var div = document.createElement("div");
+        div.classList.add("d-flex", "flex-column", "bg-success", "text-light", "p-2", "align-self-end")
+        var span = document.createElement("span");
+        span.style.wordBreak = "break-word";
+        span.innerText = message.value;
+        span.style.marginRight = "15px";
+        span.style.textAlign = "right";
+        var span2 = document.createElement("span");
+        var m = new Date();
+        var dateString =
+            m.getUTCFullYear() + "/" +
+            ("0" + (m.getUTCMonth() + 1)).slice(-2) + "/" +
+            ("0" + m.getUTCDate()).slice(-2) + " " +
+            ("0" + m.getHours()).slice(-2) + ":" +
+            ("0" + m.getUTCMinutes()).slice(-2) + ":" +
+            ("0" + m.getUTCSeconds()).slice(-2);
+        span2.innerText = dateString;
+        span2.style.fontSize = "70%";
+        var div2 = document.createElement("div");
+        div.append(span);
+        div.style.maxWidth = "60%";
+        div.style.minWidth = "20%";
+        div2.append(span2);
+        div2.classList.add("col-12");
+        var unreadIcon = document.createElement("i");
+        unreadIcon.classList.add("fa-solid", "fa-eye-slash");
+        div2.appendChild(unreadIcon);
+        div.appendChild(div2);
+        div.style.borderRadius = "10px";
+        li.append(div);
+        //adding message to message list
+        document.getElementById("messagesList").appendChild(li);
+        /*designing the message ends*/
+
+
+        //keeps scroll on the last message in the chat
+        element.scrollTop = element.scrollHeight;
+
+
+        //the method for sending other user from hub is invoking
+        //we send to the hub our username, our message and other user's Id. Hub sends our message to...
+        //the user with the same id we sent to hub and also the user which is connected to the chat page
+        //If other user is connected he will directly see, if no, will see when they join, becase...
+        //our messages and receiver Id are also send to the controller which will save it to database..
+        //so anytime user opens chat page, he will see our messages.
+
+        connection.invoke("SendToUser", user, receiverConnectionId, message.value).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+
+
+
+        //for us not to be redirected to anywhere.
+        event.preventDefault();
         //this variable is an html element which means there has not been any conversation between these two users.
         //we need to delete it because we already started a conversation
         let noMessage = document.getElementById("zeroMessage");
         if (noMessage != null || noMessage != undefined) {
             noMessage.remove();
         }
-        
 
 
-        //https://localhost:44393/
-        //http://rammkhalid-001-site1.itempurl.com/
+
 
 
         //now we send message to our controller which will save messages, time and relation between users.
-        axios.post("http://rammkhalid-001-site1.itempurl.com/messages/send?text=" + message.value + "&receiverId=" + receiverConnectionId)
+        axios.post(`${siteUrl}messages/send?text=` + message.value + "&receiverId=" + receiverConnectionId)
             .then(function (response) {
                 console.log(response)
             })
             .catch(function (error) {
                 console.log("error", error);
             })
+
+        //"message sent" sound is being played when we send the message
+        let audio = document.getElementById("outMsg");
+        audio.play();
+
+        //clearing message input after sending
+        message.value = "";
     }
 
     //if we don't have any text in message input, it gives alert,
-    else if (message.value.length<=0) {
+    else {
         alert("Message can not be empty");
     }
 
-    //clearing message input after sending
-    message.value = "";
+   
+
+
+    
+
+    
+    
 
     
 });

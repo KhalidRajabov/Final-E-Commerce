@@ -17,6 +17,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="list-inline dashboard-menu text-center">
+					<li class="list-inline-item user-menu"><a asp-action="index" asp-controller="messages">Messages</a></li>
 					<li class="list-inline-item user-menu"><a asp-action="index" asp-controller="user">Dashboard</a></li>
 					<li class="list-inline-item user-menu"><a asp-action="orders" asp-controller="user">Orders</a></li>
 					<li class="list-inline-item user-menu"><a class="active" asp-action="userdetail" asp-controller="user">Profile Details</a></li>
@@ -32,15 +33,29 @@
 									First name:
 								</b>
 								<div style="max-height:400px" class="col-9 flex-nowrap">
-									@Model.Firstname
-									</div>
+									@if (Model.Firstname!=null)
+									{
+										<span>@Model.Firstname</span>
+									}
+									else
+									{
+										<a asp-action="UpdateProfileDetail">Not set</a>
+									}
+								</div>
 							</div>
 						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
 							<b style="max-height:400px" class="col-2">
 								Last name:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.Lastname
+								@if (Model.Lastname != null)
+								{
+									<span>@Model.Lastname</span>
+								}
+								else
+								{
+									<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 						
@@ -49,7 +64,14 @@
 								Country:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.Country
+								@if (Model.Country!= null)
+								{
+									<span>@Model.Country</span>
+								}
+								else
+								{
+									<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 
@@ -58,7 +80,14 @@
 								City:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.City
+								@if (Model.City != null)
+								{
+											<span>@Model.City</span>
+								}
+								else
+								{
+											<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 
@@ -67,7 +96,14 @@
 								Street:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.Street
+								@if (Model.Street != null)
+								{
+											<span>@Model.Street</span>
+								}
+								else
+								{
+											<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 
@@ -76,7 +112,14 @@
 								Phone number:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.PhoneNumber
+								@if (Model.PhoneNumber != null)
+								{
+									<span>@Model.PhoneNumber</span>
+								}
+								else
+								{
+									<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -84,7 +127,14 @@
 								Company:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.Company
+								@if (Model.Company != null)
+								{
+									<span>@Model.Company</span>
+								}
+								else
+								{
+									<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -92,7 +142,14 @@
 								Zip Code:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.ZipCode
+								@if (Model.ZipCode!= null)
+								{
+									<span>@Model.ZipCode</span>
+								}
+								else
+								{
+									<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 						<div style="max-height:400px" class="col-12 d-flex flex-row p-2">
@@ -100,7 +157,14 @@
 								Email:
 							</b>
 							<div style="max-height:400px" class="col-9 flex-nowrap">
-								@Model.Email
+								@if (Model.Email!= null)
+								{
+									<span>@Model.Email</span>
+								}
+								else
+								{
+									<a asp-action="UpdateProfileDetail">Not set</a>
+								}
 							</div>
 						</div>
 						
