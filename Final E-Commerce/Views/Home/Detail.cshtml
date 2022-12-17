@@ -5,20 +5,20 @@
     ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    string decimalString = "";
+    string? decimalString = "";
     decimalString = Model.Product.Rating.ToString("#.##");
-    string discountday="";
-    string discountmonth="";
-    string discountyear="";
-    string year="";
-    string discounthour="";
-    string hours="";
+    string? discountday="";
+    string? discountmonth="";
+    string? discountyear="";
+    string? year="";
+    string? discounthour="";
+    string? hours="";
 
     //2022/10/12 12:00:00
     if (Model.Product.DiscountUntil > DateTime.Now.AddHours(12) && Model.Product.DiscountUntil != null && Model.Product.DiscountPercent > 0)
     {
-        discountday = Model.Product.DiscountUntil.ToString().Split('/')[1];
-        discountmonth = Model.Product.DiscountUntil.ToString().Split('/')[0];
+        discountmonth = Model.Product.DiscountUntil.ToString().Split('/')[1];
+        discountday = Model.Product.DiscountUntil.ToString().Split('/')[0];
         discountyear = Model.Product.DiscountUntil.ToString();
         year = discountyear.Substring(discountyear.LastIndexOf('/') + 1).Substring(0,4);
 
