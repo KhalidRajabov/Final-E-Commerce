@@ -29,18 +29,14 @@ namespace Final_E_Commerce.Controllers
         }
         public IActionResult Index()
         {
-            string? username=null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
+            string? username= User.Identity.IsAuthenticated ? User.Identity.Name : null;
             return View(_homeRepository.Index(username));
         }
 
 
         public IActionResult Detail(int? id)
         {
-            string? username = null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             if (!_homeRepository.ExistProducts(id))
             {
                 return RedirectToAction("error");
@@ -53,35 +49,25 @@ namespace Final_E_Commerce.Controllers
         [Authorize]
         public IActionResult Rate(int Rating, int ProductId)
         {
-            string? username = null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             return Ok(_homeRepository.Rate(Rating, ProductId, username));
         }
         [Authorize]
         public IActionResult RemoveRating(int id, string ReturnUrl)
         {
-            string? username = null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             return Redirect(_homeRepository.RemoveRating(id, ReturnUrl, username));
         }
 
         [Authorize]
         public IActionResult DeleteComment(int id)
         {
-            string? username = null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
-            
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             return Ok(_homeRepository.DeleteComment(id, username));
         }
         public IActionResult Brands(int id)
         {
-            string? username = null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
-            
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             return View(_homeRepository.Brands(id, username));
         }
 
@@ -182,19 +168,13 @@ namespace Final_E_Commerce.Controllers
         [HttpPost]
         public IActionResult PostComment(int ProductId, string comment, string? author)
         {
-            string? username = null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
-            
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             return PartialView("_ProductSingleComment", _homeRepository.PostComment(ProductId, comment, author, username));
         }
         
         public IActionResult LoadComments(int skip, int? BlogId)
         {
-            string? username = null;
-            if (User.Identity.IsAuthenticated)
-                username = User.Identity.Name;
-            
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             return PartialView("_ProductComments", _homeRepository.LoadComments(skip, BlogId, username));
         }
 
@@ -202,7 +182,11 @@ namespace Final_E_Commerce.Controllers
 
         public IActionResult Contact()
         {
-            //need to test if user is banned or not
+            string? username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
+            if (User.Identity.IsAuthenticated)
+            {
+                _homeRepository.UserBanned(username);
+            }            
             return View();
         }
         [HttpPost]

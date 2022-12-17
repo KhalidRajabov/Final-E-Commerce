@@ -1,8 +1,8 @@
 (function ($) {
     //'use strict';
 
-    //var siteUrl = `http://rammkhalid-001-site1.itempurl.com/`;
-    var siteUrl = `https://localhost:44393/`;
+    var siteUrl = `http://rammkhalid-001-site1.itempurl.com/`;
+    //var siteUrl = `https://localhost:44393/`;
 
 
 

@@ -129,9 +129,10 @@
                             {
                                 @for (int i = 0; i < 5-Math.Ceiling(Model.Product.Rating); i++)
                                 {
-                                    <li class="list-inline-item"> <i class="fa fa-star fa-2x"></i></li>
+                                    <li class="list-inline-item"> <i class="fa-regular fa-star" style="font-size: 200%;color:orange;"></i></li>
                                 }
                             }
+                            
                             <li class="list-inline-item" style="font-size: 120%">(@decimalString) Rated by @Model.RatedBy users</li>
                         }
                         else{
@@ -163,11 +164,11 @@
                     {
                         <div class="d-flex flex-column mt-5">
                             <div style="display:flex;flex-direction:row !important">
-                                <span onclick="changeColor(0)" id="spn1" class=" fa fa-star fa-2x"> </span>
-                                <span onclick="changeColor(1)" id="spn2" class=" fa fa-star fa-2x"> </span>
-                                <span onclick="changeColor(2)" id="spn3" class=" fa fa-star fa-2x"> </span>
-                                <span onclick="changeColor(3)" id="spn4" class=" fa fa-star fa-2x"> </span>
-                                <span onclick="changeColor(4)" id="spn5" class=" fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(0)" id="spn1" class="rating-star fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(1)" id="spn2" class="rating-star fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(2)" id="spn3" class="rating-star fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(3)" id="spn4" class="rating-star fa fa-star fa-2x"> </span>
+                                <span onclick="changeColor(4)" id="spn5" class="rating-star fa fa-star fa-2x"> </span>
                             </div>
                             <span class="text-danger" style="font-size: 150%" id="pro-rating-warning"></span>
                             <button id="rate-btn" class="btn btn-warning text-light col-5 mt-2"  data-id="@Model.Product.Id">Rate!</button>
