@@ -402,7 +402,7 @@ namespace Final_E_Commerce.Areas.Admin.Controllers
 
                     token = $"Salam. {dbProduct.Name} məhsulunda {dbProduct.DiscountPercent}% endirim var. \n" +
                         $"Artıq {dbProduct.Price} deyil, sadəcə {dbProduct.DiscountPrice} AZN\n" +
-                        $"Məhsula keçid linki http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}";
+                        $"Məhsula keçid linki http://rammkhalid-001-site1.itempurl.com/Home/detail/{dbProduct.Id}";
                     var emailResult = helper.SendNews(appUser.Email, token, subject);
 
                     string? discountemail = Url.Action("ConfirmEmail", "Account", new

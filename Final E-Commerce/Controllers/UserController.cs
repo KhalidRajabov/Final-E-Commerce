@@ -201,7 +201,7 @@ namespace Final_E_Commerce.Controllers
                 }
                 AppUser Profile =await _usermanager.FindByIdAsync(id);
                 ViewBag.IsSubscribed = false;
-                bool subscription =await _context.Subscription
+                bool? subscription =await _context?.Subscription?
                     .AnyAsync(s=>s.SubscriberId==AppUser.Id&&s.ProfileId==id);
                 ViewBag.IsSubscribed = subscription;
             }
@@ -784,10 +784,10 @@ namespace Final_E_Commerce.Controllers
                     return RedirectToAction("error", "home");
                 }
             }
-            var altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
+            List<Category>? altCategories = _context?.Categories?.Where(c => c.ParentId != null).Where(p => p.IsDeleted != true).ToList();
             ViewBag.Brands = new SelectList(_context?.Brands?.ToList(), "Id", "Name");
             ViewBag.Categories = new SelectList(_context?.Categories?.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).ToList(), "Id", "Name");
-            ViewBag.altCategories = new SelectList((altCategories).ToList(), "Id", "Name");
+            ViewBag.altCategories = new SelectList(altCategories?.ToList(), "Id", "Name");
             ViewBag.Tags = new SelectList(_context?.Tags?.Where(t => t.IsDeleted != true).ToList(), "Id", "Name");
             if (!ModelState.IsValid)
             {
@@ -893,7 +893,7 @@ namespace Final_E_Commerce.Controllers
                     foreach (var receiver in subscribers)
                     {
                         token = $"Hello {CurrentUser.Fullname}. A big discount price for {dbProduct.Name}. Now only {dbProduct.DiscountPrice} AZN instead of {dbProduct.Price} AZN\n" +
-                            $"See it on <a style='color: red' href='http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}'>Store</a>";
+                            $"See it on <a style='color: red' href='http://rammkhalid-001-site1.itempurl.com/Home/detail/{dbProduct.Id}'>Store</a>";
                         var emailResult2 = helper.SendNews(receiver.Email, token, subject);
                         continue;
                     }
@@ -902,7 +902,7 @@ namespace Final_E_Commerce.Controllers
                         token
                     }, Request.Scheme);
                 }
-                if (product.DiscountPercent > 0 && product.DiscountPercent > dbProduct.DiscountPercent)
+                if (product.DiscountPercent > 0)
                 {
                     List<Wishlist>? wishlist = _context?.Wishlists?.Where(p => p.ProductId == dbProduct.Id).ToList();
                     foreach (var user in wishlist)
@@ -913,9 +913,10 @@ namespace Final_E_Commerce.Controllers
                         string subject = "Discount on an item you want!";
                         EmailHelper helper = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
 
-                        token = $"Hello {CurrentUser.Fullname}. <br> <br> {dbProduct.Name} has a discount of {dbProduct.DiscountPercent}%. \n" +
-                            $"Now just {dbProduct.DiscountPrice}AZN instead if{dbProduct.Price} AZN\n" +
-                            $"See it on <a style='color: red' href='http://dante666-001-site1.atempurl.com/Home/detail/{dbProduct.Id}'>Store</a>";
+                        token = $"Hello {CurrentUser.Fullname}. <br> <br> {dbProduct.Name} has a discount of {dbProduct.DiscountPercent}%. <br> \n" +
+                            $"Now just {dbProduct.DiscountPrice}AZN instead of {dbProduct.Price} AZN <br>\n" +
+                            $"Hurry up! The discount ends on {product.DiscountUntil?.ToString("dddd, dd MMMM yyyy HH:mm:ss")} <br> <br>\n" +
+                            $"See it on <a style='color: red' href='http://rammkhalid-001-site1.itempurl.com/Home/detail/{dbProduct.Id}'>Store</a>";
                         var emailResult2 = helper.SendNews(appUser.Email, token, subject);
 
                         string? discountemail2 = Url.Action("ConfirmEmail", "Account", new
@@ -941,34 +942,41 @@ namespace Final_E_Commerce.Controllers
             dbProduct.LastUpdatedAt = DateTime.Now.AddHours(12);
            
             var roles = await _usermanager.GetRolesAsync(CurrentUser);
+            bool IsAdmin = false;
             foreach (var item in roles)
             {
                 if (item.ToLower().Contains("admin"))
                 {
                     dbProduct.Status = ProductConfirmationStatus.Approved;
+                    IsAdmin = true;
+                    break;
                 }
                 else
                 {
                     dbProduct.Status = ProductConfirmationStatus.Pending;
+                    IsAdmin = false;
                 }
             }
             
             await _context.SaveChangesAsync();
 
-            var token2 = "";
-            string subject2 = "Product updated successfully";
-            EmailHelper helper2 = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
-
-            token2 = $"Hello {CurrentUser.Fullname}. <br> <br> You recently updated {dbProduct.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
-                $"It will be posted on site and you will get notified\n" +
-                $"You can still see details of your product: \n" +
-                $" <a href='http://rammkhalid-001-site1.itempurl.com/User/productdetail/{dbProduct.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
-            var emailResult = helper2.SendNews(CurrentUser.Email, token2, subject2);
-
-            string? discountemail = Url.Action("ConfirmEmail", "Account", new
+            if (!IsAdmin)
             {
-                token2
-            }, Request.Scheme);
+                var token2 = "";
+                string subject2 = "Product updated successfully";
+                EmailHelper helper2 = new EmailHelper(_config.GetSection("ConfirmationParam:Email").Value, _config.GetSection("ConfirmationParam:Password").Value);
+
+                token2 = $"Hello {CurrentUser.Fullname}. <br> <br> You recently updated {dbProduct.Name} and it is being checked by admins right now. If there are nothing wrong with your product <br>. \n" +
+                    $"It will be posted on site and you will get notified\n" +
+                    $"You can still see details of your product: \n" +
+                    $" <a href='http://rammkhalid-001-site1.itempurl.com/User/productdetail/{dbProduct.Id}' style='color:red'><span style='color:black'>Have a look at </span> {product.Name} </a>";
+                var emailResult = helper2.SendNews(CurrentUser.Email, token2, subject2);
+
+                string? discountemail = Url.Action("ConfirmEmail", "Account", new
+                {
+                    token2
+                }, Request.Scheme);
+            }
 
             return RedirectToAction("products","user");
         }
@@ -1194,14 +1202,79 @@ namespace Final_E_Commerce.Controllers
             return View();
         }
 
-
-        public async Task<IActionResult> Blogs()
+        //I thought user's to write blogs might be good. Then changed my mind
+        /*public async Task<IActionResult> Blogs()
         {
             AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
             
             return View();
+        }*/
+        public async Task<IActionResult> Notifications()
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            NotificationVM? notificationVMs = new NotificationVM
+            {
+                Notifications=await _context?.Notifications?
+                .Where(n=>n.AppUserId==user.Id).Include(n=>n.AppUser).Include(n=>n.Products).OrderByDescending(n=>n.Time).Take(10).ToListAsync(),
+                NotificationCount = await _context.Notifications.Where(n => n.AppUserId == user.Id).CountAsync()
+            };
+            return View(notificationVMs);
         }
 
-      
+
+
+        public async Task<IActionResult> LoadNotifications(int skip)
+        {
+
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+
+            NotificationVM notificationVM = new NotificationVM()
+            {
+                Notifications = await _context?.Notifications?
+                .Where(n => n.AppUserId == user.Id)
+                .Include(b => b.AppUser)
+                .Include(n=>n.Products)
+                .OrderByDescending(b => b.Id).Skip(skip).Take(5).ToListAsync(),
+                //NotificationCount = await _context.Notifications.Where(n => n.AppUserId == user.Id).CountAsync()
+            };
+            return PartialView("_NotificationPartial", notificationVM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> MakeNotificationsRead(bool read)
+        {
+            AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
+            var nots = await _context?.Notifications?
+            .Where(n => n.AppUserId == user.Id && !n.Read).ToListAsync();
+            foreach (var item in nots)
+            {
+                item.Read = true;
+            }
+            await _context.SaveChangesAsync();
+            var obj = new
+            {
+                done = true
+            };
+            return Ok(obj);
+        }
+
+
+
+
+        public async Task<IActionResult> NotificationClicked(int notificationId)
+        {
+            Notification? notification =await _context?.Notifications?.FirstOrDefaultAsync(n=>n.Id==notificationId);
+            if (!notification.Read)
+            {
+                notification.Read = true;
+                await _context.SaveChangesAsync();
+            }
+            var obj = new 
+            {
+                clicked=true
+            };
+            return Ok(obj);
+        }
+
+
     }
 }

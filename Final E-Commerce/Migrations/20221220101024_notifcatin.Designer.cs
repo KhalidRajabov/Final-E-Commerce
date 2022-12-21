@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221207215825_chat_read")]
-    partial class chat_read
+    [Migration("20221220101024_notifcatin")]
+    partial class notifcatin
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -600,6 +600,41 @@ namespace Final_E_Commerce.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ActionBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("NotificationType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Read")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
@@ -1647,6 +1682,23 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Final_E_Commerce.Entities.Notification", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", "AppUser")
+                        .WithMany("Notifications")
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("Final_E_Commerce.Entities.Products", "Products")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("Final_E_Commerce.Entities.OrderItem", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.Orders", "Order")
@@ -1859,6 +1911,8 @@ namespace Final_E_Commerce.Migrations
 
                     b.Navigation("Messages");
 
+                    b.Navigation("Notifications");
+
                     b.Navigation("Orders");
 
                     b.Navigation("ProductComment");
@@ -1905,6 +1959,8 @@ namespace Final_E_Commerce.Migrations
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Products", b =>
                 {
+                    b.Navigation("Notifications");
+
                     b.Navigation("ProductComment");
 
                     b.Navigation("ProductImages");

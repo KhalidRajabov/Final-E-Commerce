@@ -19,9 +19,9 @@
 {
     <li class=" px-3  bg-dark p-2 search-list-content cool-search-list" style="width:90%;">
         <a class="text-dark d-flex flex-row align-content-center justify-content-between" style="width:100%; align-items: center" asp-controller="blog" asp-action="detail" asp-route-Id="@item.Id">
-            @if (item.Title.Length>15)
+            @if (item.Title.Length>45)
             {
-                <span class="text-warning">@item.Title.Substring(0,14)...</span>
+                <span class="text-warning">@item.Title.Substring(0,44)...</span>
             }
             else{
                 <span class="text-warning">@item.Title</span>

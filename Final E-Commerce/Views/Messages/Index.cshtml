@@ -13,8 +13,8 @@
                 @if (item.UnreadMessageCount>0)
                 {
                     <a class="col-12 p-3 messageSender d-flex justify-content-between" asp-action="chat" asp-controller="messages" asp-route-receiverId="@item.Sender.Id">
-                        <span>@item.Sender.Fullname</span>
-                        <span class="text-danger" style="font-weight:600; font-size:130%;">@item.UnreadMessageCount</span>
+                        <span class="text-danger">@item.Sender.Fullname </span>
+                        <span class="text-danger">@item.UnreadMessageCount</span>
                     </a>
                 }
                 else

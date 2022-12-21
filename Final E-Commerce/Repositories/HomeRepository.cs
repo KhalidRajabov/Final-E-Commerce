@@ -328,14 +328,42 @@ namespace Final_E_Commerce.Repositories
                 NewComment.AppUserId = user.Id;
                 commentVM.UserId = user.Id;
                 commentVM.User = user;
+                if (user.Id!=product.AppUserId)
+                {
+                
+                    Notification notification = new Notification
+                    {
+                        Time = DateTime.Now.AddHours(12),
+                        AppUserId = product.AppUserId,
+                        NotificationType = NotificationType.CommentOnProduct,
+                        Read = false,
+                        ActionBy=user.Fullname,
+                        ProductsId = product.Id
+                    };
+                    _context.AddAsync(notification).GetAwaiter().GetResult();
+                    _context.SaveChangesAsync().GetAwaiter().GetResult();
+                }
             }
             else
             {
                 NewComment.Author = author;
+                Notification notification = new Notification
+                {
+                    Time = DateTime.Now.AddHours(12),
+                    AppUserId = product.AppUserId,
+                    NotificationType = NotificationType.CommentOnProduct,
+                    Read = false,
+                    ActionBy = author,
+                    ProductsId= product.Id
+                };
+                _context.AddAsync(notification).GetAwaiter().GetResult();
+                _context.SaveChangesAsync().GetAwaiter().GetResult();
             }
             NewComment.Content = comment;
             NewComment.ProductId = product.Id;
             NewComment.Date = DateTime.Now.AddHours(12);
+            
+            
             _context.AddAsync(NewComment).GetAwaiter().GetResult();
             _context.SaveChangesAsync().GetAwaiter().GetResult();
             commentVM.ProductComment = NewComment;

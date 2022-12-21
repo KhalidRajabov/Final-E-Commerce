@@ -27,7 +27,7 @@ namespace Final_E_Commerce.Controllers
         public async Task<IActionResult> Index()
         {
             var currentUser=await _usermanager.GetUserAsync(User);
-            bool everMessaged = await _context?.Communications.AnyAsync(c=>c.AppUserId==currentUser.Id||c.OtherAppUserId==currentUser.Id);
+            bool everMessaged = await _context?.Communications?.AnyAsync(c=>c.AppUserId==currentUser.Id||c.OtherAppUserId==currentUser.Id);
             if (everMessaged)
             {
                 everMessaged = true;
@@ -46,14 +46,11 @@ namespace Final_E_Commerce.Controllers
                         receivedVM.Sender= await _usermanager.FindByIdAsync(msg.AppUserId);
                         
                     }
-                    int unreadMessagesInThisCom = _context.ChatMessages.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).Count();
-                    ChatMessage? lastUnreadMsg=await _context.ChatMessages.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).OrderByDescending(c=>c.Date).Take(1).FirstOrDefaultAsync();
-                    
+                    int? unreadMessagesInThisCom = _context?.ChatMessages?.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).Count();
+                    ChatMessage? lastUnreadMsg=await _context?.ChatMessages?.Where(c => c.OtherId == currentUser.Id && c.ReadByReceiver != true && c.CommunicationId == msg.Id).OrderByDescending(c=>c.Date).Take(1).FirstOrDefaultAsync();
+                    ChatMessage? lastMsg = await _context?.ChatMessages?.Where(c => (c.OtherId == currentUser.Id && c.CommunicationId == msg.Id)||(c.AppuserId==currentUser.Id&&c.CommunicationId==msg.Id)).OrderBy(m=>m.Id).LastOrDefaultAsync();
                     receivedVM.UnreadMessageCount = unreadMessagesInThisCom;
-                    if (unreadMessagesInThisCom > 0)
-                    {
-                        receivedVM.LastMessageDate = lastUnreadMsg.Date;
-                    }
+                    receivedVM.LastMessageDate = lastMsg.Date;
                     receivedMsgVMs.Add(receivedVM);
                 }
                 return View(receivedMsgVMs);

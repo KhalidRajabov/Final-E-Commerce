@@ -1,0 +1,95 @@
+﻿html{
+    scroll-behavior:smooth;
+}
+.receiverName h3{
+    padding: 10px;
+}
+.receiverName{
+    border-radius:10px;
+}
+.receiverName:hover {
+    background-color: rgb(44,202,240) !important;
+    transition: 0.3s;
+}
+
+.receiverName:not(hover) {
+    transition: 0.3s;
+}
+
+.messageSender {
+    border-radius: 10px;
+    background-color: rgb(214,213,220);
+    color: black;
+}
+
+.messageSender:hover {
+    color: black;
+    background-color: rgb(44,202,240);
+    transition: .3s;
+}
+
+.messageSender:not(hover) {
+    transition: .3s;
+    }
+
+.rating-star:hover {
+    cursor: pointer;
+}
+
+.user-menu:hover {
+    background-color: rgb(255,65,53);
+    color: aqua;
+    transition: .3s;
+}
+
+.user-menu:hover > a {
+    color: white;
+    transition: .3s;
+}
+
+.user-menu:not(hover) {
+    transition: .3s;
+}
+
+.to-top {
+    background: rgb(255, 255, 255, 0.3);
+    border: 3px solid rgb(255,65,53);
+    position: fixed;
+    cursor: pointer;
+    bottom: 16px;
+    right: 32px;
+    font-weight: 900;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 150%;
+    text-decoration: none;
+    pointer-events: none;
+    opacity: 0;
+    transition: .7s;
+}
+.top-icon {
+    color: rgb(255,65,53);
+}
+
+.to-top.active {
+    bottom: 32px;
+    pointer-events: auto;
+    opacity: 1;
+}
+.notification-btn:hover{
+    background-color:blue !important;
+}
+.notification-link:hover{
+    background-color:darkgray !important;
+    transition:.3s;
+}
+.notification-link:not(hover){
+    transition:.3s;
+}
+.notificiation-title {
+    width:50% !important;
+}

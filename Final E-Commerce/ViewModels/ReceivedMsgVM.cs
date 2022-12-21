@@ -6,6 +6,6 @@ namespace Final_E_Commerce.ViewModels
     {
         public AppUser? Sender { get; set; }
         public DateTime LastMessageDate { get; set; }
-        public int UnreadMessageCount { get; set; }
+        public int? UnreadMessageCount { get; set; }
     }
 }

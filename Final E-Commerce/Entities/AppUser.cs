@@ -25,6 +25,7 @@ namespace Final_E_Commerce.Entities
         public List<UserSubscription>? Subscription { get; set; }
         public List<Communication>? Communications { get; set; }
         public List<ChatMessage>? ChatMessages { get; set; }
+        public List<Notification>? Notifications { get; set; }
         //public List<BasketItem> BasketItems { get; set; }
     }
 }

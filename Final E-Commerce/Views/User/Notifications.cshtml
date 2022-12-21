@@ -1,0 +1,50 @@
+﻿@model NotificationVM
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex flex-row col-12 justify-content-center align-items-center">
+        <h1>Notifications</h1>
+        <input type="hidden" id="hiddenNotificationCount" value="@Model.NotificationCount"/>
+    </div>
+
+    <div class="row col-12 text-light d-flex flex-column" id="notification-area" style=" padding: 10px 0;" >
+        <a class="btn-light text-dark col-5 col-md-3 mt-3" id="makeRead" style="border-radius: 15px; margin-left:5%; padding:10px 0; cursor:pointer; text-align:center; border:2px solid black">Mark all as read</a>
+        @if (Model.Notifications.Count>0)
+        {
+            @foreach (var item in Model.Notifications)
+            {
+                @if (!item.Read)
+                {
+                    <a class="notification-link text-light bg-danger col-11 d-flex flex-column justify-content-center align-items-between text-decoration-none" data-id="@item.Id" pro-id="@item.ProductsId" style="cursor: pointer; max-height: 100px; margin: 5px auto; border-radius: 15px;">
+                        <p class="p-1 text-light">@item.ActionBy commented on @item.Products.Name</p>
+                        <span class="p-1 text-light">@item.Time.ToString("dddd, dd MMMM yyyy HH:mm:ss")</span>
+                     </a>
+                }
+                else if(item.Read)
+                {
+                    <a class="notification-link text-light bg-secondary col-11 d-flex flex-column justify-content-center align-items-between text-decoration-none"  data-id="@item.Id" pro-id="@item.ProductsId" style="cursor: pointer; max-height: 100px; margin: 5px auto; border-radius: 15px;">
+                        <p class="p-1 text-light">@item.ActionBy commented on @item.Products.Name</p>
+                        <span class="p-1 text-light">@item.Time.ToString("dddd, dd MMMM yyyy HH:mm:ss")</span>
+                    </a>    
+                }
+            }
+        }
+        else
+        {
+            <div class="d-flex flex-row col-12 justify-content-center align-items-center">
+                <h3>You have no any notification</h3>
+            </div>
+        }
+
+
+        
+    </div>
+            @if (Model.NotificationCount>10)
+            {
+                <a class="btn btn-info col-4 align-self-center mt-3" id="seemore" style="border-radius: 15px;">See more..</a>
+            }
+</div>
+

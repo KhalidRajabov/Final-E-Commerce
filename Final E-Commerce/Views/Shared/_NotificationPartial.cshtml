@@ -1,0 +1,19 @@
+﻿@model NotificationVM
+
+@foreach (var item in Model.Notifications)
+{
+    @if (!item.Read)
+    {
+        <a class="notification-link text-light bg-danger col-11 d-flex flex-column justify-content-center align-items-between text-decoration-none" data-id="@item.Id" pro-id="@item.ProductsId" style="cursor: pointer; max-height: 100px; margin: 5px auto; border-radius: 15px;">
+            <p class="p-1 text-light">@item.ActionBy commented on @item.Products.Name</p>
+            <span class="p-1 text-light">@item.Time.ToString("dddd, dd MMMM yyyy HH:mm:ss")</span>
+        </a>
+    }
+    else if (item.Read)
+    {
+        <a class="notification-link text-light bg-secondary col-11 d-flex flex-column justify-content-center align-items-between text-decoration-none" data-id="@item.Id" pro-id="@item.ProductsId" style="cursor: pointer; max-height: 100px; margin: 5px auto; border-radius: 15px;">
+            <p class="p-1 text-light">@item.ActionBy commented on @item.Products.Name</p>
+            <span class="p-1 text-light">@item.Time.ToString("dddd, dd MMMM yyyy HH:mm:ss")</span>
+        </a>
+    }
+}

@@ -891,6 +891,65 @@
 
 
 
+    let notificationLink = document.querySelectorAll(".notification-link")
+
+    notificationLink.forEach(link =>
+
+        link.addEventListener("click", function () {
+            let dataId = this.getAttribute("data-id")
+            let productId = this.getAttribute("pro-id")
+            axios.post(`${siteUrl}user/NotificationClicked?notificationId=` + dataId)
+                .then(function (response) {
+                    console.log(response)
+                    window.location = `${siteUrl}home/detail?id=` + productId;
+                    console.log(`${siteUrl}home/detail?id=` + productId)
+                    /*if (response.clicked) {
+                    }*/
+                })
+                .catch(function (error) {
+                    console.log("error " + error);
+                })
+        })
+    )
+
+
+    //loadmorenotification
+    let hiddenNotificationCount = document.getElementById("hiddenNotificationCount");
+    $(document).on('click', '#seemore', function () {
+        $.ajax({
+            url: `${siteUrl}user/LoadNotifications?skip=` + skip,
+            method: "get",
+            success: function (res) {
+                console.log(res);
+                console.log(hiddenNotificationCount);
+                $("#notification-area").append(res)
+                skip += 5;
+                if (skip >= hiddenNotificationCount.value) {
+                    $(`#seemore`).remove();
+                }
+            },
+            error: function (err) {
+                console.log("error ", err)
+            }
+        })
+    })
+
+    //MakeNotificationsRead
+    $(document).on('click', '#makeRead', function () {
+        var clicked = true;
+        $.ajax({
+            url: `${siteUrl}user/MakeNotificationsRead?read=` + clicked,
+            method: "post",
+            success: function (res) {
+                    window.location.reload();
+            },
+            error: function (err) {
+                console.log("error ", err)
+            }
+        })
+    })
+
+
 
 
   
@@ -1099,6 +1158,20 @@
       mainWrapper.removeClass('main-wrapper-section');
     }
   });
+
+
+    const toTop = document.querySelector(".to-top");
+    window.addEventListener("scroll", () => {
+        if (window.pageYOffset > 100) {
+            toTop.classList.add("active");
+        }
+        else {
+            toTop.classList.remove("active");
+        }
+    })
+
+
+
     //owl splide
 
     var splide = new Splide('.splide', {
@@ -1107,6 +1180,8 @@
     });
 
     splide.mount();
+
+
 
 
 

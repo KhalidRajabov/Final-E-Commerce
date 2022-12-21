@@ -1,4 +1,7 @@
 ﻿@model HeaderVM
+@{
+    bool unreads = Model.UnreadNotificationCount > 0 ? true : false;
+}
 <header>
    
     <div class="top-header">
@@ -49,6 +52,46 @@
                                     </div>
                                 }
                             
+                        </div>
+                    </li>
+                    <li class="list-inline-item">
+                        <div class="dropdown">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <button class="btn-dark dropdown-toggle text-light notification-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa-solid fa-bell"></i> <span style='@(unreads ? "color:red;" : "color:white;")'>@Model.UnreadNotificationCount</span>
+                                </button>
+                                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                                    @if (Model.Notifications.Count>0)
+                                    {
+                                        @foreach (var item in Model.Notifications)
+                                        {
+                                            @if (!item.Read)
+                                            {
+                                                <a class="dropdown-item text-dark notification-link d-flex flex-column w-100" data-id="@item.Id" pro-id="@item.ProductsId" style="margin-left: 5px; background-color:rgb(167,187,134);cursor:pointer;">
+                                                    <p class="notificiation-title" style="max-width:80% !important; color:red;">@item.ActionBy commented on @item.Products.Name</p>
+                                                    <span>@item.Time.ToString("dddd, dd MMMM yyyy HH:mm:ss")</span>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a class="dropdown-item text-dark notification-link d-flex flex-column w-100" data-id="@item.Id" pro-id="@item.ProductsId" style="margin-left: 5px; cursor:pointer;">
+                                                    <p class="notificiation-title" style="max-width:80% !important; ">@item.ActionBy commented on @item.Products.Name</p>
+                                                    <span>@item.Time.ToString("dddd, dd MMMM yyyy HH:mm:ss")</span>
+                                                </a>
+                                            }
+                                        }
+                                        <a class="dropdown-item d-flex flex-column w-100" style="margin: 15px auto; cursor:pointer; color:dodgerblue;" asp-action="Notifications" asp-controller="user">
+                                                    See all notifications
+                                                </a>
+                                    }
+                                    else
+                                    {
+                                        <p style="margin-left: 10px; margin-top:15px; font-size:100%; cursor:default">You have no notification</p>
+                                    }
+                                </div>
+                            }
+
                         </div>
                     </li>
                 </ul>
