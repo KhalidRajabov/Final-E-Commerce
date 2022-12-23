@@ -6,5 +6,6 @@ namespace Final_E_Commerce.ViewModels
     {
         public List<Products>? Products { get; set; }
         public AppUser? User { get; set; }
+        public List<Wishlist>? Wishlists { get; set; }
     }
 }

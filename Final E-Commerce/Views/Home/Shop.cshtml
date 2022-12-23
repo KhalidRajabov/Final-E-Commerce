@@ -12,8 +12,6 @@
         </ol>
     </div>
 </nav>
-
-
 <section class="section">
   <div class="container">
     <div class="row">
@@ -29,13 +27,13 @@
                     <input asp-for="Search" class="form-control rounded-0" id="search-product" placeholder="Keyword...">
               </div>
                         <div class="input-group flex-nowrap mt-5 mb-2 col-12 d-flex flex-row justify-content-between align-items-center">
-                <label asp-for="Speciality"></label>
+                <label asp-for="AlphabeticOrder">Order</label>
                             <select class="form-select col-6" asp-for="AlphabeticOrder" asp-items="new SelectList(ViewBag.AlphabeticOrder)">
                                 <option selected>Choose order</option>
                 </select>
               </div>
                         <div class=" mt-2 mb-2 input-group flex-nowrap col-12 d-flex flex-row justify-content-between align-items-center">
-                <label asp-for="DateOrder"></label>
+                <label asp-for="DateOrder">Date</label>
                             <select class="form-select col-6" asp-for="DateOrder" asp-items="new SelectList(ViewBag.DateOrder)">
                                 <option selected>Choose order</option>
                 </select>
@@ -52,13 +50,11 @@
                                 <option selected>Choose order</option>
                 </select>
               </div>
-              
               <div class="input-group flex-nowrap">
                     <button type="submit" style="background-color: white; border-radius: 5px; padding: 3px 20px" class="text-dark">Filter</button>
               </div>
           </form>
         </div>
-        
       </div>
       <!-- product-list -->
       <div class="col-lg-9">
@@ -124,7 +120,6 @@
                                         <span class="h5">$@product.Price</span>
                                     }
                                 </div>
-
                                 <div class="product-label d-flex flex-column justify-content-around" style="border-radius:5px">
                                     @if (product.DiscountPercent > 0)
                                     {
@@ -145,13 +140,11 @@
                             </div>
                         </div>
                     }
-          
-          <div class="col-12 mt-5">
+          @*<div class="col-12 mt-5">
             <a class="btn btn-primary">Load more</a>
-          </div>
+          </div>*@
         </div>
       </div>
     </div>
   </div>
 </section>
-

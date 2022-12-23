@@ -135,6 +135,50 @@ namespace Final_E_Commerce.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Final_E_Commerce.Entities.Basket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Baskets");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.BasketItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BasketId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BasketId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("BasketItems");
+                });
+
             modelBuilder.Entity("Final_E_Commerce.Entities.Bio", b =>
                 {
                     b.Property<int>("Id")
@@ -1600,6 +1644,34 @@ namespace Final_E_Commerce.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Final_E_Commerce.Entities.Basket", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.BasketItem", b =>
+                {
+                    b.HasOne("Final_E_Commerce.Entities.Basket", "Basket")
+                        .WithMany("BasketItems")
+                        .HasForeignKey("BasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Final_E_Commerce.Entities.Products", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Basket");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Final_E_Commerce.Entities.BlogComment", b =>
                 {
                     b.HasOne("Final_E_Commerce.Entities.AppUser", "User")
@@ -1924,6 +1996,11 @@ namespace Final_E_Commerce.Migrations
                     b.Navigation("UserProfile");
 
                     b.Navigation("Wishlist");
+                });
+
+            modelBuilder.Entity("Final_E_Commerce.Entities.Basket", b =>
+                {
+                    b.Navigation("BasketItems");
                 });
 
             modelBuilder.Entity("Final_E_Commerce.Entities.Blogs", b =>

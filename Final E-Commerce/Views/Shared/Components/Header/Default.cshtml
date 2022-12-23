@@ -61,7 +61,7 @@
                                 <button class="btn-dark dropdown-toggle text-light notification-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa-solid fa-bell"></i> <span style='@(unreads ? "color:red;" : "color:white;")'>@Model.UnreadNotificationCount</span>
                                 </button>
-                                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton" style="margin-left:-350%">
                                     @if (Model.Notifications.Count>0)
                                     {
                                         @foreach (var item in Model.Notifications)

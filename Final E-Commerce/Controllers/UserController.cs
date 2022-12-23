@@ -221,6 +221,12 @@ namespace Final_E_Commerce.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ProfileProducts(string id)
         {
+            UserProductsVM userProductsVM = new UserProductsVM
+            {
+                Products = await _context?.Products?.Where(p => p.AppUserId == id)
+                .Include(p => p.ProductImages).ToListAsync(),
+                User = await _usermanager.FindByIdAsync(id)
+            };
             if (User.Identity.IsAuthenticated)
             {
                 AppUser AppUser = await _usermanager.FindByNameAsync(User.Identity.Name);
@@ -233,15 +239,9 @@ namespace Final_E_Commerce.Controllers
                         return RedirectToAction("error", "home");
                     }
                 }
+                userProductsVM.Wishlists = await _context?.Wishlists?.Where(w => w.AppUserId == AppUser.Id).ToListAsync();
             }
             ViewBag.UserId = await _usermanager.FindByIdAsync(id);
-            UserProductsVM userProductsVM = new UserProductsVM
-            {
-                Products = await _context?.Products?.Where(p => p.AppUserId == id)
-                .Include(p => p.ProductImages).ToListAsync(),
-                User = await _usermanager.FindByIdAsync(id)
-                
-            };
 
 
             return View(userProductsVM);

@@ -11,7 +11,10 @@
     </div>
 
     <div class="row col-12 text-light d-flex flex-column" id="notification-area" style=" padding: 10px 0;" >
-        <a class="btn-light text-dark col-5 col-md-3 mt-3" id="makeRead" style="border-radius: 15px; margin-left:5%; padding:10px 0; cursor:pointer; text-align:center; border:2px solid black">Mark all as read</a>
+        @if (Model.NotificationCount>0)
+        {
+            <a class="btn-light text-dark col-5 col-md-3 mt-3" id="makeRead" style="border-radius: 15px; margin-left:5%; padding:10px 0; cursor:pointer; text-align:center; border:2px solid black">Mark all as read</a>
+        }
         @if (Model.Notifications.Count>0)
         {
             @foreach (var item in Model.Notifications)
@@ -38,13 +41,10 @@
                 <h3>You have no any notification</h3>
             </div>
         }
-
-
-        
     </div>
             @if (Model.NotificationCount>10)
             {
-                <a class="btn btn-info col-4 align-self-center mt-3" id="seemore" style="border-radius: 15px;">See more..</a>
+                <a class="btn btn-info col-4 align-self-center mt-3" id="seemore" style="border-radius: 15px;">See more... (@(Model.NotificationCount-10))</a>
             }
 </div>
 

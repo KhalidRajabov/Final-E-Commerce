@@ -15,6 +15,8 @@ namespace Final_E_Commerce.DAL
         public DbSet<AppUser>? AppUser { get; set; }
         public DbSet<Bio>? Bios { get; set; }
         public DbSet<Brand>? Brands { get; set; }
+        public DbSet<Basket>? Baskets { get; set; }
+        public DbSet<BasketItem>? BasketItems { get; set; }
         public DbSet<Category>? Categories { get; set; }
         public DbSet<Orders>? Orders { get; set; }
         public DbSet<OrderItem>? OrderItems { get; set; }

@@ -879,7 +879,6 @@
                 method: "get",
                 success: function (res) {
                     $("#SearchList").append(res);
-                    //console.log("popular products successfully brought for onlcick on search input")
                 },
                 error: function (res) {
                     console.log("error ", res.responseText)
@@ -900,11 +899,8 @@
             let productId = this.getAttribute("pro-id")
             axios.post(`${siteUrl}user/NotificationClicked?notificationId=` + dataId)
                 .then(function (response) {
-                    console.log(response)
                     window.location = `${siteUrl}home/detail?id=` + productId;
-                    console.log(`${siteUrl}home/detail?id=` + productId)
-                    /*if (response.clicked) {
-                    }*/
+                   
                 })
                 .catch(function (error) {
                     console.log("error " + error);
@@ -915,18 +911,33 @@
 
     //loadmorenotification
     let hiddenNotificationCount = document.getElementById("hiddenNotificationCount");
+    let seeMoreBtn = document.getElementById("seemore");
     $(document).on('click', '#seemore', function () {
         $.ajax({
             url: `${siteUrl}user/LoadNotifications?skip=` + skip,
             method: "get",
             success: function (res) {
-                console.log(res);
-                console.log(hiddenNotificationCount);
                 $("#notification-area").append(res)
                 skip += 5;
                 if (skip >= hiddenNotificationCount.value) {
                     $(`#seemore`).remove();
                 }
+                else {
+                    seeMoreBtn.innerText = `See more... (${parseInt(hiddenNotificationCount.value) - skip})`
+                }
+                $(document).on('click', '.notification-link', function () {
+                    let dataId = this.getAttribute("data-id")
+                    let productId = this.getAttribute("pro-id")
+                    axios.post(`${siteUrl}user/NotificationClicked?notificationId=` + dataId)
+                        .then(function (response) {
+                            window.location = `${siteUrl}home/detail?id=` + productId;
+                        })
+                        .catch(function (error) {
+                            console.log("error " + error);
+                        })
+                })
+
+
             },
             error: function (err) {
                 console.log("error ", err)

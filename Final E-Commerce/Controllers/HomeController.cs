@@ -88,69 +88,56 @@ namespace Final_E_Commerce.Controllers
             ViewBag.SpecialOrder = new List<string>() { "Populars", "Top sellers" };
             ViewBag.Price = new List<string>() { "Low", "High" };
             #endregion
-            List<Products> Products = new List<Products>();
+            ShopVM shopVM = new ShopVM();
             if (filter != null)
             {
-                Products = await _context?.Products?
-                    .Include(p => p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
-                if (filter.Search != null)
+                var x = from y in _context.Products
+                    .Include(p => p.ProductImages)
+                    .Where(p => filter.Search != null ? p.Status == ProductConfirmationStatus.Approved && p.Name.ToLower().Contains(filter.Search.ToLower()) : p.Status == ProductConfirmationStatus.Approved)
+                        select y;
+                switch (filter.AlphabeticOrder)
                 {
-                    Products.Where(p => p.Name.ToLower().Contains(filter.Search.ToLower()));
+                    case "Z-A":
+                        x = x.OrderByDescending(p => p.Name);
+                       break;
+                    case "A-Z":
+                        x = x.OrderBy(p => p.Name);
+                        break;
                 }
-                if (filter.AlphabeticOrder != null)
+                switch (filter.Price)
                 {
-                    if (filter.AlphabeticOrder == "A-Z")
-                    {
-                        Products.OrderBy(p => p.Name);
-                    }
-                    else
-                    {
-                        Products.OrderByDescending(p => p.Name);
-                    }
+                    case "Low":
+                        x = x.OrderBy(p => p.Price);
+                        break;
+                    case "High":
+                        x = x.OrderByDescending(p => p.Price);
+                        break;
                 }
-                if (filter.DateOrder != null)
+                switch (filter.DateOrder)
                 {
-                    if (filter.DateOrder == "New to Old")
-                    {
-                        Products.OrderByDescending(p => p.CreatedTime);
-                    }
-                    else
-                    {
-                        Products.OrderBy(p => p.CreatedTime);
-                    }
+                    case "New to Old":
+                        x = x.OrderByDescending(p => p.CreatedTime);
+                        break;
+                    case "Old to New":
+                        x = x.OrderBy(p => p.CreatedTime);
+                        break;
                 }
-                if (filter.Speciality != null)
+                switch (filter.Speciality)
                 {
-                    if (filter.Speciality == "Populars")
-                    {
-                        Products.OrderByDescending(p => p.Views);
-                    }
-                    else
-                    {
-                        Products.OrderByDescending(p => p.Sold);
-                    }
+                    case "Populars":
+                        x = x.OrderByDescending(p => p.Views);
+                        break;
+                    case "Top sellers":
+                        x = x.OrderByDescending(p => p.Sold);
+                        break;
                 }
-                if (filter.Price != null)
-                {
-                    if (filter.Speciality == "Low")
-                    {
-                        Products.OrderBy(p => p.Price);
-                    }
-                    else
-                    {
-                        Products.OrderByDescending(p => p.Price);
-                    }
-                }
+                shopVM.Products = x.AsNoTracking().ToList();
             }
             else
             {
-                Products = await _context?.Products?
+                shopVM.Products = await _context?.Products?
                     .Include(p => p.ProductImages).Where(p => p.Status == ProductConfirmationStatus.Approved).ToListAsync();
             }
-            ShopVM shopVM = new ShopVM
-            {
-                Products = Products
-            };
             if (User.Identity.IsAuthenticated)
             {
                 AppUser user = await _usermanager.FindByNameAsync(User.Identity.Name);
