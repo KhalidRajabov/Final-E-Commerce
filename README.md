@@ -1,6 +1,6 @@
 # TechoShop E-Commerce
 
-<h3>Visit: http://rammkhalid-001-site1.itempurl.com/</h3>
+<h3>Visit: http://khalidradj-001-site1.btempurl.com/purl.com/</h3>
 
 
 TechnoShop is a commercial project where users can post their product they wish to sell. Project has 5 roles and all of them have their specific skills (Higher level role has the ability of lower level roles).
